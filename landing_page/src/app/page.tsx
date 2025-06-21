@@ -1,21 +1,31 @@
 "use client";
-import Index from './components/index'
-import TopSpecialities from './components/TopSpecialities';
-import FeaturedDocs from './components/FeaturedDocs';
-import WhyChooseUs from './components/whyChooseUs';
-import ChooseUsSection from './components/chooseUsSection';
-import FAQs from './components/FAQs';
-import Download from './components/Download';
-import Blogs from './components/blogs';
-import Footer from './components/footer';
-import MedicalSpecialtiesCards from './components/new';
-import ScrollingCarousel from './components/scrolling';
-import Header from './components/header';
+import Index from './LandingPage/index'
+import TopSpecialities from './LandingPage/TopSpecialities';
+import FeaturedDocs from './LandingPage/FeaturedDocs';
+import WhyChooseUs from './LandingPage/whyChooseUs';
+import ChooseUsSection from './LandingPage/chooseUsSection';
+import FAQs from './LandingPage/FAQs';
+import Download from './LandingPage/Download';
+import Blogs from './LandingPage/blogs';
+import Footer from './LandingPage/footer';
+import MedicalSpecialtiesCards from './LandingPage/new';
+import ScrollingCarousel from './LandingPage/scrolling';
+import Header from './LandingPage/header';
+
+import React, { useState } from 'react';
 
 export default function Home() {
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
   return (
     <>
-      <Header />
+      <Header
+        showSearch={showSearch}
+        setShowSearch={setShowSearch}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
       <Index />
       <TopSpecialities />
       <ScrollingCarousel/>

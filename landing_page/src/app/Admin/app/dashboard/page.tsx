@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, JSX } from 'react';
 import { useRouter } from 'next/navigation';
-import  SideHeader from '../';
+import  {SideHeader} from '../../components/SideHeader';
 import { 
   Layout, 
   Menu, 

@@ -3,12 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Input, Button, DatePicker, Tag, Space, Select, Avatar, Modal, Spin, message, Layout } from 'antd';
 import { SearchOutlined, MoreOutlined, CalendarOutlined, EyeOutlined, DownloadOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import AppHeader from '@/app/Admin/components/header';
+import  AppHeader from '../../components/header';
 import { Router } from 'react-router-dom';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 import { useRouter } from 'next/navigation';
-import { SideHeader } from '@/app/Admin/components/sideheader';
+import  {SideHeader} from '../../components/SideHeader';
 
 const { Header: AntHeader, Content } = Layout;
 
@@ -126,7 +126,7 @@ const DoctorList = () => {
 
             const data = await response.json();
             
-            let doctorsData = [];
+            let doctorsData: Doctor[] = [];
             if (data.status === 'success' && data.data) {
                 doctorsData = Array.isArray(data.data) ? data.data : [data.data];
             } else if (Array.isArray(data)) {

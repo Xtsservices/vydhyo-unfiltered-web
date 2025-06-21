@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import AppHeader from '@/app/Admin/components/header';
+import AppHeader from '../../components/header';
+
 import { 
   Layout, 
   Menu, 

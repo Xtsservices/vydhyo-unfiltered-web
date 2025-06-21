@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Input, Button, DatePicker, Tag, Space, Select, Avatar, Modal, Spin, message, Layout } from 'antd';
 import { SearchOutlined, MoreOutlined, CalendarOutlined, EyeOutlined, DownloadOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import AppHeader from '@/app/Admin/components/header';
-import { SideHeader } from '@/app/Admin/components/sideheader';
+import  AppHeader from '../../components/header';
+import  {SideHeader} from '../../components/SideHeader';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
@@ -123,7 +123,7 @@ const NeedApproval = () => {
 
             const data = await response.json();
             
-            let doctorsData = [];
+            let doctorsData: Doctor[] = [];
             if (data.status === 'success' && data.data) {
                 doctorsData = Array.isArray(data.data) ? data.data : [data.data];
             } else if (Array.isArray(data)) {

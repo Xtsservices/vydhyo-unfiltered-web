@@ -1,36 +1,41 @@
 "use client";
 
 import React from "react";
+import { useRouter } from 'next/navigation';
 
 interface headerProps {
-    showSearch: boolean;
-    setShowSearch: (show: boolean) => void;
-    searchQuery: string;
-    setSearchQuery: (query: string) => void;
+    showSearch?: boolean;
+    setShowSearch?: (show: boolean) => void;
+    searchQuery?: string;
+    setSearchQuery?: (query: string) => void;
 }
 
-const header: React.FC<headerProps> = ({ showSearch, setShowSearch, searchQuery, setSearchQuery }) => {
+const Header: React.FC<headerProps> = (props) => {
+    const router = useRouter();
+    
+    const handleLoginClick = () => {
+    router.push("/Admin/app/Login"); // Changed from "/login" to "/LandingPage/Login"
+    };
+    
     return (
         <>
-            {/* header - Made sticky with reduced height */}
             <header style={{ 
                 display: "flex", 
                 alignItems: "center", 
                 justifyContent: "space-between", 
-                padding: "12px 48px", // Reduced padding from 24px to 12px
+                padding: "12px 48px",
                 background: "#fff", 
                 boxShadow: "0 2px 8px #f0f1f2",
                 position: "sticky",
                 top: 0,
                 zIndex: 100,
-                height: "70px" // Fixed height for consistency
+                height: "70px"
             }}>
-                {/* Left: Logo with Image - Increased size */}
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                     <div
                         style={{
-                            width: 120, // Increased from 80px
-                            height: 120, // Increased from 80px
+                            width: 120,
+                            height: 120,
                             borderRadius: "16px",
                             display: "flex",
                             alignItems: "center",
@@ -40,17 +45,12 @@ const header: React.FC<headerProps> = ({ showSearch, setShowSearch, searchQuery,
                         <img
                             src={"/images/logo.png"}
                             alt="Vydhyo Logo"
-                            style={{ width: 450, height: 450, objectFit: "contain", borderRadius: 12 }} // Increased from 250px
+                            style={{ width: 450, height: 450, objectFit: "contain", borderRadius: 12 }}
                         />
                     </div>
                 </div>
 
-
-                {/* Right: Buttons and Admin Section */}
                 <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-                   
-
-                    {/* ABHA Button */}
                     <button
                         style={{
                             display: "flex",
@@ -59,10 +59,10 @@ const header: React.FC<headerProps> = ({ showSearch, setShowSearch, searchQuery,
                             background: "linear-gradient(135deg, #ff6b35, #f7931e)",
                             color: "#fff",
                             border: "none",
-                            borderRadius: 20, // Reduced border radius
-                            padding: "8px 16px", // Reduced padding
+                            borderRadius: 20,
+                            padding: "8px 16px",
                             fontWeight: 600,
-                            fontSize: 14, // Reduced font size
+                            fontSize: 14,
                             cursor: "pointer",
                             boxShadow: "0 3px 10px rgba(255,107,53,0.2)",
                             transition: "transform 0.2s ease",
@@ -85,7 +85,6 @@ const header: React.FC<headerProps> = ({ showSearch, setShowSearch, searchQuery,
                         ABHA
                     </button>
 
-                    {/* For Partners Button */}
                     <button
                         style={{
                             display: "flex",
@@ -94,10 +93,10 @@ const header: React.FC<headerProps> = ({ showSearch, setShowSearch, searchQuery,
                             background: "transparent",
                             color: "#0a2540",
                             border: "2px solid #e0e0e0",
-                            borderRadius: 20, // Reduced border radius
-                            padding: "6px 14px", // Reduced padding
+                            borderRadius: 20,
+                            padding: "6px 14px",
                             fontWeight: 500,
-                            fontSize: 14, // Reduced font size
+                            fontSize: 14,
                             cursor: "pointer",
                             transition: "all 0.3s ease",
                         }}
@@ -129,8 +128,6 @@ const header: React.FC<headerProps> = ({ showSearch, setShowSearch, searchQuery,
                         For Partners
                     </button>
                      
-                    
-                     {/* Download Button */}
                     <button
                         style={{
                             display: "flex",
@@ -173,23 +170,23 @@ const header: React.FC<headerProps> = ({ showSearch, setShowSearch, searchQuery,
                         Download the App
                     </button>
 
-                    {/* Admin Section */}
                     <div
                         style={{
                             display: "flex",
                             alignItems: "center",
                             gap: 10,
-                            padding: "6px 12px", // Reduced padding
+                            padding: "6px 12px",
                             background: "#f8f9fa",
                             borderRadius: 24,
                             border: "1px solid #e9ecef",
+                            cursor: "pointer",
                         }}
+                        onClick={handleLoginClick}
                     >
-                        {/* Admin Icon */}
                         <div
                             style={{
-                                width: 32, // Reduced from 36px
-                                height: 32, // Reduced from 36px
+                                width: 32,
+                                height: 32,
                                 background: "linear-gradient(135deg, #667eea, #764ba2)",
                                 borderRadius: "50%",
                                 display: "flex",
@@ -199,7 +196,7 @@ const header: React.FC<headerProps> = ({ showSearch, setShowSearch, searchQuery,
                             }}
                         >
                             <svg
-                                width="16" // Reduced from 18px
+                                width="16"
                                 height="16"
                                 fill="#fff"
                                 viewBox="0 0 24 24"
@@ -208,23 +205,22 @@ const header: React.FC<headerProps> = ({ showSearch, setShowSearch, searchQuery,
                             </svg>
                         </div>
 
-                        {/* Admin Name */}
                         <div style={{ display: "flex", flexDirection: "column" }}>
                             <span
                                 style={{
-                                    fontSize: 14, // Reduced from 15px
+                                    fontSize: 14,
                                     fontWeight: 600,
                                     color: "#0a2540",
                                     lineHeight: 1.2,
+                                    cursor: "pointer",
                                 }}
                             >
                                 Login
                             </span>
                         </div>
 
-                        {/* Dropdown Arrow */}
                         <svg
-                            width="12" // Reduced from 14px
+                            width="12"
                             height="12"
                             fill="none"
                             stroke="#6c757d"
@@ -238,9 +234,8 @@ const header: React.FC<headerProps> = ({ showSearch, setShowSearch, searchQuery,
                     </div>
                 </div>
             </header>
-
         </>
     );
 };
 
-export default header;
+export default Header;

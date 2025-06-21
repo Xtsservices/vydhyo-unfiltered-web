@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Calendar, Truck, Droplets, Home } from "lucide-react";
 
 const carouselData = [
@@ -188,7 +188,7 @@ const HealthcareCarousel = () => {
 
     return (
         <>
-        <style jsx>{`
+        <style>{`
             @keyframes float-slow {
                 0%, 100% { transform: translateY(0px) rotate(0deg); }
                 50% { transform: translateY(-20px) rotate(5deg); }

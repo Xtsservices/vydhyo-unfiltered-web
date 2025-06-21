@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, JSX } from 'react';
 import { useRouter } from 'next/navigation';
-import  SideHeader from '@/app/Admin/components/header';
+import  SideHeader from '../';
 import { 
   Layout, 
   Menu, 
@@ -50,7 +50,7 @@ import {
   StarFilled
 } from '@ant-design/icons';
 import { AreaChart, Area, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import AppHeader from '@/app/Admin/components/header';
+// import AppHeader from './components/Header';
 
 const { Header, Content, Sider } = Layout;
 const { Title, Text } = Typography;
@@ -476,7 +476,7 @@ const MedicalDashboard = () => {
 
   return (
     <>
-      <AppHeader />
+      {/* <AppHeader /> */}
       <Layout className="min-h-screen">
         <Sider 
           width={200} 

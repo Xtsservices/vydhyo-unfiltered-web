@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { Table, Input, Button, Tag, Space, Avatar, Layout } from 'antd';
 import { SearchOutlined, FilterOutlined } from '@ant-design/icons';
-import AppHeader from '@/components/header';
-import { SideHeader } from '@/components/sideheader';
+import AppHeader from '@/app/Admin/components/header/';
+import { SideHeader } from '@/app/Admin/components/sideheader';
 
 const { Header: AntHeader, Content } = Layout;
 

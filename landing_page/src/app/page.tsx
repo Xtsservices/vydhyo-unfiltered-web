@@ -1,16 +1,17 @@
 "use client";
-import Index from './LandingPage/index'
-import TopSpecialities from './LandingPage/TopSpecialities';
-import FeaturedDocs from './LandingPage/FeaturedDocs';
-import WhyChooseUs from './LandingPage/whyChooseUs';
-import ChooseUsSection from './LandingPage/chooseUsSection';
-import FAQs from './LandingPage/FAQs';
-import Download from './LandingPage/Download';
-import Blogs from './LandingPage/blogs';
-import Footer from './LandingPage/footer';
-import MedicalSpecialtiesCards from './LandingPage/new';
-import ScrollingCarousel from './LandingPage/scrolling';
-import Header from './LandingPage/header';
+import Index from './LandingPage/index/page'
+import TopSpecialities from './LandingPage/TopSpecialities/page';
+import FeaturedDocs from './LandingPage/FeaturedDocs/page';
+import WhyChooseUs from './LandingPage/whyChooseUs/page';
+import ChooseUsSection from './LandingPage/chooseUsSection/page';
+import FAQs from './LandingPage/FAQs/page';
+import Download from './LandingPage/Download/page';
+import Blogs from './LandingPage/blogs/page';
+import Footer from './LandingPage/footer/page';
+import MedicalSpecialtiesCards from './LandingPage/new/page';
+import ScrollingCarousel from './LandingPage/scrolling/page';
+import Header from './LandingPage/header/page';
+// import App from "./routing"
 
 import React, { useState } from 'react';
 
@@ -26,7 +27,8 @@ export default function Home() {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
-      <Index />
+      <main>
+        <Index />
       <TopSpecialities />
       <ScrollingCarousel/>
       <MedicalSpecialtiesCards />
@@ -37,6 +39,8 @@ export default function Home() {
       <Download />
       <Blogs />
       <Footer />
+      </main>
+      
     </>
   );
 }

@@ -189,7 +189,7 @@ const Login = () => {
         
         setSuccessMessage('Login successful! Redirecting...');
         setTimeout(() => {
-          router.push('/Admin/app/dashboard');
+          router.push('/dashboard');
         }, 1500);
       }
 

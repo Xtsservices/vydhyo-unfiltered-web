@@ -39,6 +39,8 @@ export default function Home() {
       <Download />
       <Blogs />
       <Footer />
+
+      
       </main>
       
     </>

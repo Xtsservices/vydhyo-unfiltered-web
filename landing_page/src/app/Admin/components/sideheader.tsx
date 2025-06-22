@@ -78,7 +78,7 @@ export const SideHeader = () => {
       theme="light"
       style={{
         boxShadow: '2px 0 8px 0 rgba(29, 35, 41, 0.05)',
-        borderRight: '1px solid #f0f0f0',marginTop: '-12rem', // Adjust based on your header height
+        borderRight: '1px solid #f0f0f0',marginTop: '5rem', // Adjust based on your header height
       }}
     >
       <Menu

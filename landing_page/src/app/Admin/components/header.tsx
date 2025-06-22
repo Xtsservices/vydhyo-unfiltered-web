@@ -1,11 +1,14 @@
-import React from 'react';
+"use client";
 import { Layout, Avatar, Badge, Button, Dropdown, Space, Typography } from 'antd';
 import { BellOutlined, UserOutlined, DownOutlined } from '@ant-design/icons';
+import { useRouter } from 'next/navigation';
 
 const { Header } = Layout;
 const { Text } = Typography;
 
 const AppHeader = () => {
+    const router = useRouter(); // Initialize the router hook
+
     // Dropdown menu items for admin profile
     const adminMenuItems = [
         {
@@ -45,7 +48,10 @@ const AppHeader = () => {
             }}
         >
             {/* Left side - Logo */}
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div
+                style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+                onClick={() => router.push('/Admin/app/dashboard')}
+            >
                 <img
                     src="/images/logo.png"
                     alt="Logo"

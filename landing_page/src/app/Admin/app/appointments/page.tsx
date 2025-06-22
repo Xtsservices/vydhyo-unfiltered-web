@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Table, Button, Input, Select, Tag, Space, Layout } from 'antd';
 import { SearchOutlined, FilterOutlined } from '@ant-design/icons';
 import  AppHeader from '../../components/header';
-import  {SideHeader} from '../../components/SideHeader';
+import  {SideHeader} from '../../components/SideHeader.tsx';
 
 const { Header: AntHeader, Content } = Layout;
 const { Option } = Select;

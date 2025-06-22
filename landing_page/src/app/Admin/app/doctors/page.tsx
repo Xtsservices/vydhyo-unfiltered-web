@@ -8,8 +8,7 @@ import { Router } from 'react-router-dom';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 import { useRouter } from 'next/navigation';
-import  {SideHeader} from '../../components/SideHeader';
-
+// import { SideHeader } from '../../components/sideheader';
 const { Header: AntHeader, Content } = Layout;
 
 interface Specialization {
@@ -421,7 +420,7 @@ const DoctorList = () => {
                 height: 'auto',
                 lineHeight: 'normal'
             }}>
-                <SideHeader />
+                {/* <SideHeader /> */}
             </AntHeader>
 
             <Content style={{ 
@@ -468,7 +467,7 @@ const DoctorList = () => {
                             >
                                 Refresh
                             </Button>
-                            <Button onClick={() => router.push('/needApproval')}>
+                            <Button onClick={() => router.push('/Admin/app/needApproval')}>
                                 Need For Approval of Doctors
                             </Button>
                         </Space>

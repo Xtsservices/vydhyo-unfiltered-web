@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Input, Button, DatePicker, Tag, Space, Select, Avatar, Modal, Spin, message, Layout } from 'antd';
 import { SearchOutlined, MoreOutlined, CalendarOutlined, EyeOutlined, DownloadOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import  AppHeader from '../../components/header';
-import  {SideHeader} from '../../components/SideHeader';
+// import { SideHeader } from '../../components/sideheader';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
@@ -466,7 +466,7 @@ const NeedApproval = () => {
                 lineHeight: 'normal'
             }}>
                 <AppHeader />
-                <SideHeader />
+                {/* <SideHeader /> */}
             </AntHeader>
 
             <Content style={{ 

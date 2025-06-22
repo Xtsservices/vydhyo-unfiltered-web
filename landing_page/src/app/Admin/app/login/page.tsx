@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-// Fixed: Update import path to match your actual file structure
 
 const PhoneOutlined = () => <span>📱</span>;
-const MessageOutlined = () => <span>💬</span>;
+// const MessageOutlined = () => <span>💬</span>;
+const EyeOutlined = () => <span>👁️</span>;
+const EyeInvisibleOutlined = () => <span>🙈</span>;
 
 interface LoginResponse {
   userId?: string;
@@ -38,6 +39,8 @@ const Login = () => {
   const [otp, setOtp] = useState('');
   const [userId, setUserId] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -235,342 +238,208 @@ const Login = () => {
     if (successMessage) setSuccessMessage('');
   };
 
-  const containerStyle: React.CSSProperties = {
-    minHeight: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-  };
-
-  const wrapperStyle: React.CSSProperties = {
-    flex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: isMobile ? '20px' : '40px',
-  };
-
-  const loginBoxStyle: React.CSSProperties = {
-    maxWidth: '1100px',
-    width: '100%',
-    display: 'flex',
-    flexDirection: isMobile ? 'column' : 'row',
-    gap: isMobile ? '2rem' : '4rem',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    background: 'white',
-    borderRadius: '20px',
-    padding: isMobile ? '30px 20px' : '50px 40px',
-    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)'
-  };
-
-  const leftStyle: React.CSSProperties = {
-    width: '100%',
-    maxWidth: isMobile ? '100%' : '500px',
-    textAlign: 'center',
-    order: isMobile ? 2 : 1
-  };
-
-  const rightStyle: React.CSSProperties = {
-    width: '100%',
-    maxWidth: isMobile ? '100%' : '500px',
-    order: isMobile ? 1 : 2
-  };
-
-  const imageStyle: React.CSSProperties = {
-    width: '100%',
-    maxWidth: isMobile ? '250px' : '400px',
-    height: 'auto',
-    objectFit: 'contain'
-  };
-
-  const titleStyle: React.CSSProperties = {
-    fontSize: isMobile ? '1.8rem' : '2.5rem',
-    fontWeight: 'bold',
-    marginBottom: '0.5rem',
-    color: '#333'
-  };
-
-  const subtitleStyle: React.CSSProperties = {
-    fontSize: '1.1rem',
-    color: '#666',
-    marginBottom: '2rem'
-  };
-
-  const inputStyle: React.CSSProperties = {
-    width: '100%',
-    height: '50px',
-    padding: '0 15px 0 45px',
-    fontSize: '16px',
-    border: '2px solid #e1e1e1',
-    borderRadius: '10px',
-    outline: 'none',
-    transition: 'border-color 0.3s ease',
-    marginBottom: '1rem',
-    boxSizing: 'border-box'
-  };
-
-  const inputContainerStyle: React.CSSProperties = {
-    position: 'relative',
-    marginBottom: '1.5rem'
-  };
-
-  const iconStyle: React.CSSProperties = {
-    position: 'absolute',
-    left: '15px',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    color: '#ccc',
-    fontSize: '18px',
-    zIndex: 1
-  };
-
-  const buttonStyle: React.CSSProperties = {
-    width: '100%',
-    height: '50px',
-    fontSize: '16px',
-    fontWeight: '600',
-    color: 'white',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    border: 'none',
-    borderRadius: '10px',
-    cursor: 'pointer',
-    transition: 'transform 0.2s ease',
-    marginBottom: '1rem'
-  };
-
-  const errorStyle: React.CSSProperties = {
-    padding: '12px 16px',
-    backgroundColor: '#fff2f0',
-    border: '1px solid #ffccc7',
-    borderRadius: '8px',
-    color: '#ff4d4f',
-    fontSize: '14px',
-    marginBottom: '1.5rem',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px'
-  };
-
-  const successStyle: React.CSSProperties = {
-    padding: '12px 16px',
-    backgroundColor: '#f6ffed',
-    border: '1px solid #b7eb8f',
-    borderRadius: '8px',
-    color: '#52c41a',
-    fontSize: '14px',
-    marginBottom: '1.5rem',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px'
-  };
-
-  const avatarStyle: React.CSSProperties = {
-    width: '64px',
-    height: '64px',
-    borderRadius: '50%',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: '0 auto 1rem',
-    color: 'white',
-    fontSize: '24px'
-  };
-
-  const otpAvatarStyle: React.CSSProperties = {
-    width: '48px',
-    height: '48px',
-    borderRadius: '50%',
-    backgroundColor: '#f6ffed',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: '0 auto 1rem',
-    color: '#52c41a',
-    fontSize: '20px'
-  };
-
   return (
-    <div style={containerStyle}>
-      <div style={wrapperStyle}>
-        <div style={loginBoxStyle}>
-          <div style={leftStyle}>
-            <img
-              src="/images/doctors.png"
-              alt="Doctor Illustration"
-              style={imageStyle}
-            />
-            {!isMobile && (
-              <div style={{ marginTop: '2rem' }}>
-                <h3 style={{ color: '#667eea', fontSize: '1.5rem', marginBottom: '1rem' }}>
-                  Welcome to HealthCare
-                </h3>
-                <p style={{ color: '#666', fontSize: '1.1rem', lineHeight: '1.6' }}>
-                  Your trusted healthcare companion. Secure, reliable, and always here for you.
-                </p>
-              </div>
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Left Side - Illustration */}
+      <div className={`${isMobile ? 'hidden' : 'flex'} flex-1 items-center justify-center p-8 bg-white`}>
+        <div className="max-w-md text-center">
+          {/* Healthcare Illustration */}
+          <div className="mb-8">
+            <svg width="400" height="300" viewBox="0 0 400 300" className="w-full h-auto">
+              {/* Medical Background Elements */}
+              <circle cx="80" cy="60" r="25" fill="#e8f4fd" opacity="0.7"/>
+              <circle cx="320" cy="80" r="20" fill="#fff0e6" opacity="0.7"/>
+              <circle cx="60" cy="200" r="15" fill="#f0f9ff" opacity="0.7"/>
+              
+              {/* Medical Icons */}
+              <rect x="90" y="30" width="40" height="35" rx="8" fill="#6366f1" opacity="0.8"/>
+              <text x="110" y="52" fill="white" fontSize="20" textAnchor="middle">+</text>
+              
+              {/* Doctor Character */}
+              <circle cx="200" cy="120" r="35" fill="#fde68a"/>
+              <rect x="175" y="145" width="50" height="60" rx="25" fill="#ffffff"/>
+              <rect x="185" y="155" width="30" height="3" fill="#6366f1"/>
+              <rect x="185" y="165" width="20" height="3" fill="#6366f1"/>
+              <circle cx="190" cy="115" r="3" fill="#374151"/>
+              <circle cx="210" cy="115" r="3" fill="#374151"/>
+              <path d="M185 125 Q200 135 215 125" stroke="#374151" strokeWidth="2" fill="none"/>
+              
+              {/* Patient Character */}
+              <circle cx="120" cy="140" r="25" fill="#fed7aa"/>
+              <rect x="105" y="160" width="30" height="40" rx="15" fill="#f97316"/>
+              <circle cx="115" cy="135" r="2" fill="#374151"/>
+              <circle cx="125" cy="135" r="2" fill="#374151"/>
+              
+              {/* Medical Equipment */}
+              <rect x="260" y="160" width="60" height="40" rx="8" fill="#ef4444"/>
+              <rect x="270" y="170" width="15" height="3" fill="white"/>
+              <rect x="290" y="170" width="20" height="3" fill="white"/>
+              <text x="300" y="190" fill="white" fontSize="12" textAnchor="middle">🏥</text>
+              
+              {/* Medical Bag */}
+              <rect x="50" y="180" width="30" height="25" rx="5" fill="#dc2626"/>
+              <rect x="60" y="175" width="10" height="8" rx="2" fill="#dc2626"/>
+              <text x="65" y="195" fill="white" fontSize="12" textAnchor="middle">+</text>
+              
+              {/* Decorative Elements */}
+              <circle cx="300" cy="200" r="8" fill="#22d3ee" opacity="0.6"/>
+              <rect x="340" y="180" width="20" height="20" rx="3" fill="#a855f7" opacity="0.6"/>
+              
+              {/* Heartbeat Line */}
+              <path d="M50 250 L80 250 L90 230 L100 270 L110 230 L120 250 L350 250" 
+                    stroke="#ef4444" strokeWidth="3" fill="none" opacity="0.7"/>
+            </svg>
+          </div>
+          
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Welcome to Vydhyo
+          </h2>
+          <p className="text-gray-600 text-lg leading-relaxed">
+            Your trusted healthcare companion. Secure, reliable, and always here for you.
+          </p>
+        </div>
+      </div>
+
+      {/* Right Side - Login Form */}
+      <div className="flex-1 flex items-center justify-center p-8 bg-white">
+        <div className="w-full max-w-md">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              {otpSent ? 'Enter OTP' : 'Login Vydhyo'}
+            </h1>
+            {!otpSent && (
+              <p className="text-gray-600">Enter your mobile number to continue</p>
             )}
           </div>
 
-          <div style={rightStyle}>
-            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-              <div style={avatarStyle}>
-                <PhoneOutlined />
-              </div>
-              <h3 style={titleStyle}>Mobile Login</h3>
-              <p style={subtitleStyle}>Enter your mobile number to continue</p>
+          {/* Error Message */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+              ⚠️ {error}
             </div>
+          )}
 
-            {error && (
-              <div style={errorStyle}>
-                <span>⚠️</span>
-                {error}
-              </div>
-            )}
+          {/* Success Message */}
+          {successMessage && (
+            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
+              ✅ {successMessage}
+            </div>
+          )}
 
-            {successMessage && (
-              <div style={successStyle}>
-                <span>✅</span>
-                {successMessage}
-              </div>
-            )}
-
-            {!otpSent ? (
-              <>
-                <div style={inputContainerStyle}>
-                  <div style={iconStyle}>
-                    <PhoneOutlined />
-                  </div>
+          {!otpSent ? (
+            /* Phone Number Input */
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Mobile Number
+                </label>
+                <div className="relative">
                   <input
                     type="text"
                     placeholder="Enter your 10-digit mobile number"
                     value={phone}
                     onChange={handlePhoneChange}
-                    style={{
-                      ...inputStyle,
-                      borderColor: error && !validatePhone(phone) ? '#ff4d4f' : '#e1e1e1'
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = '#667eea'}
-                    onBlur={(e) => e.target.style.borderColor = '#e1e1e1'}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
                   />
                 </div>
+              </div>
 
-                <button
-                  style={{
-                    ...buttonStyle,
-                    opacity: !phone || phone.length !== 10 || isLoading ? 0.6 : 1,
-                    cursor: !phone || phone.length !== 10 || isLoading ? 'not-allowed' : 'pointer'
-                  }}
-                  onClick={handleSendOTP}
-                  disabled={!phone || phone.length !== 10 || isLoading}
-                >
-                  {isLoading ? 'Sending OTP...' : 'Send OTP'}
-                </button>
-              </>
-            ) : (
-              <>
-                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                  <div style={otpAvatarStyle}>
-                    <MessageOutlined />
-                  </div>
-                  <p style={{ fontSize: '16px', marginBottom: '0.5rem' }}>
-                    OTP sent to +91 {phone}
-                  </p>
-                  <button
-                    onClick={resetPhoneLogin}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: '#667eea',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                      textDecoration: 'underline'
-                    }}
-                  >
-                    ← Change number
-                  </button>
-                </div>
-
-                <div style={inputContainerStyle}>
+              {/* Remember Me & Forgot Password */}
+              <div className="flex items-center justify-between">
+                <label className="flex items-center">
                   <input
-                    type="text"
-                    placeholder="Enter 6-digit OTP"
-                    value={otp}
-                    onChange={handleOtpChange}
-                    style={{
-                      ...inputStyle,
-                      textAlign: 'center',
-                      letterSpacing: '5px',
-                      fontSize: '18px',
-                      paddingLeft: '15px',
-                      borderColor: error && otp.length < 6 ? '#ff4d4f' : '#e1e1e1'
-                    }}
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
-                </div>
-
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: '1.5rem',
-                  fontSize: '14px'
-                }}>
-                  <span style={{ color: '#666' }}>
-                    {otpTimer > 0 ? `Resend OTP in ${otpTimer}s` : "Didn't receive OTP?"}
-                  </span>
-                  {otpTimer === 0 && (
-                    <button
-                      onClick={handleSendOTP}
-                      disabled={isLoading}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        color: '#667eea',
-                        cursor: isLoading ? 'not-allowed' : 'pointer',
-                        textDecoration: 'underline',
-                        opacity: isLoading ? 0.6 : 1
-                      }}
-                    >
-                      {isLoading ? 'Sending...' : 'Resend OTP'}
-                    </button>
-                  )}
-                </div>
-
-                <button
-                  style={{
-                    ...buttonStyle,
-                    opacity: !otp || otp.length !== 6 || isLoading ? 0.6 : 1,
-                    cursor: !otp || otp.length !== 6 || isLoading ? 'not-allowed' : 'pointer'
-                  }}
-                  onClick={handleOTPVerification}
-                  disabled={!otp || otp.length !== 6 || isLoading}
-                >
-                  {isLoading ? 'Verifying...' : 'Verify & Sign In'}
+                  <span className="ml-2 text-sm text-gray-600">Remember Me</span>
+                </label>
+                <button className="text-sm text-blue-600 hover:text-blue-500">
+                  Login with OTP
                 </button>
-              </>
-            )}
+              </div>
 
-            <div style={{ textAlign: 'center', marginTop: '2rem', fontSize: '12px' }}>
-              <p style={{ color: '#666' }}>
-                By continuing, you agree to our{' '}
-                <a href="#" style={{ color: '#667eea', textDecoration: 'none' }}>Terms of Service</a>
-                {' '}and{' '}
-                <a href="#" style={{ color: '#667eea', textDecoration: 'none' }}>Privacy Policy</a>
-              </p>
+              {/* Send OTP Button */}
+              <button
+                onClick={handleSendOTP}
+                disabled={!phone || phone.length !== 10 || isLoading}
+                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              >
+                {isLoading ? 'Sending OTP...' : 'Send OTP'}
+              </button>
+
             </div>
+          ) : (
+            /* OTP Input */
+            <div className="space-y-6">
+              <div className="text-center mb-6">
+               
+                <p className="text-gray-600 mb-2">
+                  OTP sent to +91 {phone}
+                </p>
+                <button
+                  onClick={resetPhoneLogin}
+                  className="text-blue-600 hover:text-blue-500 text-sm underline"
+                >
+                  ← Change number
+                </button>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Enter OTP
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter 6-digit OTP"
+                  value={otp}
+                  onChange={handleOtpChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-center text-lg font-mono letter-spacing-wider focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                  style={{ letterSpacing: '0.5em' }}
+                />
+              </div>
+
+              {/* Resend OTP */}
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-600">
+                  {otpTimer > 0 ? `Resend OTP in ${otpTimer}s` : "Didn't receive OTP?"}
+                </span>
+                {otpTimer === 0 && (
+                  <button
+                    onClick={handleSendOTP}
+                    disabled={isLoading}
+                    className="text-blue-600 hover:text-blue-500 underline disabled:opacity-50"
+                  >
+                    {isLoading ? 'Sending...' : 'Resend OTP'}
+                  </button>
+                )}
+              </div>
+
+              {/* Verify Button */}
+              <button
+                onClick={handleOTPVerification}
+                disabled={!otp || otp.length !== 6 || isLoading}
+                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              >
+                {isLoading ? 'Verifying...' : 'Verify & Sign In'}
+              </button>
+            </div>
+          )}
+
+          {/* Terms and Privacy */}
+          <div className="mt-8 text-center text-sm text-gray-600">
+            By continuing, you agree to our{' '}
+            <a href="#" className="text-blue-600 hover:text-blue-500 underline">
+              Terms of Service
+            </a>
+            {' '}and{' '}
+            <a href="#" className="text-blue-600 hover:text-blue-500 underline">
+              Privacy Policy
+            </a>
           </div>
         </div>
-      </div>
-
-      <div style={{
-        padding: '20px',
-        width: '100%',
-        textAlign: 'center',
-        color: 'rgba(255, 255, 255, 0.8)',
-        fontSize: '14px'
-      }}>
-        &copy; {new Date().getFullYear()} HealthCare Platform. All rights reserved.
       </div>
     </div>
   );

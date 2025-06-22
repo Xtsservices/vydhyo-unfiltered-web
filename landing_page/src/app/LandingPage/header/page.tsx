@@ -14,7 +14,7 @@ const Header: React.FC<headerProps> = (props) => {
     const router = useRouter();
     
     const handleLoginClick = () => {
-    router.push("/Admin/app/Login"); // Changed from "/login" to "/LandingPage/Login"
+    router.push("/Admin/app/login"); 
     };
     
     return (

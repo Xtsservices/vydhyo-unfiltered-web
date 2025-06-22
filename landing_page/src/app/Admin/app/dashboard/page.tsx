@@ -2,11 +2,10 @@
 
 import React, { useState, useEffect, JSX } from 'react';
 import { useRouter } from 'next/navigation';
-import { SideHeader } from '../../components/sideheader';
+import sideHeader from '../../components/sideheader';
 import AppHeader from '../../components/header'
 import {
   Layout,
-  Menu,
   Card,
   Row,
   Col,
@@ -51,9 +50,9 @@ import {
   StarFilled
 } from '@ant-design/icons';
 import { AreaChart, Area, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-// import AppHeader from './components/Header';
+import SideHeader from '../../components/sideheader';
 
-const { Header, Content, Sider } = Layout;
+const { Header, Content } = Layout;
 const { Title, Text } = Typography;
 const { useToken } = theme;
 
@@ -90,63 +89,6 @@ const MedicalDashboard = () => {
       onClick: () => router.push('/Admin/app/doctors')
     }
   ]);
-
-  const menuItems = [
-    {
-      key: 'dashboard',
-      icon: <DashboardOutlined />,
-      label: 'Dashboard',
-      onClick: () => router.push('/dashboard')
-    },
-    {
-      key: 'appointments',
-      icon: <ScheduleOutlined />,
-      label: 'Appointments',
-      onClick: () => router.push('/appointments')
-    },
-    {
-      key: 'specialities',
-      icon: <MedicineBoxOutlined />,
-      label: 'Specialities',
-      onClick: () => router.push('/specialities')
-    },
-    {
-      key: 'doctors',
-      icon: <TeamOutlined />,
-      label: 'Doctors',
-      onClick: () => router.push('/Admin/app/doctors')
-    },
-    {
-      key: 'patients',
-      icon: <UserOutlined />,
-      label: 'Patients',
-      onClick: () => router.push('/Admin/app/patients')
-    },
-    {
-      key: 'reviews',
-      icon: <StarFilled />,
-      label: 'Reviews',
-      onClick: () => router.push('/Admin/app/reviews')
-    },
-    {
-      key: 'transactions',
-      icon: <MoneyCollectOutlined />,
-      label: 'Transactions',
-      onClick: () => router.push('/Admin/app/transactions')
-    },
-    {
-      key: 'settings',
-      icon: <SettingOutlined />,
-      label: 'Settings',
-      onClick: () => router.push('/Admin/app/settings')
-    },
-    {
-      key: 'reports',
-      icon: <FileTextOutlined />,
-      label: 'Reports',
-      onClick: () => router.push('/Admin/app/reports')
-    }
-  ];
 
   // Revenue chart data
   const revenueData = [
@@ -491,69 +433,7 @@ const MedicalDashboard = () => {
     <>
       <AppHeader />
       <Layout className="min-h-screen">
-        <Sider
-          width={200}
-          theme="dark"
-          breakpoint="lg"
-          collapsedWidth="0"
-          style={{
-            background: '#2c5aa0'
-          }}
-        >
-          <div style={{
-            padding: '16px',
-            borderBottom: '1px solid rgba(255,255,255,0.1)',
-            textAlign: 'center',
-            color: 'white',
-            marginTop: '84px'
-          }}>
-            <Text strong style={{ color: 'white' }}>Main</Text>
-          </div>
-          <Menu
-            theme="dark"
-            mode="inline"
-            defaultSelectedKeys={['dashboard']}
-            items={menuItems}
-            style={{
-              border: 'none',
-              background: 'transparent'
-            }}
-          />
-
-          <div style={{
-            padding: '16px',
-            borderTop: '1px solid rgba(255,255,255,0.1)',
-            marginTop: 'auto',
-            color: 'white'
-          }}>
-            <Text strong style={{ color: 'white' }}>Pages</Text>
-          </div>
-          <Menu
-            theme="dark"
-            mode="inline"
-            items={[
-              {
-                key: 'profile',
-                icon: <UserOutlined />,
-                label: 'Profile',
-              },
-              {
-                key: 'authentication',
-                icon: <SettingOutlined />,
-                label: 'Authentication',
-              },
-              {
-                key: 'error-pages',
-                icon: <QuestionCircleOutlined />,
-                label: 'Error Pages',
-              }
-            ]}
-            style={{
-              border: 'none',
-              background: 'transparent'
-            }}
-          />
-        </Sider>
+        <SideHeader/>
 
         <Layout>
           <Header
@@ -598,11 +478,11 @@ const MedicalDashboard = () => {
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'center',
-                      cursor: 'pointer', // Add cursor pointer to indicate clickable
-                      transition: 'all 0.3s ease', // Add smooth transition
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
                     }}
-                    hoverable // Add hover effect
-                    onClick={stat.onClick} // Add the onClick handler here
+                    hoverable
+                    onClick={stat.onClick}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-2px)';
                       e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';

@@ -51,7 +51,7 @@ const TopSpecialities: React.FC = () => {
                 fontFamily: "'Inter', 'Segoe UI', Arial, sans-serif",
                 padding: "40px 20px",
                 overflow: 'hidden',
-                marginBottom: "-25rem",
+                marginBottom: "-20rem",
             }}
         >
             {/* Blurred Background Layer */}

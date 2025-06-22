@@ -107,17 +107,18 @@ const WhyChooseUs: React.FC = () => {
             >
                 <div style={{ marginBottom: 24 }}>
                     <button
+                    
                         style={{
-                            background: "#2563EB",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: 20,
-                            padding: "8px 24px",
+                            background: "rgba(66, 133, 244, 0.9)",
+                            backdropFilter: "blur(10px)",
+                            color: "white",
                             fontWeight: 600,
-                            fontSize: 16,
-                            boxShadow: "0 2px 8px rgba(37,99,235,0.08)",
-                            cursor: "pointer",
-                            outline: "none",
+                            fontSize: 14,
+                            borderRadius: 20,
+                            padding: "8px 20px",
+                            display: "inline-block",
+                            marginBottom: 20,
+                            boxShadow: "0 4px 15px rgba(66, 133, 244, 0.3)"
                         }}
                     >
                         • Why Book With Us •

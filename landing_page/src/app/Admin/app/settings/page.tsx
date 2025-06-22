@@ -15,7 +15,8 @@ import {
     Typography,
     Popconfirm,
     Spin,
-    Empty
+    Empty,
+    notification
 } from 'antd';
 import {
     SettingOutlined,
@@ -50,7 +51,19 @@ const SettingsPage = () => {
         isActive: number;
         _id: string;
     };
-    
+
+    type SectionKey =
+        | 'specializations'
+        | 'allergy'
+        | 'bloodGroup'
+        | 'chronicConditions'
+        | 'degree'
+        | 'department'
+        | 'doctorType'
+        | 'feature'
+        | 'gender'
+        | 'hospital';
+
     const [specializations, setSpecializations] = useState<CatalogueItem[]>([]);
     const [allergies, setAllergies] = useState<CatalogueItem[]>([]);
     const [bloodGroups, setBloodGroups] = useState<CatalogueItem[]>([]);
@@ -63,7 +76,7 @@ const SettingsPage = () => {
     const [hospitals, setHospitals] = useState<CatalogueItem[]>([]);
     
     const [loading, setLoading] = useState(false);
-    const [activeSection, setActiveSection] = useState('specializations');
+    const [activeSection, setActiveSection] = useState<SectionKey>('specializations');
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [editingRecord, setEditingRecord] = useState<CatalogueItem | null>(null);
     const [form] = Form.useForm();
@@ -113,9 +126,26 @@ const SettingsPage = () => {
             
             setter(transformedData);
             message.success(`${entityName} loaded successfully`);
+            
+            // Toast notification for data loaded
+            notification.success({
+                message: `${entityName} Loaded`,
+                description: `${entityName} data has been loaded successfully!`,
+                placement: 'topRight',
+                duration: 3,
+            });
         } catch (err) {
             console.error(`Error fetching ${entityName}:`, err);
-            message.error(`Error fetching ${entityName}: ${err.message}`);
+            const errorMsg = (err instanceof Error) ? err.message : String(err);
+            message.error(`Error fetching ${entityName}: ${errorMsg}`);
+            
+            // Toast notification for error
+            notification.error({
+                message: `Error Loading ${entityName}`,
+                description: `Failed to load ${entityName}: ${errorMsg}`,
+                placement: 'topRight',
+                duration: 4,
+            });
             setter([]);
         } finally {
             setLoading(false);
@@ -167,13 +197,31 @@ const SettingsPage = () => {
             }
 
             message.success(`${entityName} ${isEditing ? 'updated' : 'created'} successfully!`);
+            
+            // Toast notification for successful create/update
+            notification.success({
+                message: `${entityName} ${isEditing ? 'Updated' : 'Created'}`,
+                description: `${entityName} "${values.name}" has been ${isEditing ? 'updated' : 'created'} successfully!`,
+                placement: 'topRight',
+                duration: 3,
+            });
+            
             setIsModalVisible(false);
             setEditingRecord(null);
             form.resetFields();
             refreshFunction();
         } catch (err) {
             console.error(`Error ${editingRecord ? 'updating' : 'creating'} ${sectionConfig.entityName}:`, err);
-            message.error(`Error ${editingRecord ? 'updating' : 'creating'} ${sectionConfig.entityName}: ${err.message}`);
+            const errorMsg = (err instanceof Error) ? err.message : String(err);
+            message.error(`Error ${editingRecord ? 'updating' : 'creating'} ${sectionConfig.entityName}: ${errorMsg}`);
+            
+            // Toast notification for error
+            notification.error({
+                message: `Error ${editingRecord ? 'Updating' : 'Creating'} ${sectionConfig.entityName}`,
+                description: `Failed to ${editingRecord ? 'update' : 'create'} ${sectionConfig.entityName}: ${errorMsg}`,
+                placement: 'topRight',
+                duration: 4,
+            });
         } finally {
             setLoading(false);
         }
@@ -196,10 +244,28 @@ const SettingsPage = () => {
             }
 
             message.success(`${entityName} deleted successfully!`);
+            
+            // Toast notification for successful delete
+            notification.success({
+                message: `${entityName} Deleted`,
+                description: `${entityName} has been deleted successfully!`,
+                placement: 'topRight',
+                duration: 3,
+            });
+            
             refreshFunction();
         } catch (err) {
             console.error(`Error deleting ${sectionConfig.entityName}:`, err);
-            message.error(`Error deleting ${sectionConfig.entityName}: ${err.message}`);
+            const errorMsg = (err instanceof Error) ? err.message : String(err);
+            message.error(`Error deleting ${sectionConfig.entityName}: ${errorMsg}`);
+            
+            // Toast notification for error
+            notification.error({
+                message: `Error Deleting ${sectionConfig.entityName}`,
+                description: `Failed to delete ${sectionConfig.entityName}: ${errorMsg}`,
+                placement: 'topRight',
+                duration: 4,
+            });
         } finally {
             setLoading(false);
         }
@@ -428,7 +494,7 @@ const SettingsPage = () => {
             title: 'Actions',
             key: 'actions',
             width: 150,
-            render: (_, record) => (
+            render: (_: unknown, record: CatalogueItem) => (
                 <Space>
                     <Button
                         type="primary"
@@ -557,7 +623,7 @@ const SettingsPage = () => {
                         mode="inline"
                         selectedKeys={[activeSection]}
                         items={menuItems}
-                        onClick={({ key }) => setActiveSection(key)}
+                        onClick={({ key }) => setActiveSection(key as SectionKey)}
                         style={{ border: 'none', marginTop: '8px' }}
                     />
                 </Sider>

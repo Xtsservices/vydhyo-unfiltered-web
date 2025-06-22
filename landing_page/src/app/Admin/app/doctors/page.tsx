@@ -2,13 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { Table, Input, Button, DatePicker, Tag, Space, Select, Avatar, Modal, Spin, message, Layout } from 'antd';
-import { SearchOutlined, MoreOutlined, CalendarOutlined, EyeOutlined, DownloadOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { SearchOutlined, CalendarOutlined, DownloadOutlined} from '@ant-design/icons';
 import  AppHeader from '../../components/header';
-import { Router } from 'react-router-dom';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 import { useRouter } from 'next/navigation';
-// import { SideHeader } from '../../components/sideheader';
+import SideHeader from '../../components/sideheader';
 const { Header: AntHeader, Content } = Layout;
 
 interface Specialization {
@@ -418,9 +417,10 @@ const DoctorList = () => {
                 boxShadow: '0 1px 4px rgba(0, 21, 41, 0.08)',
                 zIndex: 1,
                 height: 'auto',
-                lineHeight: 'normal'
+                lineHeight: 'normal',
+                marginTop: '-84px',
             }}>
-                {/* <SideHeader /> */}
+                <SideHeader/>
             </AntHeader>
 
             <Content style={{ 

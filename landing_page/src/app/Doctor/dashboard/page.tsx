@@ -449,7 +449,7 @@ const DoctorDashboardPage = () => {
       console.log('Sending data:', receptionistData);
 
       const response = await axios.post(
-        'http://localhost:3001/doctor/createReceptionist',
+        'http://216.10.251.239:3000/doctor/createReceptionist',
         receptionistData, // Send as regular object
         {
           headers: {

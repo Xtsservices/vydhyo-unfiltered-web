@@ -1,8 +1,8 @@
+
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Calendar, Clock, ChevronDown, ArrowLeft, Bell, User } from 'lucide-react';
-import Header from "../../Admin/components/header"
 
 interface PatientData {
     doctorId: string;
@@ -51,6 +51,36 @@ interface ApiResponse {
     data?: any;
 }
 
+interface SearchUserResponse {
+    success: boolean;
+    message: string;
+    data?: {
+        userId?: string;
+        mobile?: string;
+        firstname?: string;
+        lastname?: string;
+        gender?: string;
+        DOB?: string;
+        age?: number;
+    };
+}
+
+interface Doctor {
+    _id: string;
+    doctorId: string;
+    receptionistId: string;
+    doctor: {
+        name?: string;
+        department?: string;
+        specialization?: string;
+    };
+}
+
+interface MyDoctorsResponse {
+    status: string;
+    data: Doctor[];
+}
+
 const AddWalkInPatient: React.FC = () => {
     const [patientData, setPatientData] = useState<PatientData>({
         doctorId: '',
@@ -70,18 +100,167 @@ const AddWalkInPatient: React.FC = () => {
     });
 
     const [currentMonth, setCurrentMonth] = useState(new Date());
-    const [paymentStatus, setPaymentStatus] = useState('Pending');
+    const [paymentStatus, setPaymentStatus] = useState(['paid']);
     const [isLoading, setIsLoading] = useState(false);
     const [apiError, setApiError] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [isSearching, setIsSearching] = useState(false);
+    const [userFound, setUserFound] = useState(false);
+    const [doctors, setDoctors] = useState<Doctor[]>([]);
+    const [isLoadingDoctors, setIsLoadingDoctors] = useState(false);
+    const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+    const [createdPatientId, setCreatedPatientId] = useState<string>('');
 
     const consultationFee = 500;
     const totalAmount = 500;
 
     // API Configuration
     const API_BASE_URL = 'http://216.10.251.239:3000';
-    const AUTH_TOKEN = localStorage.getItem('accessToken') || '';
+    const AUTH_TOKEN = localStorage?.getItem('accessToken') || 'your-token-here';
 
-    console.log("@@@@@@@", API_BASE_URL, AUTH_TOKEN);
+    // Fetch My Doctors on component mount
+    useEffect(() => {
+        fetchMyDoctors();
+    }, []);
+
+    // Fetch My Doctors API call
+    const fetchMyDoctors = async (): Promise<void> => {
+        setIsLoadingDoctors(true);
+        try {
+            const response = await fetch(`${API_BASE_URL}/receptionist/fetchMyDoctors`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${AUTH_TOKEN}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data: MyDoctorsResponse = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.status || `HTTP error! status: ${response.status}`);
+            }
+
+            if (data.status === 'success' && data.data) {
+                setDoctors(data.data);
+                // Auto-select first doctor if available
+                if (data.data.length > 0) {
+                    setSelectedDoctor(data.data[0]);
+                    setPatientData(prev => ({
+                        ...prev,
+                        doctorId: data.data[0].doctorId
+                    }));
+                }
+            }
+        } catch (error) {
+            console.error('Fetch Doctors API Error:', error);
+            setApiError('Failed to load doctors list. Please refresh the page.');
+        } finally {
+            setIsLoadingDoctors(false);
+        }
+    };
+    
+    // Search User API call
+    const searchUser = async (mobile: string): Promise<SearchUserResponse> => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/doctor/searchUser?mobile=${mobile}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${AUTH_TOKEN}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || `HTTP error! status: ${response.status}`);
+            }
+
+            return {
+                success: true,
+                message: data.message || 'User found successfully',
+                data: data.data || data
+            };
+        } catch (error) {
+            console.error('Search User API Error:', error);
+            return {
+                success: false,
+                message: error instanceof Error ? error.message : 'Failed to search user'
+            };
+        }
+    };
+
+    // Handle search functionality
+    const handleSearch = async () => {
+        if (!searchQuery.trim()) {
+            setApiError('Please enter a mobile number to search');
+            return;
+        }
+
+        // Validate mobile number format
+        const phoneRegex = /^[6-9][0-9]{9}$/;
+        if (!phoneRegex.test(searchQuery)) {
+            setApiError('Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9');
+            return;
+        }
+
+        setIsSearching(true);
+        setApiError('');
+        setUserFound(false);
+
+        try {
+            const searchResult = await searchUser(searchQuery);
+
+            if (searchResult.success && searchResult.data) {
+                // Pre-fill form with found user data
+                const userData = searchResult.data;
+                
+                setPatientData(prev => ({
+                    ...prev,
+                    phoneNumber: userData.mobile || searchQuery,
+                    firstName: userData.firstname || '',
+                    lastName: userData.lastname || '',
+                    gender: userData.gender || '',
+                    age: userData.age ? userData.age.toString() : '',
+                    dateOfBirth: userData.DOB || ''
+                }));
+
+                setUserFound(true);
+                setCreatedPatientId(userData.userId || '');
+                setApiError('');
+                console.log('User found:', userData);
+            } else {
+                // User not found - clear form but keep mobile number
+                setPatientData(prev => ({
+                    ...prev,
+                    phoneNumber: searchQuery,
+                    firstName: '',
+                    lastName: '',
+                    gender: '',
+                    age: '',
+                    dateOfBirth: ''
+                }));
+                
+                setUserFound(false);
+                setCreatedPatientId('');
+                setApiError('User not found. Please enter patient details to create a new patient.');
+            }
+        } catch (error) {
+            console.error('Search error:', error);
+            setApiError('An error occurred while searching. Please try again.');
+            setUserFound(false);
+        } finally {
+            setIsSearching(false);
+        }
+    };
+
+    // Handle Enter key press in search input
+    const handleSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    };
     
     // Calculate DOB from age
     const calculateDOBFromAge = (age: string): string => {
@@ -91,7 +270,7 @@ const AddWalkInPatient: React.FC = () => {
         const birthYear = currentDate.getFullYear() - parseInt(age);
         const birthDate = new Date(birthYear, 0, 1); // January 1st of the birth year
 
-        return birthDate.toLocaleDateString('en-GB'); // DD/MM/YYYY format
+        return birthDate.toISOString().split('T')[0]; // YYYY-MM-DD format
     };
 
     // Validate form data
@@ -103,6 +282,10 @@ const AddWalkInPatient: React.FC = () => {
         if (!patientData.phoneNumber.trim()) errors.push('Phone number is required');
         if (!patientData.age.trim()) errors.push('Age is required');
         if (!patientData.gender) errors.push('Gender is required');
+        if (!patientData.doctorId) errors.push('Doctor selection is required');
+        if (!patientData.appointmentType) errors.push('Appointment type is required');
+        if (!patientData.department) errors.push('Department is required');
+        if (!patientData.selectedTimeSlot) errors.push('Time slot selection is required');
 
         // Phone number validation
         const phoneRegex = /^[6-9][0-9]{9}$/;
@@ -189,6 +372,17 @@ const AddWalkInPatient: React.FC = () => {
         }
     };
 
+    // Handle doctor selection
+    const handleDoctorSelect = (doctorId: string) => {
+        const doctor = doctors.find(d => d.doctorId === doctorId);
+        setSelectedDoctor(doctor || null);
+        setPatientData(prev => ({
+            ...prev,
+            doctorId: doctorId,
+            department: doctor?.doctor?.department || doctor?.doctor?.specialization || ''
+        }));
+    };
+
     // Calendar functionality
     const getDaysInMonth = (date: Date) => {
         const year = date.getFullYear();
@@ -244,7 +438,7 @@ const AddWalkInPatient: React.FC = () => {
     };
 
     const afternoonSlots = [
-        '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '3:00 PM', '3:30 PM', '4:00 PM'
+        '1:00 PM', '1:30 PM', '2:00 PM', '2:30 PM', '3:00 PM', '3:30 PM', '4:00 PM'
     ];
 
     const eveningSlots = [
@@ -298,52 +492,68 @@ const AddWalkInPatient: React.FC = () => {
         setApiError('');
 
         try {
-            // Prepare Patient API request data
-            const formatDOB = (date: string) => {
-                // Accepts date in "YYYY-MM-DD" and returns "DD-MM-YYYY"
-                if (!date) return "";
-                const [year, month, day] = date.split("-");
+            let patientId = createdPatientId;
+
+            // Format DOB for API (DD-MM-YYYY)
+            const formatDOBForAPI = (dateString: string) => {
+                if (!dateString) return "";
+                const date = new Date(dateString);
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
                 return `${day}-${month}-${year}`;
             };
 
-            const patientRequest: CreatePatientRequest = {
-                firstname: patientData.firstName.trim(),
-                lastname: patientData.lastName.trim(),
-                gender: patientData.gender,
-                DOB: formatDOB(patientData.dateOfBirth),
-                mobile: patientData.phoneNumber.trim()
-            };
+            // Only create patient if user was not found in search
+            if (!userFound) {
+                const patientRequest: CreatePatientRequest = {
+                    firstname: patientData.firstName.trim(),
+                    lastname: patientData.lastName.trim(),
+                    gender: patientData.gender,
+                    DOB: formatDOBForAPI(patientData.dateOfBirth),
+                    mobile: patientData.phoneNumber.trim()
+                };
 
-            // Call the Patient API
-            const patientResult = await createPatient(patientRequest);
+                // Call the Patient API
+                const patientResult = await createPatient(patientRequest);
 
-            if (!patientResult.success) {
-                setApiError(patientResult.message);
-                return;
+                if (!patientResult.success) {
+                    setApiError(patientResult.message);
+                    return;
+                }
+
+                // Extract patient ID from response
+                patientId = patientResult.data?.patientId || patientResult.data?.userId || 'NEWPATIENT';
             }
 
             // Prepare Appointment API request data
             const appointmentRequest: CreateAppointmentRequest = {
-                userId: "VYDUSER2", // You might want to make this dynamic
-                doctorId: "a7185413-6b15-4fb4-aa8d-8f6450ad8c5f", // You might want to make this dynamic
+                userId: patientId,
+                doctorId: patientData.doctorId,
                 patientName: `${patientData.firstName} ${patientData.lastName}`,
-                doctorName: "Varun", // You might want to make this dynamic
-                appointmentType: patientData.appointmentType || "consultation",
-                appointmentDepartment: patientData.department || "General Physician",
+                doctorName: selectedDoctor?.doctor?.name || "Doctor",
+                appointmentType: patientData.appointmentType,
+                appointmentDepartment: patientData.department,
                 appointmentDate: formatDateForAPI(patientData.selectedDate),
                 appointmentTime: formatTimeForAPI(patientData.selectedTimeSlot),
                 appointmentReason: patientData.visitReason || "Not specified",
                 amount: consultationFee,
                 discount: 10,
                 discountType: "percentage",
-                paymentStatus: paymentStatus.toLowerCase()
+                paymentStatus: paymentStatus[0]
             };
+
+            console.log('Appointment Request:', appointmentRequest);
 
             // Call the Appointment API
             const appointmentResult = await createAppointment(appointmentRequest);
 
             if (appointmentResult.success) {
-                alert(`Patient and appointment created successfully! ${appointmentResult.message}`);
+                const message = userFound 
+                    ? `Appointment created successfully for existing patient! ${appointmentResult.message}`
+                    : `Patient and appointment created successfully! ${appointmentResult.message}`;
+                
+                alert(message);
                 console.log('Appointment created:', appointmentResult.data);
                 resetForm();
             } else {
@@ -359,7 +569,7 @@ const AddWalkInPatient: React.FC = () => {
 
     const resetForm = () => {
         setPatientData({
-            doctorId: '',
+            doctorId: doctors.length > 0 ? doctors[0].doctorId : '',
             firstName: '',
             lastName: '',
             age: '',
@@ -374,8 +584,15 @@ const AddWalkInPatient: React.FC = () => {
             phoneNumber: '',
             dateOfBirth: ''
         });
-        setPaymentStatus('Pending');
-        setApiError('');
+        setPaymentStatus(['paid']);  setApiError('');
+        setSearchQuery('');
+        setUserFound(false);
+        setCreatedPatientId('');
+        
+        // Reset to first doctor if available
+        if (doctors.length > 0) {
+            setSelectedDoctor(doctors[0]);
+        }
     };
 
     const days = getDaysInMonth(currentMonth);
@@ -383,16 +600,24 @@ const AddWalkInPatient: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <Header />
+            {/* Header Placeholder */}
+            <div className="w-full h-16 bg-white shadow-sm border-b mb-6">
+                <div className="flex items-center justify-between px-6 h-full">
+                    <h1 className="text-xl font-semibold text-gray-800">Hospital Management System</h1>
+                    <div className="flex items-center space-x-4">
+                        <Bell className="w-6 h-6 text-gray-600" />
+                        <User className="w-6 h-6 text-gray-600" />
+                    </div>
+                </div>
+            </div>
 
             <div className="flex">
                 {/* Sidebar */}
                 <div className="w-16 bg-white shadow-sm border-r min-h-screen">
                     <div className="flex flex-col items-center py-6 space-y-6">
                         <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                            {/* <User className="w-6 h-6 text-blue-600" /> */}
+                            <User className="w-6 h-6 text-blue-600" />
                         </div>
-                        {/* Add more sidebar icons as needed */}
                     </div>
                 </div>
 
@@ -401,15 +626,22 @@ const AddWalkInPatient: React.FC = () => {
                     {/* Page Header */}
                     <div className="mb-6">
                         <div className="flex items-center space-x-3 mb-2">
-                            <h1 className="text-2xl font-semibold text-gray-800" style={{ marginTop: "60px" }}>Add Walk-in Patient</h1>
+                            <h1 className="text-2xl font-semibold text-gray-800">Add Walk-in Patient</h1>
                         </div>
-                        <p className="text-gray-600">Enter patient details for walk-in consultation</p>
+                        <p className="text-gray-600">Search for existing patient or enter new patient details for walk-in consultation</p>
                     </div>
 
                     {/* Error Display */}
                     {apiError && (
                         <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
                             <p className="text-red-700 text-sm">{apiError}</p>
+                        </div>
+                    )}
+
+                    {/* Success Message for Found User */}
+                    {userFound && (
+                        <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
+                            <p className="text-green-700 text-sm">Patient found! Details have been pre-filled. Please review and continue.</p>
                         </div>
                     )}
 
@@ -424,25 +656,45 @@ const AddWalkInPatient: React.FC = () => {
                                         <input
                                             type="text"
                                             placeholder="Search Mobile Number"
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            onKeyPress={handleSearchKeyPress}
                                             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            disabled={isSearching}
                                         />
                                     </div>
+                                    <button
+                                        onClick={handleSearch}
+                                        disabled={isSearching}
+                                        className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+                                            isSearching 
+                                                ? 'bg-gray-400 cursor-not-allowed text-white' 
+                                                : 'bg-blue-600 text-white hover:bg-blue-700'
+                                        }`}
+                                    >
+                                        {isSearching ? 'Searching...' : 'Search'}
+                                    </button>
                                     <div className="relative">
                                         <select
                                             className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                             value={patientData.doctorId || ""}
-                                            onChange={(e) => handleInputChange('doctorId' as keyof PatientData, e.target.value)}
-                                            disabled={isLoading}
+                                            onChange={(e) => handleDoctorSelect(e.target.value)}
+                                            disabled={isLoading || isLoadingDoctors}
                                         >
                                             <option value="">Select Doctor</option>
-                                            <option value="a7185413-6b15-4fb4-aa8d-8f6450ad8c5f">Dr. Varun (General Physician)</option>
-                                            <option value="b1234567-89ab-cdef-0123-456789abcdef">Dr. Priya (Cardiologist)</option>
-                                            <option value="c2345678-90bc-def1-2345-67890bcdef12">Dr. Rahul (Neurologist)</option>
-                                            {/* Add more doctors as needed */}
+                                            {doctors.map((doctor) => (
+                                                <option key={doctor.doctorId} value={doctor.doctorId}>
+                                                    {doctor.doctor?.name || `Doctor ${doctor.doctorId.slice(0, 8)}`}
+                                                    {doctor.doctor?.specialization && ` (${doctor.doctor.specialization})`}
+                                                </option>
+                                            ))}
                                         </select>
                                         <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />
                                     </div>
                                 </div>
+                                {isLoadingDoctors && (
+                                    <p className="text-blue-600 text-sm mt-2">Loading doctors...</p>
+                                )}
                             </div>
 
                             {/* Basic Information */}
@@ -450,9 +702,14 @@ const AddWalkInPatient: React.FC = () => {
                                 <div className="flex items-center space-x-2 mb-4">
                                     <User className="w-5 h-5 text-blue-600" />
                                     <h2 className="text-lg font-semibold text-gray-800">Basic Information</h2>
+                                    {userFound && (
+                                        <span className="ml-2 px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                                            Existing Patient
+                                        </span>
+                                    )}
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
                                             Patient First Name *
@@ -560,12 +817,13 @@ const AddWalkInPatient: React.FC = () => {
                                         type="button"
                                         onClick={handleSubmit}
                                         disabled={isLoading}
-                                        className={`py-2 px-6 rounded-lg font-semibold transition-colors ${isLoading
+                                        className={`py-2 px-6 rounded-lg font-semibold transition-colors ${
+                                            isLoading
                                                 ? 'bg-gray-400 cursor-not-allowed text-white'
                                                 : 'bg-blue-600 text-white hover:bg-blue-700'
-                                            }`}
+                                        }`}
                                     >
-                                        {isLoading ? 'Creating Patient...' : 'Create Patient'}
+                                        {isLoading ? (userFound ? 'Creating Appointment...' : 'Creating Patient...') : (userFound ? 'Create Appointment' : 'Create Patient')}
                                     </button>
                                 </div>
                             </div>
@@ -770,12 +1028,12 @@ const AddWalkInPatient: React.FC = () => {
                                         <label className="block text-sm text-gray-600 mb-1">Payment Status</label>
                                         <div className="relative">
                                             <select
-                                                value={paymentStatus}
-                                                onChange={(e) => setPaymentStatus(e.target.value)}
+                                                value={paymentStatus[0] || ''}
+                                                onChange={(e) => setPaymentStatus([e.target.value])}
                                                 className="w-full appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                             >
                                                 <option value="Pending">Pending</option>
-                                                <option value="Paid">Paid</option>
+                                                <option value="paid">Paid</option>
                                                 <option value="Cancelled">Cancelled</option>
                                             </select>
                                             <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />

@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 const PhoneOutlined = () => <span>📱</span>;
-// const MessageOutlined = () => <span>💬</span>;
 const EyeOutlined = () => <span>👁️</span>;
 const EyeInvisibleOutlined = () => <span>🙈</span>;
 
@@ -13,6 +12,7 @@ interface LoginResponse {
   message?: string;
   success?: boolean;
   expiresAt?: string;
+  userType?: string;
 }
 
 interface OTPValidationResponse {
@@ -21,10 +21,19 @@ interface OTPValidationResponse {
     id: string;
     name: string;
     mobile: string;
+    userType?: string;
   };
   message?: string;
   success?: boolean;
+  userType?: string;
 }
+
+// User type configuration
+const USER_TYPES = {
+  '7093081518': { type: 'admin', route: '/Admin/app/dashboard' },
+  '8096147427': { type: 'doctor', route: '/Doctor/dashboard' },
+  '8886063950': { type: 'receptionist', route: '/Receptionist/dashboard' }
+};
 
 const Login = () => {
   const router = useRouter();
@@ -41,6 +50,7 @@ const Login = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [currentUserType, setCurrentUserType] = useState<string>('');
 
   useEffect(() => {
     const checkMobile = () => {
@@ -67,6 +77,16 @@ const Login = () => {
 
   const validatePhone = (phoneNumber: string) => {
     return /^[0-9]{10}$/.test(phoneNumber);
+  };
+
+  const getUserTypeFromPhone = (phoneNumber: string) => {
+    const userConfig = USER_TYPES[phoneNumber as keyof typeof USER_TYPES];
+    return userConfig?.type || 'admin'; // default to admin if not found
+  };
+
+  const getRouteFromPhone = (phoneNumber: string) => {
+    const userConfig = USER_TYPES[phoneNumber as keyof typeof USER_TYPES];
+    return userConfig?.route || '/Admin/app/dashboard'; // default route
   };
 
   const makeAPIRequest = async (endpoint: string, data: any) => {
@@ -115,6 +135,14 @@ const Login = () => {
       return;
     }
 
+    // Check if phone number is registered
+    const userType = getUserTypeFromPhone(phone);
+    if (!USER_TYPES[phone as keyof typeof USER_TYPES]) {
+      setError('This mobile number is not registered. Please contact your administrator.');
+      return;
+    }
+
+    setCurrentUserType(userType);
     setIsLoading(true);
     setError('');
     setSuccessMessage('');
@@ -122,11 +150,13 @@ const Login = () => {
     try {
       const requestData = {
         mobile: phone,
-        userType: "admin",
+        userType: userType,
         language: "tel"
       };
 
-      const data = await makeAPIRequest('/auth/login', requestData);
+      console.log('Sending OTP request:', requestData);
+
+      const data: LoginResponse = await makeAPIRequest('/auth/login', requestData);
 
       if (data.userId || data.success !== false) {
         setUserId(data.userId || `temp-${Date.now()}`);
@@ -183,16 +213,26 @@ const Login = () => {
         mobile: phone
       };
 
+      console.log('Verifying OTP:', requestData);
+
       const data: OTPValidationResponse = await makeAPIRequest('/auth/validateOtp', requestData);
 
       if (data.accessToken) {
         if (typeof window !== 'undefined') {
           localStorage.setItem('accessToken', data.accessToken);
+          // Store user info
+          localStorage.setItem('userType', currentUserType);
+          localStorage.setItem('mobile', phone);
+          if (data.user) {
+            localStorage.setItem('userData', JSON.stringify(data.user));
+          }
         }
         
-        setSuccessMessage('Login successful! Redirecting...');
+        const redirectRoute = getRouteFromPhone(phone);
+        setSuccessMessage(`Login successful! Redirecting to ${currentUserType} dashboard...`);
+        
         setTimeout(() => {
-          router.push('/Admin/app/dashboard');
+          router.push(redirectRoute);
         }, 1500);
       }
 
@@ -222,6 +262,7 @@ const Login = () => {
     setPhone('');
     setOtp('');
     setUserId('');
+    setCurrentUserType('');
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -236,6 +277,13 @@ const Login = () => {
     setOtp(value);
     if (error) setError('');
     if (successMessage) setSuccessMessage('');
+  };
+
+  // Get user type display name
+  const getUserTypeDisplay = () => {
+    if (!phone || phone.length !== 10) return '';
+    const userConfig = USER_TYPES[phone as keyof typeof USER_TYPES];
+    return userConfig ? ` (${userConfig.type.charAt(0).toUpperCase() + userConfig.type.slice(1)})` : '';
   };
 
   return (
@@ -309,9 +357,16 @@ const Login = () => {
               {otpSent ? 'Enter OTP' : 'Login Vydhyo'}
             </h1>
             {!otpSent && (
-              <p className="text-gray-600">Enter your mobile number to continue</p>
+              <p className="text-gray-600">Enter your registered mobile number to continue</p>
             )}
           </div>
+
+          {/* User Type Indicator */}
+          {phone.length === 10 && (
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-blue-700 text-sm text-center">
+              <span className="font-medium">User Type: {getUserTypeDisplay().slice(2, -1)}</span>
+            </div>
+          )}
 
           {/* Error Message */}
           {error && (
@@ -342,6 +397,11 @@ const Login = () => {
                     onChange={handlePhoneChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
                   />
+                </div>
+                {/* Registered Numbers Info */}
+                <div className="mt-2 text-xs text-gray-500">
+                  <p>Registered numbers:</p>
+                  <p>• 7093081518 (Admin) • 8096147427 (Doctor) • 8886063950 (Receptionist)</p>
                 </div>
               </div>
 
@@ -375,9 +435,8 @@ const Login = () => {
             /* OTP Input */
             <div className="space-y-6">
               <div className="text-center mb-6">
-               
                 <p className="text-gray-600 mb-2">
-                  OTP sent to +91 {phone}
+                  OTP sent to +91 {phone}{getUserTypeDisplay()}
                 </p>
                 <button
                   onClick={resetPhoneLogin}

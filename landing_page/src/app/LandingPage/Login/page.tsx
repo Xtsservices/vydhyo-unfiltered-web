@@ -39,6 +39,21 @@ const Login = () => {
   const [userId, setUserId] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
+  // Function to determine user role based on phone number
+  const getUserRole = (phoneNumber: string): { role: string; redirectPath: string } => {
+    const cleanPhone = phoneNumber.trim().replace(/\D/g, '').slice(-10);
+    switch (cleanPhone) {
+      case '7093081518':
+        return { role: 'admin', redirectPath: '/Admin/app/dashboard' };
+      case '8096147427':
+        return { role: 'doctor', redirectPath: '/Doctor/dashboard' };
+      case '8886063950':
+        return { role: 'receptionist', redirectPath: '/Receptionist/dashboard' };
+      default:
+        return { role: 'user', redirectPath: '/dashboard' }; // Default fallback
+    }
+  };
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -117,9 +132,12 @@ const Login = () => {
     setSuccessMessage('');
 
     try {
+      // Get user role to send appropriate userType in request
+      const { role } = getUserRole(phone);
+      
       const requestData = {
         mobile: phone,
-        userType: "admin",
+        userType: role, // Use dynamic user type based on phone number
         language: "tel"
       };
 
@@ -185,11 +203,19 @@ const Login = () => {
       if (data.accessToken) {
         if (typeof window !== 'undefined') {
           localStorage.setItem('accessToken', data.accessToken);
+          
+          // Store user role information
+          const { role, redirectPath } = getUserRole(phone);
+          localStorage.setItem('userRole', role);
+          localStorage.setItem('userPhone', phone);
         }
+        
+        // Get the appropriate redirect path based on phone number
+        const { redirectPath } = getUserRole(phone);
         
         setSuccessMessage('Login successful! Redirecting...');
         setTimeout(() => {
-          router.push('/dashboard');
+          router.push(redirectPath);
         }, 1500);
       }
 

@@ -443,7 +443,7 @@ const NeedApproval = () => {
                 zIndex: 1,
                 height: 'auto',
                 lineHeight: 'normal',
-                marginTop: '-84px',
+                marginTop: '-20rem',
             }}>
             <AppHeader />
                 <SideHeader/>

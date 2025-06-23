@@ -461,7 +461,7 @@ const DoctorDashboardPage = () => {
 
       // If response is successful
       console.log('Receptionist created:', response.data);
-      message.success('Receptionist added successfully!');
+      alert('Receptionist added successfully!');
     } catch (error: any) {
       console.error('Error creating receptionist:', error);
 

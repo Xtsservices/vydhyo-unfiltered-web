@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
+import SideHeader from '../components/sideheader';
+import AppHeader from '../../Admin/components/header';
 import {
   Card,
   Button,
@@ -481,7 +483,9 @@ const DoctorDashboardPage = () => {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <>
+    <AppHeader />
+    <Layout style={{ minHeight: '100vh',marginTop: '70px' }}>
       <Layout>
         <Header style={{
           background: '#fff',
@@ -902,7 +906,8 @@ const DoctorDashboardPage = () => {
           background-color: #e6f7ff !important;
         }
       `}</style>
-    </Layout>
+    </Layout></>
+    
   );
 };
 

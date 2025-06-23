@@ -31,8 +31,8 @@ interface OTPValidationResponse {
 // User type configuration
 const USER_TYPES = {
   '7093081518': { type: 'admin', route: '/Admin/app/dashboard' },
-  '8096147427': { type: 'doctor', route: '/Doctor/dashboard' },
-  '8886063950': { type: 'receptionist', route: '/Receptionist/dashboard' }
+  '9492856727': { type: 'doctor', route: '/Doctor/dashboard' },
+  '9490219062': { type: 'receptionist', route: '/Receptionist/dashboard' }
 };
 
 const Login = () => {
@@ -398,16 +398,12 @@ const Login = () => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
                   />
                 </div>
-                {/* Registered Numbers Info */}
-                <div className="mt-2 text-xs text-gray-500">
-                  <p>Registered numbers:</p>
-                  <p>• 7093081518 (Admin) • 8096147427 (Doctor) • 8886063950 (Receptionist)</p>
-                </div>
+                
               </div>
 
               {/* Remember Me & Forgot Password */}
               <div className="flex items-center justify-between">
-                <label className="flex items-center">
+                {/* <label className="flex items-center">
                   <input
                     type="checkbox"
                     checked={rememberMe}
@@ -415,7 +411,7 @@ const Login = () => {
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
                   <span className="ml-2 text-sm text-gray-600">Remember Me</span>
-                </label>
+                </label> */}
                 <button className="text-sm text-blue-600 hover:text-blue-500">
                   Login with OTP
                 </button>

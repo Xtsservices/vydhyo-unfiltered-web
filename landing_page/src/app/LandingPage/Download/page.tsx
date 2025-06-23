@@ -14,7 +14,7 @@ const Download: React.FC = () => {
                 maxWidth: "1400px",
                 position: "relative",
                 overflow: "hidden",
-                fontFamily: "'Inter', sans-serif",
+            fontFamily: "'Inter', 'Segoe UI', Arial, sans-serif",
             }}
         >
             {/* Decorative shapes */}
@@ -84,7 +84,7 @@ const Download: React.FC = () => {
                     style={{
                         color: "#fff",
                         fontWeight: 700,
-                        fontSize: 44,
+                        fontSize: 34,
                         marginBottom: 20,
                         lineHeight: 1.1,
                     }}

@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, JSX } from 'react';
 import { useRouter } from 'next/navigation';
-import sideHeader from '../../components/sideheader';
-import AppHeader from '../../components/header'
+import AppHeader from '../../components/header';
+import SideHeader from '../../components/sideheader';
 import {
   Layout,
   Card,
@@ -24,7 +24,8 @@ import {
   Divider,
   Progress,
   Alert,
-  message
+  message,
+  Switch
 } from 'antd';
 import {
   DashboardOutlined,
@@ -50,7 +51,6 @@ import {
   StarFilled
 } from '@ant-design/icons';
 import { AreaChart, Area, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import SideHeader from '../../components/sideheader';
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
@@ -68,25 +68,29 @@ const MedicalDashboard = () => {
       title: 'Doctors',
       value: 0, // Will be updated from API
       color: '#1890ff',
-      onClick: () => router.push('/Admin/app/doctors')
+      onClick: () => router.push('/Admin/app/doctors'),
+      enabled: true
     },
     {
       title: 'Patients',
       value: 487,
       color: '#52c41a',
-      onClick: () => router.push('/Admin/app/patients')
+      onClick: () => router.push('/Admin/app/patients'),
+      enabled: true
     },
     {
       title: 'Appointment',
       value: 485,
       color: '#ff4d4f',
-      onClick: () => router.push('/Admin/app/appointments')
+      onClick: () => router.push('/Admin/app/appointments'),
+      enabled: true
     },
     {
       title: 'Revenue',
       value: '$62523',
       color: '#faad14',
-      onClick: () => router.push('/Admin/app/doctors')
+      onClick: () => router.push('/Admin/app/doctors'),
+      enabled: true
     }
   ]);
 
@@ -429,6 +433,23 @@ const MedicalDashboard = () => {
     fetchUsers();
   }, []);
 
+  const handleToggleNavigation = (index: number, checked: boolean) => {
+    setStatsData(prevStats => {
+      const newStats = [...prevStats];
+      newStats[index].enabled = checked;
+      return newStats;
+    });
+  };
+
+  const handleCardClick = (index: number) => {
+    const stat = statsData[index];
+    if (stat.enabled) {
+      stat.onClick();
+    } else {
+      message.warning(`Navigation to ${stat.title} is currently disabled`);
+    }
+  };
+
   return (
     <>
       <AppHeader />
@@ -451,7 +472,7 @@ const MedicalDashboard = () => {
           >
             <div style={{ flex: 1, minWidth: '200px' }}>
               <Title level={2} style={{ margin: 0, fontSize: '20px' }}>
-                Welcome Admin!
+                Welcome SuperAdmin!
               </Title>
               <Text type="secondary" style={{ fontSize: '14px' }}>Dashboard</Text>
             </div>
@@ -478,14 +499,17 @@ const MedicalDashboard = () => {
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'center',
-                      cursor: 'pointer',
+                      cursor: stat.enabled ? 'pointer' : 'not-allowed',
                       transition: 'all 0.3s ease',
+                      opacity: stat.enabled ? 1 : 0.7
                     }}
-                    hoverable
-                    onClick={stat.onClick}
+                    hoverable={stat.enabled}
+                    onClick={() => handleCardClick(index)}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                      if (stat.enabled) {
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                      }
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
@@ -528,6 +552,19 @@ const MedicalDashboard = () => {
                         backgroundColor: stat.color,
                         borderRadius: '2px'
                       }} />
+                    </div>
+                    <div style={{
+                      position: 'absolute',
+                      top: '10px',
+                      right: '10px'
+                    }}>
+                      <Switch 
+                        size="small" 
+                        checked={stat.enabled}
+                        onChange={(checked) => handleToggleNavigation(index, checked)}
+                        checkedChildren="On"
+                        unCheckedChildren="Off"
+                      />
                     </div>
                   </Card>
                 </Col>

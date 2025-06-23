@@ -4,8 +4,7 @@ import React, { useState } from 'react';
 import { Table, Input, Button, Tag, Space, Avatar, Layout } from 'antd';
 import { SearchOutlined, FilterOutlined } from '@ant-design/icons';
 import AppHeader from '../../components/header';
-import { SideHeader } from '../../components/sideheader';
-
+import SideHeader from '../../components/sideheader';
 const { Header: AntHeader, Content } = Layout;
 
 interface Patient {
@@ -171,7 +170,8 @@ const PatientList = () => {
                 boxShadow: '0 1px 4px rgba(0, 21, 41, 0.08)',
                 zIndex: 1,
                 height: 'auto',
-                lineHeight: 'normal'
+                lineHeight: 'normal',
+                marginTop: '-84px',
             }}>
                 <AppHeader />
                 <SideHeader />

@@ -152,7 +152,7 @@ const ChooseUsSection: React.FC = () => {
       opacity: 1,
       transition: {
         duration: 0.8,
-        ease: "easeInOut", // Use a supported string value
+        ease: [0.42, 0, 0.58, 1], // Use a cubic-bezier array for ease
       },
     },
   };
@@ -490,7 +490,7 @@ const sectionStyle: React.CSSProperties = {
   backgroundColor: "#0a132d",
   padding: "6rem 1rem",
   color: "white",
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "'Inter', 'Segoe UI', Arial, sans-serif",
   backgroundImage: "radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)",
   overflow: "hidden"
 };

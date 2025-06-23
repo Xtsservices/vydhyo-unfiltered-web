@@ -85,7 +85,7 @@ const specialities = [
         name: "Veterinary",
         doctors: 43,
         icon: "🐕",
-        bg: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Ayurveda",
@@ -109,133 +109,133 @@ const specialities = [
         name: "Neurologist",
         doctors: 98,
         icon: "🧠",
-        bg: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Nephrologist",
         doctors: 65,
         icon: "🏥",
-        bg: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Urologist",
         doctors: 84,
         icon: "🩺",
-        bg: "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Oncologist",
         doctors: 73,
         icon: "🎗️",
-        bg: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Rheumatologist",
         doctors: 47,
         icon: "🦴",
-        bg: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Vascular Surgeon",
         doctors: 39,
         icon: "⚕️",
-        bg: "https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Gastroenterologist",
         doctors: 91,
         icon: "🏥",
-        bg: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "General Surgery",
         doctors: 127,
         icon: "🔪",
-        bg: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "CTVS",
         doctors: 24,
         icon: "❤️‍🩹",
-        bg: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Neurosurgeon",
         doctors: 31,
         icon: "🧠",
-        bg: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Ortho Surgeon",
         doctors: 68,
         icon: "🦴",
-        bg: "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "ENT Surgeries",
         doctors: 52,
         icon: "👂",
-        bg: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Eye Surgeries",
         doctors: 45,
         icon: "👁️",
-        bg: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Dental Surgeries",
         doctors: 73,
         icon: "🦷",
-        bg: "https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Plastic Surgery",
         doctors: 41,
         icon: "💫",
-        bg: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Cancer Surgeries",
         doctors: 35,
         icon: "🎗️",
-        bg: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Bariatric Surgery",
         doctors: 28,
         icon: "⚖️",
-        bg: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Gyn & Obs",
         doctors: 102,
         icon: "👩‍⚕️",
-        bg: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Physical Medicine & Rehabilitation",
         doctors: 37,
         icon: "🏥",
-        bg: "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Sports Medicine",
         doctors: 29,
         icon: "⚽",
-        bg: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Transfusion Medicine",
         doctors: 18,
         icon: "🩸",
-        bg: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
     {
         name: "Psychologist",
         doctors: 64,
         icon: "🧠",
-        bg: "https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
+        bg: "https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&h=600",
     },
 ];
 
@@ -254,6 +254,21 @@ const SpecialtyCard = ({
     index: number;
 }) => {
     const [isHovered, setIsHovered] = React.useState(false);
+    const [isFlipping, setIsFlipping] = React.useState(false);
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+        setIsFlipping(true);
+        
+        // Stop the flip animation after one complete rotation
+        setTimeout(() => {
+            setIsFlipping(false);
+        }, 600);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+    };
 
     return (
         <div
@@ -272,10 +287,10 @@ const SpecialtyCard = ({
                 flexShrink: 0,
                 backdropFilter: "blur(10px)"
             }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
         >
-            {/* Background Image */}
+            {/* Background Image - No blur on hover */}
             <div
                 style={{
                     position: "absolute",
@@ -287,8 +302,8 @@ const SpecialtyCard = ({
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     transition: "all 0.4s ease",
-                    filter: isHovered ? "blur(4px) brightness(0.6)" : "blur(0px) brightness(0.8)",
-                    transform: isHovered ? "scale(1.1)" : "scale(1)",
+                    filter: "brightness(0.8)",
+                    transform: isHovered ? "scale(1.05)" : "scale(1)",
                 }}
             />
 
@@ -320,73 +335,34 @@ const SpecialtyCard = ({
                     zIndex: 2,
                 }}
             >
-                {/* Icon with Flip Animation */}
+                {/* Icon with Coin Flip Animation */}
                 <div
                     style={{
                         position: "relative",
                         width: "50px",
                         height: "50px",
                         marginBottom: "12px",
-                        perspective: "1000px",
+                        background: "rgba(255,255,255,0.95)",
+                        borderRadius: "50%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "24px",
+                        boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
+                        transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+                        transform: isFlipping ? "rotateY(360deg)" : "rotateY(0deg)",
+                        transformStyle: "preserve-3d",
                     }}
                 >
-                    <div
-                        style={{
-                            position: "absolute",
-                            width: "100%",
-                            height: "100%",
-                            transformStyle: "preserve-3d",
-                            transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
-                            transform: isHovered ? "rotateY(180deg)" : "rotateY(0deg)",
-                        }}
-                    >
-                        {/* Front Side */}
-                        <div
-                            style={{
-                                position: "absolute",
-                                width: "100%",
-                                height: "100%",
-                                background: "rgba(255,255,255,0.95)",
-                                borderRadius: "50%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                fontSize: "24px",
-                                backfaceVisibility: "hidden",
-                                boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
-                            }}
-                        >
-                            {spec.icon}
-                        </div>
-                        
-                        {/* Back Side */}
-                        <div
-                            style={{
-                                position: "absolute",
-                                width: "100%",
-                                height: "100%",
-                                background: "rgba(66, 133, 244, 0.95)",
-                                borderRadius: "50%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                fontSize: "24px",
-                                backfaceVisibility: "hidden",
-                                transform: "rotateY(180deg)",
-                                boxShadow: "0 8px 25px rgba(66, 133, 244, 0.4)",
-                            }}
-                        >
-                            <span style={{ color: "white" }}>+</span>
-                        </div>
-                    </div>
+                    {spec.icon}
                 </div>
 
                 {/* Text Content */}
                 <div style={{ textAlign: "center" }}>
-                    <h3
+                    <h4
                         style={{
                             color: "white",
-                            fontWeight: 700,
+                            fontWeight: 500,
                             fontSize: "18px",
                             margin: "0 0 6px 0",
                             textShadow: "0 2px 4px rgba(0,0,0,0.3)",
@@ -395,7 +371,7 @@ const SpecialtyCard = ({
                         }}
                     >
                         {spec.name}
-                    </h3>
+                    </h4>
                     <p
                         style={{
                             color: "rgba(255,255,255,0.9)",
@@ -467,7 +443,7 @@ const MedicalSpecialtiesCards = () => {
             padding: "20px",
             minHeight: "60vh",
             overflow: "hidden",
-            fontFamily: "'Inter', 'Segoe UI', Arial, sans-serif"
+            fontFamily: "'Inter', 'Segoe UI', Arial, sans-serif",
         }}>
             {/* Animated Background Elements */}
             <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
@@ -529,7 +505,7 @@ const MedicalSpecialtiesCards = () => {
                         position: "absolute",
                         top: "80%",
                         left: "60%",
-                        width: "80px",
+                                                width: "80px",
                         height: "80px",
                         background: "linear-gradient(45deg, rgba(255, 152, 0, 0.1), rgba(255, 87, 34, 0.1))",
                         borderRadius: "50%",

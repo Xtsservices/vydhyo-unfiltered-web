@@ -144,22 +144,22 @@ const FeaturedDocs: React.FC = () => {
           marginRight: "auto",
         }}
       >
-        <span
-          style={{
-            background: "#0E82FD",
-            color: "#fff",
-            borderRadius: 12,
-            padding: "6px 16px",
-            fontWeight: 600,
-            fontSize: 14,
-            display: "inline-block",
-            marginBottom: 12,
-            fontFamily: "'Inter', sans-serif",
-            marginTop: "3rem",
-          }}
-        >
-          ACCESSIBILITY
-        </span>
+         <span
+                        style={{
+                            background: "rgba(66, 133, 244, 0.9)",
+                            backdropFilter: "blur(10px)",
+                            color: "white",
+                            fontWeight: 600,
+                            fontSize: 14,
+                            borderRadius: 20,
+                            padding: "8px 20px",
+                            display: "inline-block",
+                            marginBottom: 20,
+                            boxShadow: "0 4px 15px rgba(66, 133, 244, 0.3)"
+                        }}
+                    >
+                        • Accessibility •
+                    </span>
         <h1
           style={{
             fontSize: 28,
@@ -386,34 +386,47 @@ const FeaturedDocs: React.FC = () => {
                       Rs{doc.fee}
                     </div>
                   </div>
-                  <button
-                    style={{
-                      background: "#1a365d",
-                      color: "#fff",
-                      border: "none",
-                      borderRadius: 8,
-                      padding: "12px 20px",
-                      fontWeight: 600,
-                      fontSize: 14,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                      cursor: "pointer",
-                      transition: "all 0.3s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "#2d3748";
-                      e.currentTarget.style.transform = "translateY(-2px)";
-                      e.currentTarget.style.boxShadow = "0 4px 12px rgba(26, 54, 93, 0.3)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "#1a365d";
-                      e.currentTarget.style.transform = "translateY(0)";
-                      e.currentTarget.style.boxShadow = "none";
-                    }}
-                  >
-                    Book Now
-                  </button>
+                    <button
+                      style={{
+                        background: "#1a365d",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: 24,
+                        padding: "8px 15px",
+                        fontWeight: 500,
+                        fontSize: 14,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        cursor: "pointer",
+                        transition: "all 0.3s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = "#2d3748";
+                        e.currentTarget.style.transform = "translateY(-2px)";
+                        e.currentTarget.style.boxShadow = "0 4px 12px rgba(26, 54, 93, 0.3)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "#1a365d";
+                        e.currentTarget.style.transform = "translateY(0)";
+                        e.currentTarget.style.boxShadow = "none";
+                      }}
+                    >
+                        <svg
+                        width="16"
+                        height="16"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        style={{ display: "block" }}
+                        >
+                        <rect x="3" y="5" width="18" height="16" rx="4" stroke="#fff" strokeWidth="2" />
+                        <path d="M16 3v4M8 3v4M3 9h18" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
+                        <circle cx="8" cy="13" r="1.5" fill="#fff" />
+                        <circle cx="12" cy="13" r="1.5" fill="#fff" />
+                        <circle cx="16" cy="13" r="1.5" fill="#fff" />
+                        </svg>
+                      Book Now
+                    </button>
                 </div>
               </div>
             </div>

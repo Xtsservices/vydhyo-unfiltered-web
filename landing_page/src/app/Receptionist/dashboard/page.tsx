@@ -246,26 +246,10 @@ const DoctorDashboardPage = () => {
       <Header />
       
       <Layout>
-        {/* Sidebar - Hide on mobile */}
-        {!isMobile && (
-          <Sider 
-            width={250} 
-            style={{ 
-              background: '#fff', 
-              position: 'fixed',
-              left: 0,
-              top: 0,
-              bottom: 0,
-              zIndex: 100,
-              paddingTop: '64px' // Adjust based on your header height
-            }}
-          >
-            {/* <SideHeader /> */}
-          </Sider>
-        )}
+       
 
         {/* Main Content */}
-        <Layout style={{ marginLeft: isMobile ? 0 : 250 }}>
+        <Layout style={{ marginLeft: isMobile ? 0 : 0 }}>
           <Content style={{ 
             padding: isMobile ? '16px 12px' : '24px', 
             backgroundColor: '#f5f5f5', 

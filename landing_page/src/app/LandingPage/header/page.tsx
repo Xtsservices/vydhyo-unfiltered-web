@@ -29,7 +29,7 @@ const Header: React.FC<headerProps> = (props) => {
                 position: "sticky",
                 top: 0,
                 zIndex: 100,
-                height: "70px"
+                height: "100px"
             }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                     <div

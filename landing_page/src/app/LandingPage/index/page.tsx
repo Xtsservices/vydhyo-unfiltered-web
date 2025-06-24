@@ -1,455 +1,412 @@
 "use client";
+import React, { useState, useEffect } from 'react';
+import { Heart, ArrowRight, Zap, Target, Users, Calendar, Truck, Droplets, Home, ChevronLeft, ChevronRight } from 'lucide-react';
 
-import  { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Calendar, Truck, Droplets, Home } from "lucide-react";
+interface HeroSectionProps {
+  scrollToSection: (sectionId: string) => void;
+}
 
-const carouselData = [
+const HealthcareCarousel: React.FC<HeroSectionProps> = ({ scrollToSection }) => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const carouselData = [
     {
-        id: 1,
-        title: "Book Appointments",
-        subtitle: "Schedule with Ease",
-        description: "Connect with top-rated Indian doctors and specialists instantly. Book appointments 24/7 with our smart scheduling system and get confirmed slots within minutes.",
-        features: ["Instant Booking", "Top Doctors", "24/7 Availability", "Smart Scheduling"],
-        image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=500&h=500&fit=crop&crop=face",
-        icon: <Calendar className="w-8 h-8" />,
-        color: "#3b82f6",
-        gradient: "linear-gradient(135deg, #3b82f6 0%, #93c5fd 100%)"
+      id: 1,
+      title: "Book Appointments",
+      subtitle: "Schedule with Ease",
+      description: "Connect with top-rated Indian doctors and specialists instantly. Book appointments 24/7 with our smart scheduling system and get confirmed slots within minutes.",
+      features: ["Instant Booking", "Top Doctors", "24/7 Availability", "Smart Scheduling"],
+      image: "https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?w=500&h=500&fit=crop&crop=face",
+      icon: <Calendar className="w-8 h-8" />,
+      color: "#3b82f6",
+      gradient: "linear-gradient(135deg, #3b82f6 0%, #93c5fd 100%)"
     },
     {
-        id: 2,
-        title: "Verified Ambulance Services",
-        subtitle: "Immediate Medical Attention",
-        description: "Fast, reliable emergency medical services with certified Indian doctors. Our emergency network ensures you get immediate medical attention when every second counts.",
-        features: ["24/7 Emergency", "Certified Doctors", "Quick Response", "Advanced Care"],
-        image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=500&h=500&fit=crop&crop=face",
-        icon: <Truck className="w-8 h-8" />,
-        color: "#3b82f6",
-        gradient: "linear-gradient(135deg, #3b82f6 0%, #93c5fd 100%)"
+      id: 2,
+      title: "Verified Ambulance Services",
+      subtitle: "Immediate Medical Attention",
+      description: "Fast, reliable emergency medical services with certified Indian doctors. Our emergency network ensures you get immediate medical attention when every second counts.",
+      features: ["24/7 Emergency", "Certified Doctors", "Quick Response", "Advanced Care"],
+      image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=500&h=500&fit=crop&crop=face",
+      icon: <Truck className="w-8 h-8" />,
+      color: "#ef4444",
+      gradient: "linear-gradient(135deg, #ef4444 0%, #fca5a5 100%)"
     },
     {
-        id: 3,
-        title: "Live Blood Bank Updates",
-        subtitle: "Traditional Healing",
-        description: "Connect with Ayurvedic specialists for holistic consultations. Get expert advice and treatment plans based on India's ancient medical wisdom.",
-        features: ["Holistic Approach", "Natural Remedies", "Personalized Care", "Wellness Plans"],
-        image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=500&h=500&fit=crop&crop=face",
-        icon: <Droplets className="w-8 h-8" />,
-        color: "#3b82f6",
-        gradient: "linear-gradient(135deg, #3b82f6 0%, #93c5fd 100%)"
+      id: 3,
+      title: "Live Blood Bank Updates",
+      subtitle: "Life-Saving Resources",
+      description: "Real-time blood availability updates from certified blood banks across India. Find the right blood type when you need it most with our comprehensive network.",
+      features: ["Real-time Updates", "Multiple Blood Banks", "Emergency Access", "Verified Sources"],
+      image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=500&h=500&fit=crop&crop=face",
+      icon: <Droplets className="w-8 h-8" />,
+      color: "#dc2626",
+      gradient: "linear-gradient(135deg, #dc2626 0%, #f87171 100%)"
     },
     {
-        id: 4,
-        title: "Certified Home Healthcare",
-        subtitle: "Comprehensive Tests",
-        description: "Complete health checkup packages with certified Indian medical professionals. Get accurate results and professional analysis for your wellness.",
-        features: ["Full Body Checkup", "Preventive Care", "Accurate Results", "Professional Analysis"],
-        image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=500&h=500&fit=crop&crop=face",
-        icon: <Home className="w-8 h-8" />,
-        color: "#3b82f6",
-        gradient: "linear-gradient(135deg, #3b82f6 0%, #93c5fd 100%)"
+      id: 4,
+      title: "Certified Home Healthcare",
+      subtitle: "Care at Your Doorstep",
+      description: "Professional healthcare services delivered to your home by certified medical professionals. Get quality care without leaving the comfort of your home.",
+      features: ["Home Visits", "Certified Staff", "Convenient Care", "Professional Service"],
+      image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=500&h=500&fit=crop&crop=face",
+      icon: <Home className="w-8 h-8" />,
+      color: "#059669",
+      gradient: "linear-gradient(135deg, #059669 0%, #6ee7b7 100%)"
     }
-];
+  ];
 
-const AnimatedBackground = () => {
-    return (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {/* Floating medical icons */}
-            <div className="absolute top-20 left-20 opacity-10 animate-float-slow">
-                <svg className="w-12 h-12 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z"/>
-                </svg>
-            </div>
-            <div className="absolute top-1/3 right-32 opacity-15 animate-float-medium">
-                <svg className="w-10 h-10 text-blue-300" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19 8H17V6A5 5 0 0 0 7 6V8H5A3 3 0 0 0 2 11V19A3 3 0 0 0 5 22H19A3 3 0 0 0 22 19V11A3 3 0 0 0 19 8M9 6A3 3 0 0 1 15 6V8H9V6Z"/>
-                </svg>
-            </div>
-            <div className="absolute bottom-32 left-1/4 opacity-12 animate-float-fast">
-                <svg className="w-14 h-14 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,6V12.4L16.2,15.4L17,14.1L12.5,11.5V6H11Z"/>
-                </svg>
-            </div>
-            
-            {/* Geometric shapes with smooth motion */}
-            <div className="absolute top-1/4 left-1/6 opacity-8">
-                <div className="w-20 h-20 border-2 border-blue-200 rounded-lg rotate-45 animate-rotate-slow"></div>
-            </div>
-            <div className="absolute bottom-1/4 right-1/5 opacity-10">
-                <div className="w-16 h-16 border-2 border-blue-300 rounded-full animate-scale-pulse"></div>
-            </div>
-            
-            {/* DNA Helix animation */}
-            <div className="absolute top-1/2 left-12 opacity-8 animate-twist">
-                <div className="relative w-8 h-32">
-                    <div className="absolute w-2 h-2 bg-blue-300 rounded-full top-0 left-0 animate-dna-1"></div>
-                    <div className="absolute w-2 h-2 bg-blue-400 rounded-full top-4 right-0 animate-dna-2"></div>
-                    <div className="absolute w-2 h-2 bg-blue-300 rounded-full top-8 left-0 animate-dna-1"></div>
-                    <div className="absolute w-2 h-2 bg-blue-400 rounded-full top-12 right-0 animate-dna-2"></div>
-                    <div className="absolute w-2 h-2 bg-blue-300 rounded-full top-16 left-0 animate-dna-1"></div>
-                    <div className="absolute w-2 h-2 bg-blue-400 rounded-full top-20 right-0 animate-dna-2"></div>
+  // Auto-rotate carousel every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % carouselData.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [carouselData.length]);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % carouselData.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + carouselData.length) % carouselData.length);
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
+
+  return (
+    <>
+      <style jsx>{`
+        .hero-section {
+          position: relative;
+          min-height: 100vh;
+          background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 25%, #60a5fa 100%);
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          margin-top: 4rem;
+        }
+
+        .hero-bg-pattern {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-image: 
+            radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+            linear-gradient(45deg, transparent 49%, rgba(255, 255, 255, 0.02) 50%, transparent 51%);
+          background-size: 100px 100px, 150px 150px, 20px 20px;
+          animation: patternMove 20s linear infinite;
+        }
+
+        @keyframes patternMove {
+          0% { transform: translate(0, 0); }
+          100% { transform: translate(20px, 20px); }
+        }
+
+        .medical-grid {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-image: 
+            linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+          background-size: 50px 50px;
+          animation: gridPulse 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes gridPulse {
+          0% { opacity: 0.3; }
+          100% { opacity: 0.1; }
+        }
+
+        .hero-container {
+          position: relative;
+          z-index: 2;
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 2rem;
+          width: 100%;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 4rem;
+          align-items: center;
+        }
+
+        .doctor-image-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          animation: slideUp 1s ease-out 0.4s both;
+        }
+
+        .doctor-image {
+          width: 400px;
+          height: 500px;
+          border-radius: 24px;
+          object-fit: cover;
+          border: 4px solid rgba(255, 255, 255, 0.3);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
+        }
+
+        .doctor-image:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .carousel-container {
+          position: relative;
+          animation: slideUp 1s ease-out 0.6s both;
+        }
+
+        .carousel-card {
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 24px;
+          padding: 2rem;
+          color: white;
+          transition: all 0.5s ease;
+          opacity: 0;
+          transform: translateX(100px);
+          position: absolute;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .carousel-card.active {
+          opacity: 1;
+          transform: translateX(0);
+          position: relative;
+        }
+
+        .carousel-card-header {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .carousel-icon {
+          padding: 0.75rem;
+          border-radius: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        .carousel-title {
+          font-size: 1.5rem;
+          font-weight: 700;
+          margin-bottom: 0.25rem;
+        }
+
+        .carousel-subtitle {
+          font-size: 0.875rem;
+          color: #e2e8f0;
+        }
+
+        .carousel-description {
+          font-size: 1rem;
+          line-height: 1.6;
+          color: #f1f5f9;
+          margin-bottom: 1.5rem;
+        }
+
+        .carousel-features {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.75rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .carousel-feature {
+          background: rgba(255, 255, 255, 0.1);
+          padding: 0.5rem 0.75rem;
+          border-radius: 12px;
+          font-size: 0.875rem;
+          text-align: center;
+          transition: all 0.3s ease;
+        }
+
+        .carousel-feature:hover {
+          background: rgba(255, 255, 255, 0.2);
+          transform: translateY(-2px);
+        }
+
+        .carousel-navigation {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 1rem;
+          margin-top: 2rem;
+        }
+
+        .carousel-nav-btn {
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 50%;
+          width: 48px;
+          height: 48px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          color: white;
+          transition: all 0.3s ease;
+        }
+
+        .carousel-nav-btn:hover {
+          background: rgba(59, 130, 246, 0.3);
+          border-color: rgba(59, 130, 246, 0.5);
+          transform: scale(1.1);
+        }
+
+        .carousel-dots {
+          display: flex;
+          gap: 0.75rem;
+        }
+
+        .carousel-dot {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.3);
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .carousel-dot.active {
+          background: #3b82f6;
+          transform: scale(1.2);
+        }
+
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @media (max-width: 1024px) {
+          .hero-container {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            text-align: center;
+          }
+          
+          .doctor-image {
+            width: 300px;
+            height: 400px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .hero-container {
+            padding: 1rem;
+          }
+          
+          .doctor-image {
+            width: 250px;
+            height: 320px;
+          }
+
+          .carousel-features {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .doctor-image {
+            width: 200px;
+            height: 280px;
+          }
+
+          .carousel-card {
+            padding: 1.5rem;
+          }
+        }
+      `}</style>
+
+      <section id="home" className="hero-section">
+        <div className="hero-bg-pattern"></div>
+        <div className="medical-grid"></div>
+
+        <div className="hero-container">
+          <div className="doctor-image-container">
+            <img 
+              src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face" 
+              alt="Indian Doctor" 
+              className="doctor-image"
+            />
+          </div>
+
+          <div className="carousel-container">
+            {carouselData.map((card, index) => (
+              <div
+                key={card.id}
+                className={`carousel-card ${index === currentSlide ? 'active' : ''}`}
+                style={{ minHeight: index === currentSlide ? 'auto' : '400px' }}
+              >
+                <div className="carousel-card-header">
+                  <div className="carousel-icon" style={{ background: card.gradient }}>
+                    {card.icon}
+                  </div>
+                  <div>
+                    <h3 className="carousel-title">{card.title}</h3>
+                    <p className="carousel-subtitle">{card.subtitle}</p>
+                  </div>
                 </div>
-            </div>
-            
-            {/* Heartbeat line animation */}
-            <div className="absolute bottom-20 right-20 opacity-15">
-                <svg className="w-32 h-8 text-blue-400" viewBox="0 0 128 32">
-                    <path className="animate-heartbeat" fill="none" stroke="currentColor" strokeWidth="2" 
-                          d="M0,16 L20,16 L25,8 L30,24 L35,16 L40,16 L45,12 L50,20 L55,16 L128,16"/>
-                </svg>
-            </div>
-            
-            {/* Particle system */}
-            <div className="absolute top-16 right-16 opacity-20">
-                <div className="relative w-24 h-24">
-                    <div className="absolute w-1 h-1 bg-blue-400 rounded-full animate-particle-1"></div>
-                    <div className="absolute w-1 h-1 bg-blue-300 rounded-full animate-particle-2"></div>
-                    <div className="absolute w-1 h-1 bg-blue-500 rounded-full animate-particle-3"></div>
-                    <div className="absolute w-1 h-1 bg-blue-200 rounded-full animate-particle-4"></div>
-                </div>
-            </div>
-            
-            {/* Flowing lines */}
-            <div className="absolute inset-0">
-                <svg className="w-full h-full opacity-5" viewBox="0 0 1200 800">
-                    <path className="animate-flow-1" fill="none" stroke="url(#gradient1)" strokeWidth="2"
-                          d="M0,400 Q300,200 600,400 T1200,400"/>
-                    <path className="animate-flow-2" fill="none" stroke="url(#gradient2)" strokeWidth="1"
-                          d="M0,300 Q400,100 800,300 T1200,300"/>
-                    <defs>
-                        <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stopColor="#3b82f6" stopOpacity="0"/>
-                            <stop offset="50%" stopColor="#3b82f6" stopOpacity="0.3"/>
-                            <stop offset="100%" stopColor="#3b82f6" stopOpacity="0"/>
-                        </linearGradient>
-                        <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stopColor="#93c5fd" stopOpacity="0"/>
-                            <stop offset="50%" stopColor="#93c5fd" stopOpacity="0.2"/>
-                            <stop offset="100%" stopColor="#93c5fd" stopOpacity="0"/>
-                        </linearGradient>
-                    </defs>
-                </svg>
-            </div>
-        </div>
-    );
-};
-
-const FloatingElements = () => {
-    return (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {/* Subtle accent particles */}
-            <div className="absolute top-1/5 left-1/3 opacity-15">
-                <div className="w-2 h-2 bg-blue-400 rounded-full animate-ping" style={{ animationDuration: '3s', animationDelay: '0s' }}></div>
-            </div>
-            <div className="absolute top-2/3 right-1/4 opacity-10">
-                <div className="w-3 h-3 bg-blue-300 rounded-full animate-ping" style={{ animationDuration: '4s', animationDelay: '1s' }}></div>
-            </div>
-            <div className="absolute bottom-1/3 left-1/5 opacity-12">
-                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-ping" style={{ animationDuration: '5s', animationDelay: '2s' }}></div>
-            </div>
-        </div>
-    );
-};
-
-const HealthcareCarousel = () => {
-    const [currentSlide, setCurrentSlide] = useState(0);
-    const [isAnimating, setIsAnimating] = useState(false);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            handleNext();
-        }, 5000); // Increased to 5 seconds for better viewing
-
-        return () => clearInterval(interval);
-    }, [currentSlide]);
-
-    const handleNext = () => {
-        if (isAnimating) return;
-        setIsAnimating(true);
-        setCurrentSlide((prev) => (prev + 1) % carouselData.length);
-        setTimeout(() => setIsAnimating(false), 500);
-    };
-
-    const handlePrev = () => {
-        if (isAnimating) return;
-        setIsAnimating(true);
-        setCurrentSlide((prev) => (prev - 1 + carouselData.length) % carouselData.length);
-        setTimeout(() => setIsAnimating(false), 500);
-    };
-
-    const goToSlide = (index: number) => {
-        if (isAnimating || index === currentSlide) return;
-        setIsAnimating(true);
-        setCurrentSlide(index);
-        setTimeout(() => setIsAnimating(false), 500);
-    };
-
-    const currentData = carouselData[currentSlide];
-    const isEven = currentSlide % 2 === 0;
-
-    return (
-        <>
-        <style>{`
-            @keyframes float-slow {
-                0%, 100% { transform: translateY(0px) rotate(0deg); }
-                50% { transform: translateY(-20px) rotate(5deg); }
-            }
-            @keyframes float-medium {
-                0%, 100% { transform: translateY(0px) translateX(0px); }
-                33% { transform: translateY(-15px) translateX(10px); }
-                66% { transform: translateY(-5px) translateX(-5px); }
-            }
-            @keyframes float-fast {
-                0%, 100% { transform: translateY(0px) scale(1); }
-                50% { transform: translateY(-25px) scale(1.1); }
-            }
-            @keyframes rotate-slow {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-            @keyframes scale-pulse {
-                0%, 100% { transform: scale(1); opacity: 0.1; }
-                50% { transform: scale(1.2); opacity: 0.2; }
-            }
-            @keyframes twist {
-                0% { transform: rotateY(0deg); }
-                100% { transform: rotateY(360deg); }
-            }
-            @keyframes dna-1 {
-                0%, 100% { transform: translateX(0px) translateY(0px); }
-                50% { transform: translateX(20px) translateY(-5px); }
-            }
-            @keyframes dna-2 {
-                0%, 100% { transform: translateX(0px) translateY(0px); }
-                50% { transform: translateX(-20px) translateY(5px); }
-            }
-            @keyframes heartbeat {
-                0%, 100% { stroke-dasharray: 0, 1000; stroke-dashoffset: 0; }
-                50% { stroke-dasharray: 100, 1000; stroke-dashoffset: -200; }
-            }
-            @keyframes particle-1 {
-                0% { transform: translate(0, 0) scale(1); opacity: 1; }
-                100% { transform: translate(60px, -30px) scale(0); opacity: 0; }
-            }
-            @keyframes particle-2 {
-                0% { transform: translate(0, 0) scale(1); opacity: 1; }
-                100% { transform: translate(-40px, -50px) scale(0); opacity: 0; }
-            }
-            @keyframes particle-3 {
-                0% { transform: translate(0, 0) scale(1); opacity: 1; }
-                100% { transform: translate(30px, 40px) scale(0); opacity: 0; }
-            }
-            @keyframes particle-4 {
-                0% { transform: translate(0, 0) scale(1); opacity: 1; }
-                100% { transform: translate(-60px, 20px) scale(0); opacity: 0; }
-            }
-            @keyframes flow-1 {
-                0% { stroke-dasharray: 0, 2000; }
-                100% { stroke-dasharray: 200, 2000; }
-            }
-            @keyframes flow-2 {
-                0% { stroke-dasharray: 0, 1500; stroke-dashoffset: 0; }
-                100% { stroke-dasharray: 150, 1500; stroke-dashoffset: -300; }
-            }
-            
-            .animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
-            .animate-float-medium { animation: float-medium 4s ease-in-out infinite; }
-            .animate-float-fast { animation: float-fast 3s ease-in-out infinite; }
-            .animate-rotate-slow { animation: rotate-slow 20s linear infinite; }
-            .animate-scale-pulse { animation: scale-pulse 4s ease-in-out infinite; }
-            .animate-twist { animation: twist 15s linear infinite; }
-            .animate-dna-1 { animation: dna-1 3s ease-in-out infinite; }
-            .animate-dna-2 { animation: dna-2 3s ease-in-out infinite 1.5s; }
-            .animate-heartbeat { animation: heartbeat 2s ease-in-out infinite; }
-            .animate-particle-1 { animation: particle-1 4s linear infinite; }
-            .animate-particle-2 { animation: particle-2 4s linear infinite 1s; }
-            .animate-particle-3 { animation: particle-3 4s linear infinite 2s; }
-            .animate-particle-4 { animation: particle-4 4s linear infinite 3s; }
-            .animate-flow-1 { animation: flow-1 8s ease-in-out infinite; }
-            .animate-flow-2 { animation: flow-2 10s ease-in-out infinite 2s; }
-        `}</style>
-        
-        <div className="relative w-full min-h-screen bg-gradient-to-br from-slate-50 via-blue-25 to-blue-50 overflow-hidden" style={{ fontFamily: 'Inter, sans-serif' }}>
-            <AnimatedBackground />
-            <FloatingElements />
-            
-            {/* Enhanced background animated shapes */}
-            <div className="absolute inset-0">
-                <div 
-                    className="absolute top-0 left-0 w-96 h-96 rounded-full opacity-10 animate-pulse"
-                    style={{ 
-                        background: currentData.gradient,
-                        transform: `translate(${isEven ? '-50px' : '50px'}, -50px)`,
-                        transition: 'all 0.8s ease-in-out'
-                    }}
-                ></div>
-                <div 
-                    className="absolute bottom-0 right-0 w-80 h-80 rounded-full opacity-10 animate-pulse"
-                    style={{ 
-                        background: currentData.gradient,
-                        transform: `translate(${isEven ? '50px' : '-50px'}, 50px)`,
-                        transition: 'all 0.8s ease-in-out',
-                        animationDelay: '0.5s'
-                    }}
-                ></div>
                 
-                {/* Additional animated background elements */}
-                <div 
-                    className="absolute top-1/2 left-1/2 w-72 h-72 rounded-full opacity-5 animate-ping"
-                    style={{ 
-                        background: currentData.gradient,
-                        transform: 'translate(-50%, -50%)',
-                        animationDuration: '8s'
-                    }}
-                ></div>
-            </div>
-
-            {/* Navigation arrows */}
-            <button
-                onClick={handlePrev}
-                className="absolute left-6 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white p-3 rounded-full shadow-xl transition-all duration-300 hover:scale-110 backdrop-blur-sm"
-            >
-                <ChevronLeft className="w-6 h-6 text-gray-700" />
-            </button>
-            <button
-                onClick={handleNext}
-                className="absolute right-6 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white p-3 rounded-full shadow-xl transition-all duration-300 hover:scale-110 backdrop-blur-sm"
-            >
-                <ChevronRight className="w-6 h-6 text-gray-700" />
-            </button>
-
-            {/* Main content */}
-            <div className="relative z-10 h-screen flex items-center justify-center px-8">
-                <div className={`w-full max-w-7xl mx-auto flex items-center gap-16 ${!isEven ? 'flex-row-reverse' : ''}`}>
-                    
-                    {/* Content Side */}
-                    <div className={`flex-1 space-y-8 ${isAnimating ? 'animate-pulse' : ''}`}>
-                        <div 
-                            className="inline-flex items-center gap-3 px-4 py-2 rounded-full shadow-lg transform transition-all duration-700 hover:scale-105"
-                            style={{ 
-                                background: 'rgba(255, 255, 255, 0.95)',
-                                backdropFilter: 'blur(10px)'
-                            }}
-                        >
-                            <div style={{ color: currentData.color }}>
-                                {currentData.icon}
-                            </div>
-                            <span className="text-sm font-semibold text-gray-800" style={{ fontSize: '14px' }}>{currentData.subtitle}</span>
-                        </div>
-
-                        <h1 
-                            className="text-5xl font-extrabold leading-tight transition-all duration-700"
-                            style={{ color: currentData.color }}
-                        >
-                            {currentData.title}
-                        </h1>
-                        
-                        <p className="text-gray-600 leading-relaxed max-w-2xl" style={{ fontSize: '16px' }}>
-                            {currentData.description}
-                        </p>
-
-                        <div className="grid grid-cols-2 gap-3">
-                            {currentData.features.map((feature, index) => (
-                                <div 
-                                    key={index}
-                                    className="flex items-center gap-2 p-3 bg-white/70 backdrop-blur-sm rounded-xl shadow-sm transition-all duration-300 hover:shadow-md hover:bg-white/90"
-                                >
-                                    <div 
-                                        className="w-2 h-2 rounded-full"
-                                        style={{ backgroundColor: currentData.color }}
-                                    ></div>
-                                    <span className="font-medium text-gray-700" style={{ fontSize: '14px' }}>{feature}</span>
-                                </div>
-                            ))}
-                        </div>
-
-                        <button 
-                            className="px-8 py-3 text-white font-bold rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 transform"
-                            style={{ 
-                                background: currentData.gradient,
-                                fontSize: '16px',
-                                boxShadow: `0 4px 15px ${currentData.color}40`
-                            }}
-                        >
-                            Get Started Now
-                        </button>
+                <p className="carousel-description">{card.description}</p>
+                
+                <div className="carousel-features">
+                  {card.features.map((feature, featureIndex) => (
+                    <div key={featureIndex} className="carousel-feature">
+                      {feature}
                     </div>
-
-                    {/* Image Side */}
-                    <div className="flex-1 relative flex justify-center">
-                        <div 
-                            className="absolute inset-0 rounded-full blur-sm transition-all duration-700"
-                            style={{ 
-                                background: currentData.gradient,
-                                transform: 'translate(20px, 20px)',
-                                opacity: 0.3,
-                                width: '500px',
-                                height: '500px',
-                                margin: '0 auto'
-                            }}
-                        ></div>
-                        <img
-                            src={currentData.image}
-                            alt={currentData.title}
-                            className={`relative z-10 w-[500px] h-[500px] object-cover rounded-full shadow-2xl transition-all duration-700 transform ${isAnimating ? 'scale-95 opacity-80' : 'scale-100 opacity-100'}`}
-                            style={{
-                                border: `8px solid ${currentData.color}20`,
-                                boxShadow: `0 10px 30px ${currentData.color}40`
-                            }}
-                        />
-                        
-                        {/* Floating stats */}
-                        <div 
-                            className="absolute -top-6 -right-6 bg-white rounded-2xl p-4 shadow-xl z-20 transition-all duration-700"
-                            style={{ 
-                                transform: isAnimating ? 'translateY(10px)' : 'translateY(0px)',
-                                opacity: isAnimating ? 0.8 : 1,
-                                boxShadow: `0 5px 20px ${currentData.color}20`
-                            }}
-                        >
-                            <div className="text-2xl font-bold" style={{ color: currentData.color }}>
-                                {currentSlide === 0 ? '24/7' : currentSlide === 1 ? '5min' : currentSlide === 2 ? '100%' : '500+'}
-                            </div>
-                            <div className="text-xs text-gray-600" style={{ fontSize: '12px' }}>
-                                {currentSlide === 0 ? 'Available' : currentSlide === 1 ? 'Response' : currentSlide === 2 ? 'Verified' : 'Doctors'}
-                            </div>
-                        </div>
-                    </div>
+                  ))}
                 </div>
-            </div>
+              </div>
+            ))}
 
-            {/* Slide indicators */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+            <div className="carousel-navigation">
+              <button className="carousel-nav-btn" onClick={prevSlide}>
+                <ChevronLeft size={20} />
+              </button>
+              
+              <div className="carousel-dots">
                 {carouselData.map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => goToSlide(index)}
-                        className={`h-3 rounded-full transition-all duration-300 ${
-                            index === currentSlide 
-                                ? 'w-12 shadow-lg' 
-                                : 'w-3 bg-white/60 hover:bg-white/80'
-                        }`}
-                        style={{
-                            backgroundColor: index === currentSlide ? currentData.color : undefined,
-                            boxShadow: index === currentSlide ? `0 2px 8px ${currentData.color}60` : undefined
-                        }}
-                    />
+                  <div
+                    key={index}
+                    className={`carousel-dot ${index === currentSlide ? 'active' : ''}`}
+                    onClick={() => goToSlide(index)}
+                  />
                 ))}
+              </div>
+              
+              <button className="carousel-nav-btn" onClick={nextSlide}>
+                <ChevronRight size={20} />
+              </button>
             </div>
-
-            {/* Progress bar */}
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-gray-200/50 z-20">
-                <div 
-                    className="h-full transition-all duration-300 ease-linear"
-                    style={{ 
-                        width: `${((currentSlide + 1) / carouselData.length) * 100}%`,
-                        background: currentData.gradient,
-                        boxShadow: `0 0 10px ${currentData.color}60`
-                    }}
-                />
-            </div>
+          </div>
         </div>
-        </>
-    );
+      </section>
+    </>
+  );
 };
 
 export default HealthcareCarousel;

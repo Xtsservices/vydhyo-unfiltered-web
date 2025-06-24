@@ -118,7 +118,8 @@ const WhyChooseUs: React.FC = () => {
                             padding: "8px 20px",
                             display: "inline-block",
                             marginBottom: 20,
-                            boxShadow: "0 4px 15px rgba(66, 133, 244, 0.3)"
+                            boxShadow: "0 4px 15px rgba(66, 133, 244, 0.3)",
+                            marginTop: '-4 rem',
                         }}
                     >
                         • Why Book With Us •

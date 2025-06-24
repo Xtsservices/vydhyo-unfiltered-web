@@ -28,7 +28,7 @@ export default function Home() {
         setSearchQuery={setSearchQuery}
       />
       <main>
-        <Index />
+      <Index scrollToSection={(sectionId) => document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })} />
       <TopSpecialities />
       <ScrollingCarousel/>
       <MedicalSpecialtiesCards />

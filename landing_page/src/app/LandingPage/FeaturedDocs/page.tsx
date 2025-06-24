@@ -10,7 +10,9 @@ const doctors = [
     rating: 5.0,
     fee: 1500,
     available: true,
-    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+    image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face" 
+,
+    
   },
   {
     name: "Dr. Priya Patel",
@@ -20,7 +22,7 @@ const doctors = [
     rating: 4.6,
     fee: 1200,
     available: true,
-    image: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+    image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face" 
   },
   {
     name: "Dr. Amit Kumar",
@@ -30,7 +32,7 @@ const doctors = [
     rating: 4.8,
     fee: 2000,
     available: true,
-    image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+    image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face" 
   },
   {
     name: "Dr. Ananya Gupta",
@@ -40,7 +42,7 @@ const doctors = [
     rating: 4.8,
     fee: 1800,
     available: true,
-    image: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+    image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face" 
   },
   {
     name: "Dr. Sanjay Verma",
@@ -50,7 +52,7 @@ const doctors = [
     rating: 4.7,
     fee: 1600,
     available: true,
-    image: "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+    image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face" 
   },
   {
     name: "Dr. Neha Singh",
@@ -60,7 +62,7 @@ const doctors = [
     rating: 4.9,
     fee: 1900,
     available: true,
-    image: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+    image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face" 
   },
   {
     name: "Dr. Vikram Joshi",
@@ -70,7 +72,7 @@ const doctors = [
     rating: 4.8,
     fee: 2200,
     available: true,
-    image: "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+    image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face" 
   },
   {
     name: "Dr. Meera Nair",
@@ -80,7 +82,7 @@ const doctors = [
     rating: 4.5,
     fee: 1400,
     available: true,
-    image: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+    image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face" 
   },
 ];
 

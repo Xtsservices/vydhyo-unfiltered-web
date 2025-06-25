@@ -396,7 +396,7 @@ export default function StaffManagement() {
         console.log('Sending receptionist data as object:', staffData);
         
         const response = await axios.post(
-          'http://216.10.251.239:3000/doctor/createReceptionist',
+          'http://192.168.1.42:3000/doctor/createReceptionist',
           staffData, // Send as regular object
           {
             headers: {

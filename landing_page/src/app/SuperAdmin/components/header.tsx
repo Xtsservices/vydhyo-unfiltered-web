@@ -2,6 +2,7 @@
 import { Layout, Avatar, Badge, Button, Dropdown, Space, Typography } from 'antd';
 import { BellOutlined, UserOutlined, DownOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
+import { MessageOutlined } from '@ant-design/icons';
 
 const { Header } = Layout;
 const { Text } = Typography;
@@ -35,7 +36,7 @@ const AppHeader = () => {
                 padding: '0 24px',
                 background: '#fff',
                 borderBottom: '1px solid #f0f0f0',
-                height: '64px',
+                height: '74px',
                 zIndex: 1000,
                 paddingTop: '12px',
                 paddingBottom: '12px',
@@ -58,10 +59,29 @@ const AppHeader = () => {
                 />
             </div>
 
+            <div style={{  gap: '16px', marginLeft: 'auto', marginRight: '0px' }}>
+                {/* Message Icon */}
+                <Badge count={1} size="small" style={{ marginRight: '5px' }}>
+
+                <Button
+                    type="text"
+                    icon={<MessageOutlined style={{ fontSize: '18px' }} />}
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginLeft: '764px',
+                        border: 'none',
+                        color: '#666',
+                    }}
+                />
+                </Badge>
+            </div>
+
             {/* Right side - Notifications and Admin */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginLeft: 'auto', marginRight: '44px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginLeft: 'auto', marginRight: '44px' }}>
                 {/* Notifications */}
-                <Badge count={3} size="small">
+                <Badge count={2} size="small" style={{ marginRight: '5px' }}>
                     <Button
                         type="text"
                         icon={<BellOutlined style={{ fontSize: '18px' }} />}
@@ -108,7 +128,7 @@ const AppHeader = () => {
                             }}
                             icon={<UserOutlined />}
                         />
-                        <Text style={{ fontWeight: '500', color: '#000' }}>Admin</Text>
+                        <Text style={{ fontWeight: '500', color: '#000' }}>Super Admin</Text>
                         <DownOutlined style={{ fontSize: '12px', color: '#666' }} />
                     </div>
                 </Dropdown>

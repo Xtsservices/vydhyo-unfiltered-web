@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { Table, Input, Button, DatePicker, Tag, Space, Select, Avatar, Modal, Spin, message, Layout } from 'antd';
 import { SearchOutlined, CalendarOutlined, DownloadOutlined} from '@ant-design/icons';
 import  AppHeader from '../../components/header';
@@ -105,7 +105,7 @@ const DoctorList = () => {
                 return;
             }
 
-            const response = await fetch('http://216.10.251.239:3000/users/AllUsers?type=doctor&status=approved', {
+            const response = await fetch('http://192.168.1.42:3000/users/AllUsers?type=doctor&status=approved', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -153,7 +153,7 @@ const DoctorList = () => {
                 return;
             }
 
-            const response = await fetch(`http://216.10.251.239:3000/admin/approveDoctor`, {
+            const response = await fetch(`http://192.168.1.42:3000/admin/approveDoctor`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -407,6 +407,8 @@ const DoctorList = () => {
         }
     ];
 
+ 
+
     return (
         <>
     
@@ -470,9 +472,9 @@ const DoctorList = () => {
                             >
                                 Refresh
                             </Button> */}
-                            <Button onClick={() => router.push('/Admin/app/needApproval')}>
+                            {/* <Button onClick={() => router.push('/Admin/app/needApproval')}>
                                 Need For Approval of Doctors
-                            </Button>
+                            </Button> */}
                         </Space>
                     </div>
 

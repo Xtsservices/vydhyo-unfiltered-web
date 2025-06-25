@@ -145,7 +145,7 @@ const NeedApproval = () => {
         return;
       }
 
-      const response = await fetch('http://216.10.251.239:3000/users/AllUsers?type=doctor', {
+      const response = await fetch('http://192.168.1.42:3000/users/AllUsers?type=doctor', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -200,7 +200,7 @@ const NeedApproval = () => {
 
       message.loading(`${newStatus === 'active' ? 'Approving' : 'Rejecting'} doctor...`, 0);
 
-      const response = await fetch(`http://216.10.251.239:3000/admin/approveDoctor`, {
+      const response = await fetch(`http://192.168.1.42:3000/admin/approveDoctor`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

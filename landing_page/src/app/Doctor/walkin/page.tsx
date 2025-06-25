@@ -141,7 +141,7 @@ const AddWalkInPatient: React.FC = () => {
   const totalAmount = calculateTotalAmount();
 
   // API Configuration
-  const API_BASE_URL = "http://216.10.251.239:3000";
+  const API_BASE_URL = "http://192.168.1.42:3000";
   const getAuthToken = () => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("accessToken") || "your-token-here";
@@ -660,6 +660,7 @@ const AddWalkInPatient: React.FC = () => {
   function handleCreatePatient(event: React.MouseEvent<HTMLButtonElement>): void {
     // Implement patient creation logic here
     // For now, just simulate patient creation
+    //imlement api call to create patient
     setIsCreatingPatient(true);
     setTimeout(() => {
       setPatientCreated(true);

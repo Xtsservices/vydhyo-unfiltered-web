@@ -160,7 +160,7 @@ export default function MedicalDashboard() {
     onClick: () => router.push(item.path)
   }));
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status : any) => {
     switch (status) {
       case 'confirmed': return 'green';
       case 'pending': return 'orange';
@@ -169,7 +169,7 @@ export default function MedicalDashboard() {
     }
   };
 
-  const getInvoiceStatusColor = (status) => {
+  const getInvoiceStatusColor = (status : any) => {
     switch (status) {
       case 'paid': return 'green';
       case 'pending': return 'orange';
@@ -195,6 +195,8 @@ export default function MedicalDashboard() {
               <Tag color="blue">Dentist</Tag>
             </div>
           </div>
+
+
 
           <Menu
             mode="inline"

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Layout,
   Card,
@@ -30,12 +30,25 @@ import {
 } from '@ant-design/icons';
 import AppHeader from '@/app/Admin/components/header';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 const { Header, Sider, Content } = Layout;
 const { Title, Text } = Typography;
 const { Option } = Select;
 
 export default function MedicalDashboard() {
   const [selectedMenuItem, setSelectedMenuItem] = useState('dashboard');
+  type UserData = {
+    firstname?: string;
+    lastname?: string;
+    email?: string;
+    mobile?: string;
+    specialization?: {
+      name?: string;
+      // add other properties as needed
+    };
+    // add other properties as needed
+  };
+  const [userData, setUserData] = useState<UserData | null>(null);
   const router = useRouter();
 
   // Sample data
@@ -142,7 +155,7 @@ export default function MedicalDashboard() {
 
   const menuItemsData = [
     { key: 'dashboard', icon: <DashboardOutlined />, label: 'Dashboard', path: '/Doctor/dashboard' },
-    { key: 'appointments', icon: <CalendarOutlined />, label: 'Appointments', path: '/Doctor/appointments' },
+    { key: 'appointments', icon: <CalendarOutlined />, label: 'Appointments', path: '/Doctor/appointment' },
     { key: 'patients', icon: <TeamOutlined />, label: 'My Patients', path: '/Doctor/patients' },
     { key: 'reviews', icon: <UserOutlined />, label: 'Walkin Patients', path: '/Doctor/walkin' },
     { key: 'services', icon: <SettingOutlined />, label: 'Staff Management', path: '/Doctor/staffManagement' },
@@ -178,6 +191,41 @@ export default function MedicalDashboard() {
     }
   };
 
+    const API_BASE_URL = "http://216.10.251.239:3000";
+  const getAuthToken = () => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("accessToken") || "your-token-here";
+    }
+    return "your-token-here";
+  };
+const getCurrentUserData = async () => {
+  try {
+    const token = await getAuthToken(); // If this is not async, remove await
+
+    const response = await fetch(`${API_BASE_URL}/users/getUser`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    setUserData(data?.data); // Ensure setUserData is defined in your component
+  } catch (error) {
+    console.error('Failed to fetch user data:', error);
+  }
+};
+
+
+  useEffect(() => {
+    getCurrentUserData()
+  },[])
+
   return (
     <>
       <AppHeader />
@@ -187,13 +235,21 @@ export default function MedicalDashboard() {
             <Avatar size={64} style={{ marginBottom: '10px' }}>
               <UserOutlined />
             </Avatar>
-            <Title level={5} style={{ color: 'white', margin: 0 }}>Dr Edalin Hendry</Title>
-            <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px' }}>
-              BDS, MDS - Oral & Maxillofacial Surgery
+             <Title level={5} style={{ color: 'white', margin: 0 }}>
+  Dr {userData?.firstname} {userData?.lastname}
+</Title>
+
+            <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px', display: 'block' }}>
+              {userData?.email}
             </Text>
+            <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px' }}>
+              {userData?.mobile}
+            </Text>
+             
             <div style={{ marginTop: '10px' }}>
-              <Tag color="blue">Dentist</Tag>
+              <Tag color="blue">{userData?.specialization?.name}</Tag>
             </div>
+            
           </div>
 
 

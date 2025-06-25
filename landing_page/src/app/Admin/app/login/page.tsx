@@ -32,14 +32,14 @@ interface OTPValidationResponse {
 const USER_TYPES = {
   '7093081512': { type: 'superadmin', route: '/SuperAdmin/app/dashboard' },
   '7093081518': { type: 'admin', route: '/Admin/app/dashboard' },
-  '9052519059': { type: 'doctor', route: '/Doctor/dashboard' },
+  '6885558855': { type: 'doctor', route: '/Doctor/dashboard' },
   '9490219062': { type: 'receptionist', route: '/Receptionist/dashboard' },
   '9490219063': { type: 'Super Admin', route: '/SuperAdmin/app/dashboard' },
 };
 
 const Login = () => {
   const router = useRouter();
-  const API_BASE_URL = "http://216.10.251.239:3000";
+  const API_BASE_URL = "http://192.168.1.42:3000";
 
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);

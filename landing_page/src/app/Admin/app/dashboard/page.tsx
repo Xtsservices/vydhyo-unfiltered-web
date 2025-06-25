@@ -389,7 +389,7 @@ const MedicalDashboard = () => {
         return;
       }
 
-      const response = await fetch('http://216.10.251.239:3000/users/AllUsers?type=doctor&status=approved', {
+      const response = await fetch('http://192.168.1.42:3000/users/AllUsers?type=doctor&status=approved', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

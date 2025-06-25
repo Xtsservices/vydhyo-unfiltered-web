@@ -23,6 +23,7 @@ import {
   Drawer,
   Progress,
 } from "antd";
+const { Option } = Select;
 import dayjs from "dayjs";
 import {
   UserOutlined,
@@ -212,7 +213,8 @@ const ReceptionistDashboard = () => {
 
   // --- Render ---
   return (
-    <Layout style={{ minHeight: "100vh", backgroundColor: "#f5f5f5" }}>
+    <>
+        <Layout style={{ minHeight: "100vh", backgroundColor: "#f5f5f5" }}>
       <Content
         style={{
           padding: isMobile ? "16px 12px" : "24px",
@@ -511,8 +513,9 @@ const ReceptionistDashboard = () => {
                   title={
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
                       <Text style={{ fontSize: '18px', fontWeight: '600' }}>Appointment</Text>
-                      <Select defaultValue="Last 7 Days" style={{ width: 120 }}>
-                        <Option value="Last 7 Days">Last 7 Days</Option>
+                      <Select defaultValue="Last 7 Days" style={{ minWidth: 120 }}>
+                        <Select.Option value="Last 7 Days">Last 7 Days</Select.Option>
+                        <Select.Option value="Last 30 Days">Last 30 Days</Select.Option>
                       </Select>
                     </div>
                   }
@@ -798,8 +801,7 @@ const ReceptionistDashboard = () => {
             `}</style>
           </Content>
         </Layout>
-      </Layout>
-    </Layout>
+    </>
   );
 };
 

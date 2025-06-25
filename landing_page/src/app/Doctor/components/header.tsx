@@ -92,7 +92,7 @@ const AppHeader = () => {
           onClick={() => router.push("/Admin/app/dashboard")}
         >
           <img
-            src="/images/vy_logo.png"
+            src="/images/vydh_logo.png"
             alt="Logo"
             style={
               {

@@ -23,6 +23,7 @@ import {
   Drawer,
   Progress,
 } from "antd";
+import AppHeader from '../component/header'
 const { Option } = Select;
 import dayjs from "dayjs";
 import {
@@ -343,7 +344,10 @@ const ReceptionistDashboard = () => {
   // --- Render ---
   return (
     <>
-        <Layout style={{ minHeight: "100vh", backgroundColor: "#f5f5f5" }}>
+    <AppHeader/>
+        <Layout style={{ minHeight: "100vh", backgroundColor: "#f5f5f5",marginTop: "64px" }}>
+      
+      
       <Content
         style={{
           padding: isMobile ? "16px 12px" : "24px",

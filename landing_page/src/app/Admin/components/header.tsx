@@ -60,96 +60,98 @@ const AppHeader = () => {
     };
 
     return (
-        <Header
-            style={{
-                position: 'fixed',
-                top: 0,
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '0 24px',
-                background: '#fff',
-                borderBottom: '1px solid #f0f0f0',
-                height: '64px',
-                zIndex: 1000,
-                paddingTop: '12px',
-                paddingBottom: '12px',
-            }}
-        >
-            {/* Left side - Logo */}
-            <div
-                style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+        <>
+            <Header
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '0 24px',
+                    background: '#fff',
+                    borderBottom: '1px solid #f0f0f0',
+                    height: '64px',
+                    zIndex: 1000,
+                    paddingTop: '12px',
+                    paddingBottom: '12px',
+                }}
             >
+                {/* Left side - Logo */}
                 <div
-                    style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' } as CSSProperties}
-                    onClick={() => router.push('/Admin/app/dashboard')}
+                    style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
                 >
-                    <img
-                        src="/images/logo.png"
-                        alt="Logo"
-                        style={{
-                            width: '140px',
-                            height: '140px',
-                            borderRadius: '8px',
-                            marginRight: '12px',
-                        } as CSSProperties}
-                    />
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginLeft: 'auto', marginRight: '44px' } as CSSProperties}>
-                    {/* Notifications */}
-                    <Badge count={3} size="small">
-                        <Button
-                            type="text"
-                            icon={<BellOutlined style={{ fontSize: '18px' }} />}
+                    <div
+                        style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' } as CSSProperties}
+                        onClick={() => router.push('/Admin/app/dashboard')}
+                    >
+                        <img
+                            src="/images/logo.png"
+                            alt="Logo"
                             style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                border: 'none',
-                                color: '#666',
+                                width: '140px',
+                                height: '140px',
+                                borderRadius: '8px',
+                                marginRight: '12px',
                             } as CSSProperties}
                         />
-                    </Badge>
+                    </div>
 
-                    {/* Admin Profile Dropdown */}
-                    <Dropdown
-                        menu={{
-                            items: adminMenuItems,
-                            onClick: handleMenuClick,
-                        }}
-                        trigger={['click']}
-                    >
-                        <div
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                cursor: 'pointer',
-                                padding: '4px 8px',
-                                borderRadius: '6px',
-                                transition: 'background-color 0.2s',
-                            } as CSSProperties}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor = '#f5f5f5';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.backgroundColor = 'transparent';
-                            }}
-                        >
-                            <Avatar
-                                size={32}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginLeft: 'auto', marginRight: '44px' } as CSSProperties}>
+                        {/* Notifications */}
+                        <Badge count={3} size="small">
+                            <Button
+                                type="text"
+                                icon={<BellOutlined style={{ fontSize: '18px' }} />}
                                 style={{
-                                    backgroundColor: '#1890ff',
-                                    color: 'white',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    border: 'none',
+                                    color: '#666',
                                 } as CSSProperties}
-                                icon={<UserOutlined />}
                             />
-                            <Text style={{ fontWeight: '500', color: '#000' }}>Admin</Text>
-                            <DownOutlined style={{ fontSize: '12px', color: '#666' }} />
-                        </div>
-                    </Dropdown>
+                        </Badge>
+
+                        {/* Admin Profile Dropdown */}
+                        <Dropdown
+                            menu={{
+                                items: adminMenuItems,
+                                onClick: handleMenuClick,
+                            }}
+                            trigger={['click']}
+                        >
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    cursor: 'pointer',
+                                    padding: '4px 8px',
+                                    borderRadius: '6px',
+                                    transition: 'background-color 0.2s',
+                                } as CSSProperties}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#f5f5f5';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'transparent';
+                                }}
+                            >
+                                <Avatar
+                                    size={32}
+                                    style={{
+                                        backgroundColor: '#1890ff',
+                                        color: 'white',
+                                    } as CSSProperties}
+                                    icon={<UserOutlined />}
+                                />
+                                <Text style={{ fontWeight: '500', color: '#000' }}>Admin</Text>
+                                <DownOutlined style={{ fontSize: '12px', color: '#666' }} />
+                            </div>
+                        </Dropdown>
+                    </div>
                 </div>
             </Header>
         </>

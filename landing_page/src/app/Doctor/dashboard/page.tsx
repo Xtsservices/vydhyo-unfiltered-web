@@ -502,8 +502,7 @@ export default function MedicalDashboard() {
           background-color: #e6f7ff !important;
         }
       `}</style>
-    </Layout></>
-    
     </>
+    
   );
 }

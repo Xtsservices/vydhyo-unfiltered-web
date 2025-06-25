@@ -10,8 +10,7 @@ const doctors = [
     rating: 5.0,
     fee: 1500,
     available: true,
-    image:
-      "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face",
+    image: "/images/doc1.jpeg",
   },
   {
     name: "Dr. Priya Patel",
@@ -21,8 +20,7 @@ const doctors = [
     rating: 4.6,
     fee: 1200,
     available: true,
-    image:
-      "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face",
+    image: "/images/doc3.jpeg",
   },
   {
     name: "Dr. Amit Kumar",
@@ -32,8 +30,7 @@ const doctors = [
     rating: 4.8,
     fee: 2000,
     available: true,
-    image:
-      "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face",
+    image: "/images/doctor.jpg",
   },
   {
     name: "Dr. Ananya Gupta",
@@ -43,8 +40,7 @@ const doctors = [
     rating: 4.8,
     fee: 1800,
     available: true,
-    image:
-      "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face",
+    image: "/images/doc3.jpeg",
   },
   {
     name: "Dr. Sanjay Verma",
@@ -54,8 +50,7 @@ const doctors = [
     rating: 4.7,
     fee: 1600,
     available: true,
-    image:
-      "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face",
+    image: "/images/doc1.jpeg",
   },
   {
     name: "Dr. Neha Singh",
@@ -65,8 +60,7 @@ const doctors = [
     rating: 4.9,
     fee: 1900,
     available: true,
-    image:
-      "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face",
+    image: "/images/doc3.jpeg",
   },
   {
     name: "Dr. Vikram Joshi",
@@ -76,8 +70,7 @@ const doctors = [
     rating: 4.8,
     fee: 2200,
     available: true,
-    image:
-      "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face",
+    image: "/images/doc1.jpeg",
   },
   {
     name: "Dr. Meera Nair",
@@ -87,8 +80,7 @@ const doctors = [
     rating: 4.5,
     fee: 1400,
     available: true,
-    image:
-      "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face",
+    image: "/images/doc2.jpeg",
   },
 ];
 

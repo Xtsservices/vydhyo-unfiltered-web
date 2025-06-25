@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import AppHeader from '../../components/header'
+import AppHeader from '../../components/header';
 import {
   Layout,
   Card,
@@ -63,18 +63,13 @@ const MedicalDashboard = () => {
   const [doctorsCount, setDoctorsCount] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  // Optimized navigation handlers with useCallback to prevent recreation
   const handleNavigation = useCallback((path: string) => {
-    // Add loading state to provide immediate feedback
     message.loading('Navigating...', 0.5);
-    
-    // Use setTimeout to ensure UI updates before navigation
     setTimeout(() => {
       router.push(path);
     }, 50);
   }, [router]);
 
-  // Memoized stats data to prevent unnecessary re-renders
   const statsData = useMemo(() => [
     {
       title: 'Doctors',
@@ -102,7 +97,6 @@ const MedicalDashboard = () => {
     }
   ], [doctorsCount, handleNavigation]);
 
-  // Memoized chart data to prevent recreation on every render
   const revenueData = useMemo(() => [
     { year: '2013', revenue: 50 },
     { year: '2014', revenue: 75 },
@@ -248,7 +242,6 @@ const MedicalDashboard = () => {
     }
   ], []);
 
-  // Memoized table columns to prevent recreation
   const doctorColumns = useMemo(() => [
     {
       title: 'Doctor Name',
@@ -387,7 +380,6 @@ const MedicalDashboard = () => {
     }
   ], []);
 
-  // Optimized API fetch function
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
@@ -397,7 +389,7 @@ const MedicalDashboard = () => {
         return;
       }
 
-      const response = await fetch('http://216.10.251.239:3000/users/AllUsers?type=doctor&status=approved', {
+      const response = await fetch('http://192.168.1.42:3000/users/AllUsers?type=doctor&status=approved', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -426,7 +418,6 @@ const MedicalDashboard = () => {
     fetchUsers();
   }, [fetchUsers]);
 
-  // Optimized card click handler
   const handleCardClick = useCallback((onClick: () => void) => {
     return (e: React.MouseEvent) => {
       e.preventDefault();
@@ -471,7 +462,6 @@ const MedicalDashboard = () => {
           </Header>
 
           <Content style={{ padding: '16px', marginTop: '8px', backgroundColor: '#f5f5f5', minHeight: 'calc(100vh - 64px)' }}>
-            {/* Stats Cards */}
             <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
               {statsData.map((stat, index) => (
                 <Col xs={24} sm={12} md={12} lg={6} xl={6} key={index}>
@@ -532,7 +522,6 @@ const MedicalDashboard = () => {
             </Row>
 
             <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
-              {/* Revenue Chart */}
               <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                 <Card
                   title="Revenue"
@@ -564,7 +553,6 @@ const MedicalDashboard = () => {
                 </Card>
               </Col>
 
-              {/* Status Chart */}
               <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                 <Card
                   title="Status"
@@ -599,7 +587,6 @@ const MedicalDashboard = () => {
             </Row>
 
             <Row gutter={[16, 16]}>
-              {/* Doctors List */}
               <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                 <Card
                   title="Doctors List"
@@ -623,7 +610,6 @@ const MedicalDashboard = () => {
                 </Card>
               </Col>
 
-              {/* Patients List */}
               <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                 <Card
                   title="Patients List"
@@ -648,7 +634,6 @@ const MedicalDashboard = () => {
               </Col>
             </Row>
 
-            {/* Appointment List - Full Width */}
             <Row gutter={[16, 16]}>
               <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                 <Card

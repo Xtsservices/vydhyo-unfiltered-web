@@ -10,55 +10,54 @@ const { Text } = Typography;
 const AppHeader = () => {
   const router = useRouter(); // Initialize the router hook
 
-  // Dropdown menu items for admin profile
-  const adminMenuItems = [
-    {
-      key: "1",
-      label: "Profile",
-    },
-    {
-      key: "2",
-      label: "Settings",
-    },
-    {
-      key: "3",
-      label: "Logout",
-    },
-  ];
+    // Dropdown menu items for admin profile
+    const adminMenuItems = [
+        {
+            key: '1',
+            label: 'Profile',
+            onClick: () => router.push('/Doctor/profile'),
+        },
+        {
+            key: '2',
+            label: 'Settings',
+            onClick: () => router.push('/Doctor/app/settings'),
+        },
+        {
+            key: '3',
+            label: 'Logout',
+        },
+    ];
 
-  const handleMenuClick = (e: { key: any }) => {
-    console.log("Menu clicked:", e.key);
+    const handleMenuClick = (e: { key: any }) => {
+        console.log('Menu clicked:', e.key);
 
-    // Handle logout functionality
-    if (e.key === "3") {
-      // Logout option
-      // Remove token from localStorage
-      localStorage.removeItem("token");
+        // Handle logout functionality
+        if (e.key === '3') { // Logout option
+            // Remove token from localStorage
+            localStorage.removeItem('token');
 
-      // You might also want to remove other auth-related items
-      localStorage.removeItem("user");
-      localStorage.removeItem("refreshToken");
+            // You might also want to remove other auth-related items
+            localStorage.removeItem('user');
+            localStorage.removeItem('refreshToken');
 
-      // Clear sessionStorage if you're using it
-      sessionStorage.clear();
+            // Clear sessionStorage if you're using it
+            sessionStorage.clear();
 
-      // Redirect to login page
-      router.push("/Admin/app/login");
-    }
+            // Redirect to login page
+            router.push('/Admin/app/login');
+        }
 
-    // Handle other menu items
-    if (e.key === "1") {
-      // Profile
-      // Add profile navigation logic here
-      console.log("Navigate to profile");
-    }
+        // Handle other menu items
+        if (e.key === '1') { // Profile
+            // Add profile navigation logic here
+            console.log('Navigate to profile');
+        }
 
-    if (e.key === "2") {
-      // Settings
-      // Add settings navigation logic here
-      console.log("Navigate to settings");
-    }
-  };
+        if (e.key === '2') { // Settings
+            // Add settings navigation logic here
+            console.log('Navigate to settings');
+        }
+    };
 
   return (
     <>

@@ -414,31 +414,19 @@ const SettingsPage = () => {
             icon: <BookOutlined />,
             label: 'Specializations',
         },
-        {
-            key: 'allergy',
-            icon: <MedicineBoxOutlined />,
-            label: 'Allergies',
-        },
+      
         {
             key: 'bloodGroup',
             icon: <HeartOutlined />,
             label: 'Blood Groups',
         },
-        {
-            key: 'chronicConditions',
-            icon: <ExperimentOutlined />,
-            label: 'Chronic Conditions',
-        },
+       
         {
             key: 'degree',
             icon: <BookOutlined />,
             label: 'Degrees',
         },
-        {
-            key: 'department',
-            icon: <BankOutlined />,
-            label: 'Departments',
-        },
+     
         {
             key: 'doctorType',
             icon: <UserSwitchOutlined />,
@@ -501,6 +489,10 @@ const SettingsPage = () => {
                         icon={<EditOutlined />}
                         size="small"
                         onClick={() => openModal(record)}
+                        style={{ 
+                            backgroundColor: '#4B8BF5',
+                            borderColor: '#4B8BF5'
+                        }}
                     >
                         Edit
                     </Button>
@@ -532,18 +524,22 @@ const SettingsPage = () => {
         return (
             <div>
                 <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Title level={2}>{config.entityName} Management</Title>
+                    <Title level={2} style={{ color: '#1a365d' }}>{config.entityName} Management</Title>
                     <Button
                         type="primary"
                         icon={<PlusOutlined />}
                         onClick={() => openModal()}
                         size="large"
+                        style={{ 
+                            backgroundColor: '#4B8BF5',
+                            borderColor: '#4B8BF5'
+                        }}
                     >
                         Add New {config.entityName}
                     </Button>
                 </div>
 
-                <Card>
+                <Card style={{ borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
                     <Table
                         columns={columns}
                         dataSource={config.data}
@@ -564,6 +560,13 @@ const SettingsPage = () => {
                                 />
                             ),
                         }}
+                        style={{
+                            '& .ant-table-thead > tr > th': {
+                                backgroundColor: '#f8f9fa',
+                                color: '#1a365d',
+                                fontWeight: '600'
+                            }
+                        }}
                     />
                 </Card>
             </div>
@@ -575,10 +578,10 @@ const SettingsPage = () => {
         const menuItem = menuItems.find(item => item.key === sectionId);
         return (
             <div>
-                <Title level={2}>{menuItem?.label} Management</Title>
-                <Card>
+                <Title level={2} style={{ color: '#1a365d' }}>{menuItem?.label} Management</Title>
+                <Card style={{ borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
                     <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-                        <div style={{ fontSize: '48px', color: '#d9d9d9', marginBottom: '16px' }}>
+                        <div style={{ fontSize: '48px', color: '#4B8BF5', marginBottom: '16px' }}>
                             {menuItem?.icon && React.cloneElement(menuItem.icon, { style: { fontSize: '48px' } })}
                         </div>
                         <Title level={3} type="secondary">
@@ -612,11 +615,21 @@ const SettingsPage = () => {
         <>
             <AppHeader />
             <Layout style={{ minHeight: '100vh', marginTop: '64px' }}>
-                <Sider width={250} theme="light" style={{ borderRight: '1px solid #f0f0f0' }}>
-                    <div style={{ padding: '16px', borderBottom: '1px solid #f0f0f0' }}>
+                <Sider 
+                    width={250} 
+                    style={{ 
+                        background: '#4472C4',
+                        borderRight: '1px solid #e1e8ed'
+                    }}
+                >
+                    <div style={{ 
+                        padding: '16px', 
+                        borderBottom: '1px solid rgba(255,255,255,0.1)',
+                        backgroundColor: '#4472C4'
+                    }}>
                         <Space>
-                            <SettingOutlined style={{ fontSize: '24px', color: '#1890ff' }} />
-                            <Title level={3} style={{ margin: 0 }}>Settings</Title>
+                            <SettingOutlined style={{ fontSize: '24px', color: '#ffffff' }} />
+                            <Title level={3} style={{ margin: 0, color: '#ffffff' }}>Settings</Title>
                         </Space>
                     </div>
                     <Menu
@@ -624,12 +637,17 @@ const SettingsPage = () => {
                         selectedKeys={[activeSection]}
                         items={menuItems}
                         onClick={({ key }) => setActiveSection(key as SectionKey)}
-                        style={{ border: 'none', marginTop: '8px' }}
+                        style={{ 
+                            border: 'none', 
+                            marginTop: '8px',
+                            backgroundColor: '#4472C4'
+                        }}
+                        theme="dark"
                     />
                 </Sider>
 
                 <Layout>
-                    <Content style={{ padding: '24px', background: '#f5f5f5' }}>
+                    <Content style={{ padding: '24px', background: '#f8f9fa' }}>
                         <Spin spinning={loading && !Object.keys(sectionConfigs).includes(activeSection)}>
                             {renderContent()}
                         </Spin>
@@ -639,6 +657,7 @@ const SettingsPage = () => {
                             open={isModalVisible}
                             onCancel={closeModal}
                             footer={null}
+                            style={{ borderRadius: '8px' }}
                         >
                             <Form
                                 form={form}
@@ -662,12 +681,16 @@ const SettingsPage = () => {
                                     <Input
                                         placeholder={`Enter ${getCurrentSectionTitle().toLowerCase()} name`}
                                         size="large"
+                                        style={{ borderRadius: '6px' }}
                                     />
                                 </Form.Item>
 
                                 <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
                                     <Space>
-                                        <Button onClick={closeModal}>
+                                        <Button 
+                                            onClick={closeModal}
+                                            style={{ borderRadius: '6px' }}
+                                        >
                                             Cancel
                                         </Button>
                                         <Button
@@ -675,6 +698,11 @@ const SettingsPage = () => {
                                             htmlType="submit"
                                             loading={loading}
                                             icon={<SaveOutlined />}
+                                            style={{ 
+                                                backgroundColor: '#4B8BF5',
+                                                borderColor: '#4B8BF5',
+                                                borderRadius: '6px'
+                                            }}
                                         >
                                             {editingRecord ? 'Update' : 'Create'}
                                         </Button>

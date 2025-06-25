@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { Table, Input, Button, DatePicker, Tag, Space, Select, Avatar, Modal, Spin, message, Layout } from 'antd';
 import { SearchOutlined, CalendarOutlined, DownloadOutlined} from '@ant-design/icons';
 import  AppHeader from '../../components/header';
@@ -105,7 +105,7 @@ const DoctorList = () => {
                 return;
             }
 
-            const response = await fetch('http://216.10.251.239:3000/users/AllUsers?type=doctor&status=approved', {
+            const response = await fetch('http://192.168.1.42:3000/users/AllUsers?type=doctor&status=approved', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -153,7 +153,7 @@ const DoctorList = () => {
                 return;
             }
 
-            const response = await fetch(`http://216.10.251.239:3000/admin/approveDoctor`, {
+            const response = await fetch(`http://192.168.1.42:3000/admin/approveDoctor`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -269,12 +269,11 @@ const DoctorList = () => {
     };
 
     const getUniqueSpecializations = () => {
-        const allSpecs = doctors.flatMap(doctor => {
-            if (doctor.specialization && Array.isArray(doctor.specialization)) {
-                return doctor.specialization.map(specialization => specialization.name);
-            }
-            return [];
-        });
+        const allSpecs = doctors.flatMap(doctor => 
+            Array.isArray(doctor.specialization)
+                ? doctor.specialization.map(specialization => specialization.name)
+                : []
+        );
         return [...new Set(allSpecs)].filter(specialization => specialization && String(specialization).trim() !== '');
     };
 
@@ -408,6 +407,8 @@ const DoctorList = () => {
         }
     ];
 
+ 
+
     return (
         <>
     
@@ -454,7 +455,7 @@ const DoctorList = () => {
                             Doctor List
                         </h2>
                         <Space>
-                            <Input
+                            {/* <Input
                                 placeholder="Search by name, ID, email, or specialization"
                                 prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
                                 value={searchText}
@@ -470,10 +471,10 @@ const DoctorList = () => {
                                 style={{ borderRadius: '6px' }}
                             >
                                 Refresh
-                            </Button>
-                            <Button onClick={() => router.push('/Admin/app/needApproval')}>
+                            </Button> */}
+                            {/* <Button onClick={() => router.push('/Admin/app/needApproval')}>
                                 Need For Approval of Doctors
-                            </Button>
+                            </Button> */}
                         </Space>
                     </div>
 
@@ -488,8 +489,7 @@ const DoctorList = () => {
                             placeholder="All Status"
                             value={statusFilter}
                             onChange={setStatusFilter}
-                            dropdownStyle={{ width: 120 }}
-                            // width prop is not available, so use dropdownStyle or wrap in a div if needed
+                            styles={{ popup: { root: { width: 120 } } }}
                         >
                             <Option value="all">All Status</Option>
                             <Option value="active">Active</Option>

@@ -71,18 +71,18 @@ const AddStaffModal = ({ isOpen, onCancel, onSubmit, staffType, loading }) => {
       // Create regular JavaScript object instead of FormData
       const staffData: Record<string, any> = {};
       
-    if (staffType === 'receptionist') {
-      Object.assign(staffData, {
-        firstname: values.firstname,
-        lastname: values.lastname,
-        gender: values.gender,
-        DOB: dayjs(values.DOB).format('DD-MM-YYYY'),
-        mobile: values.mobile,
-      });
-      // Note: File upload will need separate handling or convert to base64
-      if (fileList.length > 0) {
-        // staffData.profilePicture = await convertFileToBase64(fileList[0].originFileObj);
-      }
+      if (staffType === 'receptionist') {
+        Object.assign(staffData, {
+          firstname: values.firstname,
+          lastname: values.lastname,
+          gender: values.gender,
+          DOB: dayjs(values.DOB).format('DD-MM-YYYY'),
+          mobile: values.mobile,
+        });
+        // Note: File upload will need separate handling or convert to base64
+        if (fileList.length > 0) {
+          // staffData.profilePicture = await convertFileToBase64(fileList[0].originFileObj);
+        }
       } else {
         // For other staff types
         Object.keys(values).forEach(key => {
@@ -396,7 +396,7 @@ export default function StaffManagement() {
         console.log('Sending receptionist data as object:', staffData);
         
         const response = await axios.post(
-          'http://216.10.251.239:3000/doctor/createReceptionist',
+          'http://192.168.1.42:3000/doctor/createReceptionist',
           staffData, // Send as regular object
           {
             headers: {
@@ -526,14 +526,12 @@ export default function StaffManagement() {
             selectedKeys={[selectedMenuItem]}
             onSelect={({ key }) => setSelectedMenuItem(key)}
             style={{ borderRight: 0, height: 'calc(100vh - 200px)', overflowY: 'auto' }}
-          >
-            {menuItems.map(item => (
-              <Menu.Item key={item.key} icon={item.icon}>
-                <span>{item.label}</span>
-                {item.badge && <Badge count={item.badge} size="small" style={{ marginLeft: '8px' }} />}
-              </Menu.Item>
-            ))}
-          </Menu>
+            items={menuItems.map(item => ({
+              key: item.key,
+              icon: item.icon,
+              label: item.label
+            }))}
+          />
         </Sider>
 
         <Layout>

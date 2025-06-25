@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-
+import AppHeader from '../../components/header'; 
 const PhoneOutlined = () => <span>📱</span>;
 const EyeOutlined = () => <span>👁️</span>;
 const EyeInvisibleOutlined = () => <span>🙈</span>;
@@ -289,7 +289,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <><div className="min-h-screen bg-gray-50 flex">
       {/* Left Side - Illustration */}
       <div className={`${isMobile ? 'hidden' : 'flex'} flex-1 items-center justify-center p-8 bg-white`}>
         <div className="max-w-md text-center">
@@ -498,7 +498,8 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div></>
+    
   );
 };
 

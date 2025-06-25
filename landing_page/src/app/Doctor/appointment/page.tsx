@@ -18,6 +18,8 @@ import {
   TimePicker,
   message
 } from 'antd';
+import AppHeader from "@/app/Admin/components/header";
+import SideHeader from '../components/sideheader';
 import { 
   PhoneOutlined, 
   VideoCameraOutlined, 
@@ -233,7 +235,9 @@ const Appointment = () => {
     }, []);
 
     return (
-        <div style={{ padding: '24px', backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+        <>
+        <AppHeader />
+        <div style={{ padding: '24px', backgroundColor: '#f5f5f5', minHeight: '100vh',marginTop: '64px' }}>
             {/* Header */}
             <div style={{ marginBottom: '32px' }}>
                 <Title level={2} style={{ margin: 0, color: '#262626' }}>
@@ -358,7 +362,8 @@ const Appointment = () => {
                     />
                 </Space>
             </Modal>
-        </div>
+        </div></>
+        
     );
 };
 

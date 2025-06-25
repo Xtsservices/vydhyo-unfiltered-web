@@ -28,7 +28,7 @@ import {
   MailOutlined,
   MoreOutlined
 } from '@ant-design/icons';
-import AppHeader from '@/app/Admin/components/header';
+import AppHeader from '../components/header'; // Adjust the import path as necessary
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 const { Header, Sider, Content } = Layout;
@@ -201,7 +201,7 @@ export default function MedicalDashboard() {
 const getCurrentUserData = async () => {
   try {
     const token = await getAuthToken(); // If this is not async, remove await
-
+console.log("token", token);
     const response = await fetch(`${API_BASE_URL}/users/getUser`, {
       method: 'GET',
       headers: {
@@ -225,7 +225,7 @@ const getCurrentUserData = async () => {
   useEffect(() => {
     getCurrentUserData()
   },[])
-
+console.log("userData", userData);
   return (
     <>
       <AppHeader />

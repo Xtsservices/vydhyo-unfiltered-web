@@ -1,21 +1,30 @@
 "use client";
 
-import React, { useState } from 'react';
-import { 
-  Card, 
-  Button, 
-  Table, 
-  Tag, 
-  List, 
-  Row, 
-  Col, 
-  Typography, 
+import React, { useState } from "react";
+import {
+  Card,
+  Button,
+  Table,
+  Tag,
+  List,
+  Row,
+  Col,
+  Typography,
   Space,
   Divider,
   Select,
   Tabs,
-  Layout
-} from 'antd';
+  Layout,
+  DatePicker,
+  Modal,
+  Avatar,
+  Badge,
+  Tooltip,
+  Drawer,
+  Progress,
+} from "antd";
+const { Option } = Select;
+import dayjs from "dayjs";
 import {
   UserOutlined,
   CalendarOutlined,
@@ -27,263 +36,376 @@ import {
   DollarOutlined,
   SettingOutlined,
   PlusOutlined,
-  UserAddOutlined
-} from '@ant-design/icons';
-// Make sure the file exists at this path, or update the path if needed
-// import SideHeader from '../component/sideheader';
-import Header from "../../Admin/components/header"
+  UserAddOutlined,
+  ClockCircleOutlined,
+  ReloadOutlined,
+  UserDeleteOutlined,
+  TeamOutlined,
+  FilterOutlined,
+  EyeOutlined,
+  RiseOutlined,
+  FallOutlined,
+} from "@ant-design/icons";
+import { useRouter } from "next/navigation";
 
 const { Title, Text } = Typography;
-const { Option } = Select;
-const { TabPane } = Tabs;
-const { Sider, Content } = Layout;
+const { RangePicker } = DatePicker;
+const { Content } = Layout;
 
-const DoctorDashboardPage = () => {
+interface Appointment {
+  key: string;
+  id: string;
+  name: string;
+  avatar: string;
+  time?: string;
+  type: string;
+  status?: string;
+  doctor?: string;
+  reason?: string;
+  originalTime?: string;
+  newTime?: string;
+  lastVisit?: string;
+  nextFollowUp?: string;
+  specialty?: string;
+  experience?: string;
+  rating?: number;
+  availableToday?: boolean;
+  nextAppointment?: string;
+  totalToday?: number;
+}
+
+interface DashboardCard {
+  id: string;
+  title: string;
+  count: number;
+  change: string;
+  trend: "up" | "down" | "neutral";
+  color: string;
+  icon: React.ReactNode;
+  data: Appointment[];
+  percent?: number;
+}
+
+const ReceptionistDashboard = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const [selectedCard, setSelectedCard] = useState<DashboardCard | null>(null);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [selectedDateRange, setSelectedDateRange] = useState<
+    [dayjs.Dayjs | null, dayjs.Dayjs | null] | null
+  >(null);
+  const [rescheduleModalVisible, setRescheduleModalVisible] = useState(false);
 
-  // Sample data for appointments
-  const appointmentData = [
+  const Router = useRouter();
+
+  // --- Sample Data (same as before, omitted for brevity) ---
+  // ... (copy your data arrays here, unchanged) ...
+
+  // For brevity, only showing the dashboardCards array with percent for charts
+  const dashboardCards: DashboardCard[] = [
     {
-      key: '1',
-      id: '#Apt0001',
-      name: 'Adrian Marshall',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face&round=50',
-      time: '11 Nov 2024 10.45 AM',
-      type: 'General',
-      typeColor: '#1890ff'
+      id: "total",
+      title: "Total Appointments",
+      count: 156,
+      change: "+12%",
+      trend: "up",
+      color: "#1890ff",
+      icon: <CalendarOutlined />,
+      data: [], // fill with your data
+      percent: 80,
     },
     {
-      key: '2',
-      id: '#Apt0002', 
-      name: 'Kelly Stevens',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b1-af?w=40&h=40&fit=crop&crop=face&round=50',
-      time: '10 Nov 2024 11.00 AM',
-      type: 'Clinic Consulting',
-      typeColor: '#1890ff'
+      id: "upcoming",
+      title: "Upcoming Appointments",
+      count: 23,
+      change: "Next 24 hours",
+      trend: "neutral",
+      color: "#faad14",
+      icon: <ClockCircleOutlined />,
+      data: [],
+      percent: 60,
     },
     {
-      key: '3',
-      id: '#Apt0003',
-      name: 'Samuel Anderson',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face&round=50',
-      time: '03 Nov 2024 02.00 PM',
-      type: 'General',
-      typeColor: '#1890ff'
+      id: "cancelled",
+      title: "Cancelled Appointments",
+      count: 8,
+      change: "-5%",
+      trend: "down",
+      color: "#ff4d4f",
+      icon: <CloseCircleOutlined />,
+      data: [],
+      percent: 20,
     },
     {
-      key: '4',
-      id: '#Apt0004',
-      name: 'Catherine Griffin',
-      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face&round=50',
-      time: '01 Nov 2024 04.00 PM',
-      type: 'Clinic Consulting',
-      typeColor: '#1890ff'
+      id: "reschedule",
+      title: "Reschedule Appointments",
+      count: 12,
+      change: "Pending reschedule",
+      trend: "neutral",
+      color: "#722ed1",
+      icon: <ReloadOutlined />,
+      data: [],
+      percent: 30,
     },
     {
-      key: '5',
-      id: '#Apt0005',
-      name: 'Robert Hutchinson',
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&fit=crop&crop=face&round=50',
-      time: '28 Oct 2024 05.30 PM',
-      type: 'General',
-      typeColor: '#1890ff'
-    }
+      id: "new",
+      title: "New Appointments",
+      count: 34,
+      change: "+18%",
+      trend: "up",
+      color: "#52c41a",
+      icon: <PlusOutlined />,
+      data: [],
+      percent: 50,
+    },
+    {
+      id: "followup",
+      title: "Follow Up",
+      count: 19,
+      change: "Due this week",
+      trend: "neutral",
+      color: "#13c2c2",
+      icon: <UserOutlined />,
+      data: [],
+      percent: 40,
+    },
+    {
+      id: "doctors",
+      title: "Doctor Availability",
+      count: 3,
+      change: "2 Available",
+      trend: "neutral",
+      color: "#1890ff",
+      icon: <TeamOutlined />,
+      data: [],
+      percent: 66,
+    },
+    {
+      id: "doctorlist",
+      title: "Doctor List",
+      count: 8,
+      change: "6 Available today",
+      trend: "neutral",
+      color: "#fa8c16",
+      icon: <UserDeleteOutlined />,
+      data: [],
+      percent: 75,
+    },
   ];
 
-  const recentPatientsData = [
-    {
-      key: '1',
-      id: 'P0001',
-      name: 'Adrian Marshall',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face&round=50',
-      lastAppointment: 'Last Appointment 15 Mar 2024'
-    },
-    {
-      key: '2',
-      id: 'P0002',
-      name: 'Kelly Stevens', 
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b1af?w=60&h=60&fit=crop&crop=face&round=50',
-      lastAppointment: 'Last Appointment 13 Mar 2024'
-    }
-  ];
-
-  const invoiceData = [
-    {
-      key: '1',
-      id: '#Apt0001',
-      name: 'Adrian',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face&round=50',
-      amount: '$450',
-      paidOn: '11 Nov 2024'
-    },
-    {
-      key: '2',
-      id: '#Apt0002',
-      name: 'Kelly',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b1af?w=40&h=40&fit=crop&crop=face&round=50',
-      amount: '$500',
-      paidOn: '10 Nov 2024'
-    },
-    {
-      key: '3',
-      id: '#Apt0003',
-      name: 'Samuel',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face&round=50',
-      amount: '$320',
-      paidOn: '03 Nov 2024'
-    },
-    {
-      key: '4',
-      id: '#Apt0004',
-      name: 'Catherine',
-      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face&round=50',
-      amount: '$240',
-      paidOn: '01 Nov 2024'
-    },
-    {
-      key: '5',
-      id: '#Apt0005',
-      name: 'Robert',
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&fit=crop&crop=face&round=50',
-      amount: '$380',
-      paidOn: '28 Oct 2024'
-    }
-  ];
-
-  const appointmentColumns = [
-    {
-      title: '',
-      dataIndex: 'avatar',
-      key: 'avatar',
-      width: 60,
-      render: (avatar: string | Blob | undefined, record: { id: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; name: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; }) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <img src={avatar} alt="avatar" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
-          <div>
-            <div style={{ color: '#1890ff', fontSize: '12px', fontWeight: '500' }}>{record.id}</div>
-            <div style={{ fontWeight: '500', fontSize: '14px' }}>{record.name}</div>
-          </div>
-        </div>
-      )
-    },
-    {
-      title: '',
-      dataIndex: 'time',
-      key: 'time',
-      render: (time: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined, record: { typeColor: string | (string & {}) | undefined; type: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; }) => (
-        <div>
-          <div style={{ fontSize: '14px', marginBottom: '4px' }}>{time}</div>
-          <Tag color={record.typeColor} style={{ fontSize: '11px' }}>{record.type}</Tag>
-        </div>
-      )
-    },
-    {
-      title: '',
-      key: 'actions',
-      width: 80,
-      render: () => (
-        <Space>
-          <Button 
-            type="text" 
-            shape="circle" 
-            icon={<CheckCircleOutlined />} 
-            style={{ color: '#52c41a', borderColor: '#52c41a' }}
-          />
-          <Button 
-            type="text" 
-            shape="circle" 
-            icon={<CloseCircleOutlined />} 
-            style={{ color: '#ff4d4f', borderColor: '#ff4d4f' }}
-          />
-        </Space>
-      )
-    }
-  ];
-
-  const ChartData = () => {
-    const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-    const values = [40, 38, 15, 43, 32, 45, 62];
-    const colors = ['#1890ff', '#1890ff', '#1890ff', '#faad14', '#1890ff', '#1890ff', '#1890ff'];
-    
-    return (
-      <div style={{ display: 'flex', alignItems: 'end', height: '120px', gap: '8px', justifyContent: 'center' }}>
-        {values.map((value, index) => (
-          <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-            <div 
-              style={{ 
-                width: '20px', 
-                height: `${value}px`, 
-                backgroundColor: colors[index],
-                borderRadius: '2px'
-              }}
-            />
-            <Text style={{ fontSize: '11px', color: '#8c8c8c' }}>{days[index]}</Text>
-          </div>
-        ))}
-      </div>
-    );
-  };
-
-  const handleAddWalkin = () => {
-    window.location.href = '/Receptionist/walk-in/page';
-  };
-
-  // Check window size for responsive behavior
+  // --- Responsive ---
   React.useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 768);
     };
-
     checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-
-    return () => window.removeEventListener('resize', checkScreenSize);
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  return (
-    <Layout style={{ minHeight: '100vh' }}>
-      {/* Header */}
-      <Header />
-      
-      <Layout>
-       
+  const handleCardClick = (card: DashboardCard) => {
+    setSelectedCard(card);
+    setDrawerVisible(true);
+  };
 
-        {/* Main Content */}
-        <Layout style={{ marginLeft: isMobile ? 0 : 0 }}>
-          <Content style={{ 
-            padding: isMobile ? '16px 12px' : '24px', 
-            backgroundColor: '#f5f5f5', 
-            minHeight: '100vh', 
-            marginTop: '84px' 
-          }}>
-            {/* Add Walk-in Button */}
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center', 
-              marginBottom: '24px',
-              flexWrap: 'wrap',
-              gap: '16px'
-            }}>
-              <Title level={2} style={{ margin: 0, fontSize: isMobile ? '20px' : '24px' }}>
-              Receptionist Dashboard
-              </Title>
-              <Button 
-              type="primary" 
-              icon={<UserAddOutlined />}
-              onClick={() => window.location.href = '/Receptionist/walk-in'}
-              size={isMobile ? 'middle' : 'large'}
-              style={{
-                backgroundColor: '#1890ff',
-                borderColor: '#1890ff',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
+  const handleWalkinbutton = () => {
+    Router.push("/Receptionist/walk-in");
+  };
+
+  // --- Render ---
+  return (
+    <>
+        <Layout style={{ minHeight: "100vh", backgroundColor: "#f5f5f5" }}>
+      <Content
+        style={{
+          padding: isMobile ? "16px 12px" : "24px",
+          backgroundColor: "#f5f5f5",
+          minHeight: "100vh",
+        }}
+      >
+        {/* Header */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "24px",
+            flexWrap: "wrap",
+            gap: "16px",
+          }}
+        >
+          <Title
+            level={2}
+            style={{ margin: 0, fontSize: isMobile ? "20px" : "24px" }}
+          >
+            Receptionist Dashboard
+          </Title>
+          <Button
+            type="primary"
+            icon={<UserAddOutlined />}
+            size={isMobile ? "middle" : "large"}
+            style={{
+              backgroundColor: "#1890ff",
+              borderColor: "#1890ff",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+            }}
+            onClick={handleWalkinbutton}
+          >
+            Add Walk-in
+          </Button>
+        </div>
+
+        {/* Dashboard Cards with Pie/Bar Graphs */}
+        <Row gutter={[16, 16]}>
+          {dashboardCards.map((card, idx) => (
+            <Col xs={24} sm={12} lg={6} key={card.id}>
+              <Card
+                className="dashboard-card"
+                hoverable
+                onClick={() => handleCardClick(card)}
+                style={{
+                  borderRadius: "16px",
+                  cursor: "pointer",
+                  border: `2px solid ${card.color}20`,
+                  height: "220px",
+                  boxShadow: "0 2px 16px rgba(0,0,0,0.04)",
+                  transition: "transform 0.3s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s",
+                  overflow: "hidden",
+                  background: "#fff",
+                  position: "relative",
+                }}
+                bodyStyle={{ padding: "20px" }}
               >
-              Add Walk-in
-              </Button>
+                <div style={{ display: "flex", alignItems: "center", marginBottom: "12px" }}>
+                  <div
+                    style={{
+                      backgroundColor: `${card.color}15`,
+                      padding: "12px",
+                      borderRadius: "8px",
+                      marginRight: "12px",
+                      fontSize: 24,
+                      color: card.color,
+                      boxShadow: `0 2px 8px ${card.color}10`,
+                      transition: "background 0.3s",
+                    }}
+                  >
+                    {card.icon}
+                  </div>
+                  <Text style={{ fontSize: "15px", color: "#8c8c8c", fontWeight: 500 }}>
+                    {card.title}
+                  </Text>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                  <Progress
+                    type="circle"
+                    percent={card.percent}
+                    width={60}
+                    strokeColor={card.color}
+                    strokeWidth={10}
+                    trailColor="#f0f0f0"
+                    format={percent => (
+                      <span style={{ color: card.color, fontWeight: 700, fontSize: 18 }}>
+                        {card.count}
+                      </span>
+                    )}
+                    style={{
+                      transition: "all 0.7s cubic-bezier(.34,1.56,.64,1)",
+                      boxShadow: `0 0 0 4px ${card.color}10`,
+                    }}
+                  />
+                  <div style={{ flex: 1 }}>
+                    <Progress
+                      percent={card.percent}
+                      showInfo={false}
+                      strokeColor={card.color}
+                      trailColor="#f0f0f0"
+                      style={{
+                        marginBottom: 8,
+                        transition: "all 0.7s cubic-bezier(.34,1.56,.64,1)",
+                      }}
+                    />
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      {card.trend === "up" && (
+                        <RiseOutlined style={{ color: "#52c41a", fontSize: "14px" }} />
+                      )}
+                      {card.trend === "down" && (
+                        <FallOutlined style={{ color: "#ff4d4f", fontSize: "14px" }} />
+                      )}
+                      <Text
+                        style={{
+                          fontSize: "13px",
+                          color:
+                            card.trend === "up"
+                              ? "#52c41a"
+                              : card.trend === "down"
+                              ? "#ff4d4f"
+                              : "#8c8c8c",
+                          fontWeight: 500,
+                        }}
+                      >
+                        {card.change}
+                      </Text>
+                    </div>
+                  </div>
+                </div>
+                {/* Animated overlay on hover */}
+                <div className="card-anim-overlay" />
+              </Card>
+            </Col>
+          ))}
+        </Row>
+
+        {/* Detail Drawer */}
+        <Drawer
+          title={selectedCard?.title}
+          placement="right"
+          onClose={() => setDrawerVisible(false)}
+          open={drawerVisible}
+          width={isMobile ? "100%" : "60%"}
+          style={{
+            backgroundColor: "#f5f5f5",
+          }}
+          headerStyle={{
+            backgroundColor: "#fff",
+            borderBottom: "1px solid #f0f0f0",
+          }}
+          bodyStyle={{
+            backgroundColor: "#fff",
+            padding: "24px",
+          }}
+        >
+          {/* You can keep your renderDetailedList() here */}
+          <div style={{ minHeight: 200, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Text type="secondary">[Detailed list goes here]</Text>
+          </div>
+        </Drawer>
+
+        {/* Reschedule Modal */}
+        <Modal
+          title="Reschedule Appointment"
+          open={rescheduleModalVisible}
+          onCancel={() => setRescheduleModalVisible(false)}
+          footer={[
+            <Button key="cancel" onClick={() => setRescheduleModalVisible(false)}>
+              Cancel
+            </Button>,
+            <Button key="confirm" type="primary">
+              Confirm Reschedule
+            </Button>,
+          ]}
+        >
+          <div style={{ margin: "20px 0" }}>
+            <Text strong>Select new date range:</Text>
+            <div style={{ marginTop: "12px" }}>
+              <RangePicker
+                style={{ width: "100%" }}
+                onChange={(dates) => setSelectedDateRange(dates)}
+                placeholder={["Start Date", "End Date"]}
+              />
             </div>
+          </div>
+        </Modal>
 
             <Row gutter={[16, 16]}>
               {/* Top Stats Cards */}
@@ -391,8 +513,9 @@ const DoctorDashboardPage = () => {
                   title={
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
                       <Text style={{ fontSize: '18px', fontWeight: '600' }}>Appointment</Text>
-                      <Select defaultValue="Last 7 Days" style={{ width: 120 }}>
-                        <Option value="Last 7 Days">Last 7 Days</Option>
+                      <Select defaultValue="Last 7 Days" style={{ minWidth: 120 }}>
+                        <Select.Option value="Last 7 Days">Last 7 Days</Select.Option>
+                        <Select.Option value="Last 30 Days">Last 30 Days</Select.Option>
                       </Select>
                     </div>
                   }
@@ -665,7 +788,7 @@ const DoctorDashboardPage = () => {
               </Col>
             </Row>
 
-            <style jsx>{`
+            <style>{`
               .appointment-row:hover {
                 background-color: #f5f5f5;
               }
@@ -678,9 +801,8 @@ const DoctorDashboardPage = () => {
             `}</style>
           </Content>
         </Layout>
-      </Layout>
-    </Layout>
+    </>
   );
 };
 
-export default DoctorDashboardPage;
+export default ReceptionistDashboard;

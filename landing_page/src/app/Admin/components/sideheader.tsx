@@ -108,47 +108,47 @@ const SideHeader: React.FC<SideHeaderProps> = ({ selectedKey = 'dashboard' }) =>
       breakpoint="lg"
       collapsedWidth="0"
       style={{
-        background: '#2c5aa0'
+      background: '#25416a' // lighter than #00203F
       }}
     >
       <div style={{
-        padding: '16px',
-        borderBottom: '1px solid rgba(255,255,255,0.1)',
-        textAlign: 'center',
-        color: 'white',
-        marginTop: '84px'
+      padding: '16px',
+      borderBottom: '1px solid rgba(255,255,255,0.1)',
+      textAlign: 'center',
+      color: 'white',
+      marginTop: '84px'
       }}>
-        <Text strong style={{ color: 'white' }}>Main</Text>
+      <Text strong style={{ color: 'white' }}>Main</Text>
       </div>
       
       <Menu
-        theme="dark"
-        mode="inline"
-        defaultSelectedKeys={[selectedKey]}
-        items={menuItems}
-        style={{
-          border: 'none',
-          background: 'transparent'
-        }}
+      theme="dark"
+      mode="inline"
+      defaultSelectedKeys={[selectedKey]}
+      items={menuItems}
+      style={{
+        border: 'none',
+        background: 'transparent'
+      }}
       />
 
       <div style={{
-        padding: '16px',
-        borderTop: '1px solid rgba(255,255,255,0.1)',
-        marginTop: 'auto',
-        color: 'white'
+      padding: '16px',
+      borderTop: '1px solid rgba(255,255,255,0.1)',
+      marginTop: 'auto',
+      color: 'white'
       }}>
-        <Text strong style={{ color: 'white' }}>Pages</Text>
+      <Text strong style={{ color: 'white' }}>Pages</Text>
       </div>
       
       <Menu
-        theme="dark"
-        mode="inline"
-        items={pageItems}
-        style={{
-          border: 'none',
-          background: 'transparent'
-        }}
+      theme="dark"
+      mode="inline"
+      items={pageItems}
+      style={{
+        border: 'none',
+        background: 'transparent'
+      }}
       />
     </Sider>
   );

@@ -269,12 +269,11 @@ const DoctorList = () => {
     };
 
     const getUniqueSpecializations = () => {
-        const allSpecs = doctors.flatMap(doctor => {
-            if (doctor.specialization && Array.isArray(doctor.specialization)) {
-                return doctor.specialization.map(specialization => specialization.name);
-            }
-            return [];
-        });
+        const allSpecs = doctors.flatMap(doctor => 
+            Array.isArray(doctor.specialization)
+                ? doctor.specialization.map(specialization => specialization.name)
+                : []
+        );
         return [...new Set(allSpecs)].filter(specialization => specialization && String(specialization).trim() !== '');
     };
 
@@ -454,7 +453,7 @@ const DoctorList = () => {
                             Doctor List
                         </h2>
                         <Space>
-                            <Input
+                            {/* <Input
                                 placeholder="Search by name, ID, email, or specialization"
                                 prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
                                 value={searchText}
@@ -470,7 +469,7 @@ const DoctorList = () => {
                                 style={{ borderRadius: '6px' }}
                             >
                                 Refresh
-                            </Button>
+                            </Button> */}
                             <Button onClick={() => router.push('/Admin/app/needApproval')}>
                                 Need For Approval of Doctors
                             </Button>
@@ -488,8 +487,7 @@ const DoctorList = () => {
                             placeholder="All Status"
                             value={statusFilter}
                             onChange={setStatusFilter}
-                            dropdownStyle={{ width: 120 }}
-                            // width prop is not available, so use dropdownStyle or wrap in a div if needed
+                            styles={{ popup: { root: { width: 120 } } }}
                         >
                             <Option value="all">All Status</Option>
                             <Option value="active">Active</Option>

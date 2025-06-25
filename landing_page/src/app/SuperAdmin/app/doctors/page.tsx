@@ -469,7 +469,7 @@ const DoctorList = () => {
                             >
                                 Refresh
                             </Button>
-                            <Button onClick={() => router.push('/Admin/app/needApproval')}>
+                            <Button onClick={() => router.push('/SuperAdmin/app/doctorApproval')}>
                                 Need For Approval of Doctors
                             </Button>
                         </Space>

@@ -152,7 +152,7 @@ const ChooseUsSection: React.FC = () => {
       opacity: 1,
       transition: {
         duration: 0.8,
-        ease: [0.42, 0, 0.58, 1], // Use a cubic-bezier array for ease
+        ease: [0.42, 0, 0.58, 1], // cubic-bezier for easeInOut
       },
     },
   };

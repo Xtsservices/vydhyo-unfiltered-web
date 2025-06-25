@@ -13,7 +13,11 @@ import {
   SettingOutlined,
   MedicineBoxOutlined,
   StarFilled,
-  QuestionCircleOutlined
+  QuestionCircleOutlined,
+  ToolOutlined,
+  ExperimentOutlined,
+  BankOutlined,
+  AppstoreOutlined
 } from '@ant-design/icons';
 
 const { Sider } = Layout;
@@ -31,55 +35,82 @@ const SideHeader: React.FC<SideHeaderProps> = ({ selectedKey = 'dashboard' }) =>
       key: 'dashboard',
       icon: <DashboardOutlined />,
       label: 'Dashboard',
-      onClick: () => router.push('/Admin/app/dashboard')
-    },
-    {
-      key: 'appointments',
-      icon: <ScheduleOutlined />,
-      label: 'Appointments',
-      onClick: () => router.push('/Admin/app/appointments')
-    },
-    {
-      key: 'specialities',
-      icon: <MedicineBoxOutlined />,
-      label: 'Specialities',
-      onClick: () => router.push('/Admin/app/specialities')
+      onClick: () => router.push('/SuperAdmin/app/dashboard')
     },
     {
       key: 'doctors',
       icon: <TeamOutlined />,
       label: 'Doctors',
-      onClick: () => router.push('/Admin/app/doctors')
+      onClick: () => router.push('/SuperAdmin/app/doctors')
     },
     {
       key: 'patients',
       icon: <UserOutlined />,
       label: 'Patients',
-      onClick: () => router.push('/Admin/app/patients')
+      onClick: () => router.push('/SuperAdmin/app/patients')
     },
     {
-      key: 'reviews',
-      icon: <StarFilled />,
-      label: 'Reviews',
-      onClick: () => router.push('/Admin/app/reviews')
+    key: 'services',
+    icon: <ToolOutlined />,
+    label: 'Services',
+    onClick: () => router.push('/SuperAdmin/app/services')
+  },
+    {
+      key: 'appointments',
+      icon: <ScheduleOutlined />,
+      label: 'Appointments',
+      onClick: () => router.push('/SuperAdmin/app/appointments')
     },
     {
       key: 'transactions',
       icon: <MoneyCollectOutlined />,
       label: 'Transactions',
-      onClick: () => router.push('/Admin/app/transactions')
+      onClick: () => router.push('/SuperAdmin/app/transactions')
     },
+    {
+    key: 'departments',
+    icon: <BankOutlined />,
+    label: 'Billing Status',
+    onClick: () => router.push('/SuperAdmin/app/departments')
+  },
+    {
+      key: 'specialities',
+      icon: <MedicineBoxOutlined />,
+      label: 'Specialities',
+      onClick: () => router.push('/SuperAdmin/app/specialities')
+    },
+    
+  
+    {
+      key: 'reviews',
+      icon: <StarFilled />,
+      label: 'Reviews/Feedback',
+      onClick: () => router.push('/SuperAdmin/app/reviews')
+    },
+    
+  //   {
+  //   key: 'features',
+  //   icon: <AppstoreOutlined />,
+  //   label: 'Features',
+  //   onClick: () => router.push('/SuperAdmin/app/features')
+  // },
     {
       key: 'settings',
       icon: <SettingOutlined />,
       label: 'Settings',
-      onClick: () => router.push('/Admin/app/settings')
+      onClick: () => router.push('/SuperAdmin/app/settings')
     },
     {
       key: 'reports',
       icon: <FileTextOutlined />,
       label: 'Reports',
-      onClick: () => router.push('/Admin/app/reports')
+      onClick: () => router.push('/SuperAdmin/app/reports')
+    },
+    {
+      key: 'profile',
+      icon: <FileTextOutlined />,
+      label: 'Profile',
+      onClick: () => router.push('/SuperAdmin/app/profile')
     }
   ];
 

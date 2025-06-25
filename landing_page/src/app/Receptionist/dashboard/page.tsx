@@ -665,7 +665,7 @@ const DoctorDashboardPage = () => {
               </Col>
             </Row>
 
-            <style jsx>{`
+            <style>{`
               .appointment-row:hover {
                 background-color: #f5f5f5;
               }

@@ -190,7 +190,7 @@ const AddWalkInPatient: React.FC = () => {
     };
 
     // Calendar functionality
-    const getDaysInMonth = (date: Date) => {
+    const getDaysInMonth = (date: Date): Array<number | null> => {
         const year = date.getFullYear();
         const month = date.getMonth();
         const firstDay = new Date(year, month, 1);
@@ -198,7 +198,7 @@ const AddWalkInPatient: React.FC = () => {
         const daysInMonth = lastDay.getDate();
         const startingDayOfWeek = firstDay.getDay();
 
-        const days = [];
+        const days: Array<number | null> = [];
 
         // Add empty cells for days before the first day of the month
         for (let i = 0; i < startingDayOfWeek; i++) {

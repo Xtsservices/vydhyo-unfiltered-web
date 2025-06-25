@@ -414,31 +414,19 @@ const SettingsPage = () => {
             icon: <BookOutlined />,
             label: 'Specializations',
         },
-        {
-            key: 'allergy',
-            icon: <MedicineBoxOutlined />,
-            label: 'Allergies',
-        },
+        
         {
             key: 'bloodGroup',
             icon: <HeartOutlined />,
             label: 'Blood Groups',
         },
-        {
-            key: 'chronicConditions',
-            icon: <ExperimentOutlined />,
-            label: 'Chronic Conditions',
-        },
+      
         {
             key: 'degree',
             icon: <BookOutlined />,
             label: 'Degrees',
         },
-        {
-            key: 'department',
-            icon: <BankOutlined />,
-            label: 'Departments',
-        },
+    
         {
             key: 'doctorType',
             icon: <UserSwitchOutlined />,

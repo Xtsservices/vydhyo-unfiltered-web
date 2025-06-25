@@ -405,25 +405,400 @@ const ReceptionistDashboard = () => {
           </div>
         </Modal>
 
-        <style jsx global>{`
-          .dashboard-card:hover {
-            transform: translateY(-6px) scale(1.03);
-            box-shadow: 0 8px 32px rgba(24, 144, 255, 0.08);
-          }
-          .dashboard-card .card-anim-overlay {
-            pointer-events: none;
-            position: absolute;
-            left: 0; top: 0; right: 0; bottom: 0;
-            background: linear-gradient(120deg, rgba(24,144,255,0.04) 0%, rgba(255,255,255,0.0) 100%);
-            opacity: 0;
-            transition: opacity 0.4s;
-            z-index: 1;
-          }
-          .dashboard-card:hover .card-anim-overlay {
-            opacity: 1;
-          }
-        `}</style>
-      </Content>
+            <Row gutter={[16, 16]}>
+              {/* Top Stats Cards */}
+              <Col xs={24} sm={12} md={6}>
+                <Card style={{ borderRadius: '12px', border: '1px solid #e8e8e8' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div>
+                      <Text type="secondary" style={{ fontSize: '14px' }}>Total Patient</Text>
+                      <div style={{ fontSize: isMobile ? '28px' : '36px', fontWeight: 'bold', color: '#2c5aa0', margin: '8px 0' }}>978</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ color: '#52c41a' }}>↗</span>
+                        <Text style={{ color: '#52c41a', fontSize: '12px' }}>15% From Last Week</Text>
+                      </div>
+                    </div>
+                    <div style={{ 
+                      width: isMobile ? '50px' : '60px', 
+                      height: isMobile ? '50px' : '60px', 
+                      backgroundColor: '#f0f5ff', 
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <UserOutlined style={{ fontSize: isMobile ? '24px' : '28px', color: '#2c5aa0' }} />
+                    </div>
+                  </div>
+                </Card>
+              </Col>
+
+              <Col xs={24} sm={12} md={6}>
+                <Card style={{ borderRadius: '12px', border: '1px solid #e8e8e8' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div>
+                      <Text type="secondary" style={{ fontSize: '14px' }}>Patients Today</Text>
+                      <div style={{ fontSize: isMobile ? '28px' : '36px', fontWeight: 'bold', color: '#2c5aa0', margin: '8px 0' }}>80</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ color: '#ff4d4f' }}>↗</span>
+                        <Text style={{ color: '#ff4d4f', fontSize: '12px' }}>15% From Yesterday</Text>
+                      </div>
+                    </div>
+                    <div style={{ 
+                      width: isMobile ? '50px' : '60px', 
+                      height: isMobile ? '50px' : '60px', 
+                      backgroundColor: '#f0f5ff', 
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <UserOutlined style={{ fontSize: isMobile ? '24px' : '28px', color: '#2c5aa0' }} />
+                    </div>
+                  </div>
+                </Card>
+              </Col>
+
+              <Col xs={24} sm={12} md={6}>
+                <Card style={{ borderRadius: '12px', border: '1px solid #e8e8e8' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div>
+                      <Text type="secondary" style={{ fontSize: '14px' }}>Appointments Today</Text>
+                      <div style={{ fontSize: isMobile ? '28px' : '36px', fontWeight: 'bold', color: '#2c5aa0', margin: '8px 0' }}>50</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ color: '#52c41a' }}>↗</span>
+                        <Text style={{ color: '#52c41a', fontSize: '12px' }}>20% From Yesterday</Text>
+                      </div>
+                    </div>
+                    <div style={{ 
+                      width: isMobile ? '50px' : '60px', 
+                      height: isMobile ? '50px' : '60px', 
+                      backgroundColor: '#f0f5ff', 
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <CalendarOutlined style={{ fontSize: isMobile ? '24px' : '28px', color: '#2c5aa0' }} />
+                    </div>
+                  </div>
+                </Card>
+              </Col>
+
+              <Col xs={24} sm={12} md={6}>
+                <Card style={{ borderRadius: '12px', border: '1px solid #e8e8e8' }}>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                      <Text style={{ fontSize: '16px', fontWeight: '500' }}>Weekly Overview</Text>
+                      <Text type="secondary" style={{ fontSize: '12px' }}>Mar 14 - Mar 21</Text>
+                    </div>
+                    <Tabs defaultActiveKey="1" size="small">
+                      <TabPane tab="Revenue" key="1">
+                        <ChartData />
+                      </TabPane>
+                      <TabPane tab="Appointments" key="2">
+                        <ChartData />
+                      </TabPane>
+                    </Tabs>
+                  </div>
+                </Card>
+              </Col>
+
+              {/* Main Content */}
+              <Col xs={24} lg={16}>
+                {/* Appointments Table */}
+                <Card 
+                  title={
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                      <Text style={{ fontSize: '18px', fontWeight: '600' }}>Appointment</Text>
+                      <Select defaultValue="Last 7 Days" style={{ width: 120 }}>
+                        <Option value="Last 7 Days">Last 7 Days</Option>
+                      </Select>
+                    </div>
+                  }
+                  style={{ marginBottom: '16px', borderRadius: '12px' }}
+                >
+                  <Table 
+                    columns={appointmentColumns} 
+                    dataSource={appointmentData}
+                    pagination={false}
+                    showHeader={false}
+                    rowClassName={() => 'appointment-row'}
+                    scroll={{ x: 'max-content' }}
+                  />
+                </Card>
+
+                {/* Upcoming Appointment Card */}
+                <Card 
+                  title={<Text style={{ color: 'white', fontSize: '18px', fontWeight: '600' }}>Upcoming Appointment</Text>}
+                  style={{ 
+                    background: 'linear-gradient(135deg, #1890ff 0%, #40a9ff 100%)',
+                    borderRadius: '12px',
+                    marginBottom: '16px'
+                  }}
+                  styles={{ header: { backgroundColor: 'transparent', borderBottom: 'none' } }}
+                  bodyStyle={{ backgroundColor: 'transparent' }}
+                >
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: isMobile ? 'flex-start' : 'center', 
+                    gap: '16px',
+                    flexDirection: isMobile ? 'column' : 'row'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1 }}>
+                      <img 
+                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face&round=50" 
+                        alt="Adrian Marshall" 
+                        style={{ width: '60px', height: '60px', borderRadius: '50%' }}
+                      />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ color: '#1890ff', fontSize: '12px', fontWeight: '500', marginBottom: '2px' }}>#Apt0001</div>
+                        <Text style={{ color: 'white', fontSize: '18px', fontWeight: '600', display: 'block' }}>Adrian Marshall</Text>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '8px', flexWrap: 'wrap' }}>
+                          <Text style={{ color: 'white', fontSize: '14px' }}>General Visit</Text>
+                          <Text style={{ color: 'white', fontSize: '14px' }}>Today, 10:45 AM</Text>
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ 
+                      display: 'flex', 
+                      gap: '8px', 
+                      flexWrap: 'wrap',
+                      justifyContent: isMobile ? 'center' : 'flex-end'
+                    }}>
+                      <Button 
+                        type="primary" 
+                        ghost 
+                        icon={<VideoCameraOutlined />}
+                        style={{ borderColor: 'white', color: 'white' }}
+                        size={isMobile ? 'small' : 'middle'}
+                      >
+                        {isMobile ? 'Video' : 'Video Appointment'}
+                      </Button>
+                      <Button 
+                        type="primary" 
+                        ghost
+                        style={{ borderColor: 'white', color: 'white' }}
+                        size={isMobile ? 'small' : 'middle'}
+                      >
+                        Chat Now
+                      </Button>
+                      <Button 
+                        type="primary" 
+                        ghost
+                        style={{ borderColor: 'white', color: 'white' }}
+                        size={isMobile ? 'small' : 'middle'}
+                      >
+                        Start
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+
+                {/* Recent Invoices */}
+                <Card 
+                  title={
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Text style={{ fontSize: '18px', fontWeight: '600' }}>Recent Invoices</Text>
+                      <Button type="link">View All</Button>
+                    </div>
+                  }
+                  style={{ borderRadius: '12px' }}
+                >
+                  <List
+                    dataSource={invoiceData}
+                    renderItem={(item) => (
+                      <List.Item style={{ padding: '12px 0', borderBottom: '1px solid #f0f0f0' }}>
+                        <div style={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          gap: '12px', 
+                          width: '100%',
+                          flexWrap: isMobile ? 'wrap' : 'nowrap'
+                        }}>
+                          <img src={item.avatar} alt="avatar" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
+                          <div style={{ flex: 1, minWidth: '120px' }}>
+                            <div style={{ fontWeight: '500', fontSize: '14px' }}>{item.name}</div>
+                            <div style={{ color: '#1890ff', fontSize: '12px' }}>{item.id}</div>
+                          </div>
+                          <div style={{ textAlign: 'center', minWidth: '80px' }}>
+                            <div style={{ fontSize: '12px', color: '#8c8c8c' }}>Amount</div>
+                            <div style={{ fontWeight: '600', fontSize: '14px' }}>{item.amount}</div>
+                          </div>
+                          <div style={{ textAlign: 'center', minWidth: '100px' }}>
+                            <div style={{ fontSize: '12px', color: '#8c8c8c' }}>Paid On</div>
+                            <div style={{ fontSize: '12px', color: '#1890ff' }}>{item.paidOn}</div>
+                          </div>
+                          <Button type="text" icon={<SettingOutlined />} />
+                        </div>
+                      </List.Item>
+                    )}
+                  />
+                </Card>
+              </Col>
+
+              {/* Right Sidebar */}
+              <Col xs={24} lg={8}>
+                {/* Recent Patients */}
+                <Card 
+                  title={
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Text style={{ fontSize: '18px', fontWeight: '600' }}>Recent Patients</Text>
+                      <Button type="link">View All</Button>
+                    </div>
+                  }
+                  style={{ marginBottom: '16px', borderRadius: '12px' }}
+                >
+                  <div style={{ 
+                    display: 'flex', 
+                    gap: '16px',
+                    flexDirection: isMobile ? 'column' : 'row',
+                    alignItems: isMobile ? 'center' : 'flex-start'
+                  }}>
+                    {recentPatientsData.map((patient) => (
+                      <div key={patient.key} style={{ textAlign: 'center', flex: 1 }}>
+                        <img 
+                          src={patient.avatar} 
+                          alt={patient.name}
+                          style={{ width: '80px', height: '80px', borderRadius: '50%', marginBottom: '8px' }}
+                        />
+                        <div style={{ fontWeight: '500', fontSize: '14px', marginBottom: '4px' }}>{patient.name}</div>
+                        <div style={{ color: '#1890ff', fontSize: '12px', marginBottom: '4px' }}>Patient ID : {patient.id}</div>
+                        <div style={{ fontSize: '11px', color: '#8c8c8c' }}>{patient.lastAppointment}</div>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+
+                {/* Notifications */}
+                <Card 
+                  title={
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Text style={{ fontSize: '18px', fontWeight: '600' }}>Notifications</Text>
+                      <Button type="link">View All</Button>
+                    </div>
+                  }
+                  style={{ marginBottom: '16px', borderRadius: '12px' }}
+                >
+                  <List
+                    size="small"
+                    dataSource={[
+                      {
+                        icon: <BellOutlined style={{ color: '#722ed1' }} />,
+                        title: 'Booking Confirmed on 21 Mar 2024 10:30 AM',
+                        time: 'Just Now',
+                        bgColor: '#f9f0ff'
+                      },
+                      {
+                        icon: <StarOutlined style={{ color: '#1890ff' }} />,
+                        title: 'You have a New Review for your Appointment',
+                        time: '5 Days ago',
+                        bgColor: '#f0f5ff'
+                      },
+                      {
+                        icon: <CalendarOutlined style={{ color: '#ff4d4f' }} />,
+                        title: 'You have Appointment with Ahmed by 01:20 PM',
+                        time: '12:55 PM',
+                        bgColor: '#fff2f0'
+                      },
+                      {
+                        icon: <DollarOutlined style={{ color: '#faad14' }} />,
+                        title: 'Sent an amount of $200 for an Appointment by 01:20 PM',
+                        time: '2 Days ago',
+                        bgColor: '#fffbe6'
+                      },
+                      {
+                        icon: <StarOutlined style={{ color: '#1890ff' }} />,
+                        title: 'You have a New Review for your Appointment',
+                        time: '5 Days ago',
+                        bgColor: '#f0f5ff'
+                      }
+                    ]}
+                    renderItem={(item) => (
+                      <List.Item style={{ padding: '12px 0', borderBottom: 'none' }}>
+                        <div style={{ display: 'flex', gap: '12px', width: '100%' }}>
+                          <div style={{ 
+                            width: '40px', 
+                            height: '40px', 
+                            borderRadius: '50%', 
+                            backgroundColor: item.bgColor,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0
+                          }}>
+                            {item.icon}
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <Text style={{ fontSize: '12px', display: 'block', marginBottom: '4px' }}>{item.title}</Text>
+                            <Text type="secondary" style={{ fontSize: '11px' }}>{item.time}</Text>
+                          </div>
+                        </div>
+                      </List.Item>
+                    )}
+                  />
+                </Card>
+
+                {/* Clinics & Availability */}
+                <Card 
+                  title={<Text style={{ fontSize: '18px', fontWeight: '600' }}>Clinics & Availability</Text>}
+                  style={{ borderRadius: '12px' }}
+                >
+                  <div style={{ marginBottom: '24px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                      <img 
+                        src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=50&h=50&fit=crop&crop=center" 
+                        alt="clinic" 
+                        style={{ width: '50px', height: '50px', borderRadius: '8px' }}
+                      />
+                      <div style={{ flex: 1 }}>
+                        <Text strong style={{ fontSize: '14px' }}>Sofi's Clinic</Text>
+                        <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#2c5aa0' }}>$900</div>
+                      </div>
+                      <Button type="link" size="small">Change</Button>
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#8c8c8c', lineHeight: '1.4' }}>
+                      <div><strong>Tue :</strong> 07:00 AM - 09:00 PM</div>
+                      <div><strong>Wed :</strong> 07:00 AM - 09:00 PM</div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                      <img 
+                        src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=50&h=50&fit=crop&crop=center" 
+                        alt="clinic" 
+                        style={{ width: '50px', height: '50px', borderRadius: '8px' }}
+                      />
+                      <div style={{ flex: 1 }}>
+                        <Text strong style={{ fontSize: '14px' }}>The Family Dentistry Clinic</Text>
+                        <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#2c5aa0' }}>$600</div>
+                      </div>
+                      <Button type="link" size="small">Change</Button>
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#8c8c8c', lineHeight: '1.4' }}>
+                      <div><strong>Sat :</strong> 07:00 AM - 09:00 PM</div>
+                      <div><strong>Tue :</strong> 07:00 AM - 09:00 PM</div>
+                    </div>
+                  </div>
+                </Card>
+              </Col>
+            </Row>
+
+            <style>{`
+              .appointment-row:hover {
+                background-color: #f5f5f5;
+              }
+              .ant-card {
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+              }
+              .ant-list-item {
+                border-bottom: none !important;
+              }
+            `}</style>
+          </Content>
+        </Layout>
+      </Layout>
     </Layout>
   );
 };

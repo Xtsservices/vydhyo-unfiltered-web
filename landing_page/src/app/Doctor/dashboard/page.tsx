@@ -481,6 +481,29 @@ export default function MedicalDashboard() {
           </Content>
         </Layout>
       </Layout>
+
+      <style>{`
+        .appointment-row:hover {
+          background-color: #f5f5f5;
+        }
+        .ant-card {
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+        .ant-list-item {
+          border-bottom: none !important;
+        }
+        .ant-layout-sider {
+          box-shadow: 2px 0 8px rgba(0, 0, 0, 0.06);
+        }
+        .ant-menu-item:hover {
+          background-color: #f0f5ff !important;
+        }
+        .ant-menu-item-selected {
+          background-color: #e6f7ff !important;
+        }
+      `}</style>
+    </Layout></>
+    
     </>
   );
 }

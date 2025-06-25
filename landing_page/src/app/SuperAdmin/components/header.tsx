@@ -12,14 +12,6 @@ const AppHeader = () => {
     // Dropdown menu items for admin profile
     const adminMenuItems = [
         {
-            key: '1',
-            label: 'Profile',
-        },
-        {
-            key: '2',
-            label: 'Settings',
-        },
-        {
             key: '3',
             label: 'Logout',
         },
@@ -27,6 +19,8 @@ const AppHeader = () => {
 
     const handleMenuClick = (e: { key: any }) => {
         console.log('Menu clicked:', e.key);
+        localStorage.removeItem('accessToken'); // Clear the token from local storage
+        router.push('/'); // Redirect to the home page
     };
 
     return (
@@ -43,7 +37,7 @@ const AppHeader = () => {
                 borderBottom: '1px solid #f0f0f0',
                 height: '64px',
                 zIndex: 1000,
-                paddingTop: '12px', 
+                paddingTop: '12px',
                 paddingBottom: '12px',
             }}
         >

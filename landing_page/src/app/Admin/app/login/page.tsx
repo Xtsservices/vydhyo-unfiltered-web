@@ -32,7 +32,7 @@ interface OTPValidationResponse {
 const USER_TYPES = {
   '7093081512': { type: 'superadmin', route: '/SuperAdmin/app/dashboard' },
   '7093081518': { type: 'admin', route: '/Admin/app/dashboard' },
-  '9492856727': { type: 'doctor', route: '/Doctor/dashboard' },
+  '9052519059': { type: 'doctor', route: '/Doctor/dashboard' },
   '9490219062': { type: 'receptionist', route: '/Receptionist/dashboard' },
   '9490219063': { type: 'Super Admin', route: '/SuperAdmin/app/dashboard' },
 };

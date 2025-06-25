@@ -70,13 +70,13 @@ const ChooseUsSection: React.FC = () => {
     };
 
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   useEffect(() => {
     if (!isInView) return;
-    
+
     const interval = setInterval(() => {
       setCurrentFlipIndex((prev) => (prev + 1) % features.length);
     }, 2000);
@@ -88,7 +88,7 @@ const ChooseUsSection: React.FC = () => {
       setCounterValues({ hospitals: 0, doctors: 0 });
       return;
     }
-    
+
     const targetValues = {
       hospitals: 50,
       doctors: 100,
@@ -96,7 +96,7 @@ const ChooseUsSection: React.FC = () => {
 
     const startCounters = () => {
       setCountersStarted(true);
-      
+
       const duration = 3000;
       const startTime = Date.now();
       const endTime = startTime + duration;
@@ -105,7 +105,7 @@ const ChooseUsSection: React.FC = () => {
         const now = Date.now();
         const elapsed = now - startTime;
         const progress = Math.min(elapsed / duration, 1);
-        
+
         const easedProgress = 1 - Math.pow(1 - progress, 3);
 
         setCounterValues({
@@ -185,7 +185,7 @@ const ChooseUsSection: React.FC = () => {
   };
 
   return (
-    <motion.div 
+    <motion.div
       style={sectionStyle}
       initial="hidden"
       whileInView="visible"
@@ -194,13 +194,17 @@ const ChooseUsSection: React.FC = () => {
       onViewportEnter={() => setIsInView(true)}
       onViewportLeave={() => setIsInView(false)}
     >
-      <div style={{ ...containerStyle, flexDirection: isMobile ? "column" : "row" }}>
+      <div
+        style={{
+          ...containerStyle,
+          flexDirection: isMobile ? "column" : "row",
+        }}
+      >
         {/* Left side */}
-        <motion.div style={{ ...leftContentStyle, width: isMobile ? "100%" : "auto" }}>
-          <motion.div 
-            style={pillStyle}
-            variants={itemVariants}
-          >
+        <motion.div
+          style={{ ...leftContentStyle, width: isMobile ? "100%" : "auto" }}
+        >
+          <motion.div style={pillStyle} variants={itemVariants}>
             <div style={pillIconStyle}>
               <svg
                 width="16"
@@ -221,61 +225,92 @@ const ChooseUsSection: React.FC = () => {
             <span style={pillTextStyle}>Why Choose Vydhyo</span>
           </motion.div>
 
-          <motion.h2 
-            style={{ ...headerStyle, fontSize: isMobile ? "2rem" : "2.5rem" }} 
+          <motion.h2
+            style={{ ...headerStyle, fontSize: isMobile ? "2rem" : "2.5rem" }}
             variants={itemVariants}
           >
             Trusted By Healthcare Providers
           </motion.h2>
 
-          <motion.p 
-            style={{ ...subHeaderStyle, maxWidth: isMobile ? "100%" : "440px" }} 
+          <motion.p
+            style={{ ...subHeaderStyle, maxWidth: isMobile ? "100%" : "440px" }}
             variants={itemVariants}
           >
-            Vydhyo is a comprehensive doctor appointment and clinic management platform designed to streamline your practice, enhance patient experience, and boost operational efficiency.
+            Vydhyo is a comprehensive doctor appointment and clinic management
+            platform designed to streamline your practice, enhance patient
+            experience, and boost operational efficiency.
           </motion.p>
 
-          <motion.div 
-            variants={itemVariants}
-          >
-            <Row gutter={[16, 16]} style={{ marginTop: 32 }} justify={isMobile ? "center" : "start"}>
-              <Col xs={24} sm={8} style={{ display: "flex", justifyContent: isMobile ? "center" : "flex-start" }}>
+          <motion.div variants={itemVariants}>
+            <Row
+              gutter={[16, 16]}
+              style={{ marginTop: 32 }}
+              justify={isMobile ? "center" : "start"}
+            >
+              <Col
+                xs={24}
+                sm={8}
+                style={{
+                  display: "flex",
+                  justifyContent: isMobile ? "center" : "flex-start",
+                }}
+              >
                 <motion.div
                   style={statBoxStyle}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <span style={statNumberStyle}>
-                    {counterValues.hospitals}<span style={plusStyle}>+</span>
+                    {counterValues.hospitals}
+                    <span style={plusStyle}>+</span>
                   </span>
                   <p style={statLabelStyle}>Partner Hospitals</p>
-                  <p style={statSubLabelStyle}>Leading healthcare institutions across multiple cities</p>
+                  <p style={statSubLabelStyle}>
+                    Leading healthcare institutions across multiple cities
+                  </p>
                 </motion.div>
               </Col>
-              <Col xs={24} sm={8} style={{ display: "flex", justifyContent: isMobile ? "center" : "flex-start" }}>
+              <Col
+                xs={24}
+                sm={8}
+                style={{
+                  display: "flex",
+                  justifyContent: isMobile ? "center" : "flex-start",
+                }}
+              >
                 <motion.div
                   style={statBoxStyle}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <span style={statNumberStyle}>
-                    {counterValues.doctors}<span style={plusStyle}>+</span>
+                    {counterValues.doctors}
+                    <span style={plusStyle}>+</span>
                   </span>
                   <p style={statLabelStyle}>Verified Doctors</p>
-                  <p style={statSubLabelStyle}>Specialists across numerous medical fields</p>
+                  <p style={statSubLabelStyle}>
+                    Specialists across numerous medical fields
+                  </p>
                 </motion.div>
               </Col>
-              <Col xs={24} sm={8} style={{ display: "flex", justifyContent: isMobile ? "center" : "flex-start" }}>
+              <Col
+                xs={24}
+                sm={8}
+                style={{
+                  display: "flex",
+                  justifyContent: isMobile ? "center" : "flex-start",
+                }}
+              >
                 <motion.div
                   style={statBoxStyle}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <span style={statNumberStyle}>
-                    24/7
-                  </span>
+                  <span style={statNumberStyle}>24/7</span>
                   <p style={statLabelStyle}>Support Available</p>
-                  <p style={statSubLabelStyle}>Round-the-clock assistance for all users</p>
+                  <p style={statSubLabelStyle}>
+                    Round-the-clock assistance for all users
+                  </p>
                 </motion.div>
               </Col>
             </Row>
@@ -283,16 +318,18 @@ const ChooseUsSection: React.FC = () => {
         </motion.div>
 
         {/* Right side */}
-        <div style={{ 
-          ...rightContentStyle, 
-          gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
-          width: "100%",
-          marginTop: isMobile ? "2rem" : 0
-        }}>
+        <div
+          style={{
+            ...rightContentStyle,
+            gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
+            width: "100%",
+            marginTop: isMobile ? "2rem" : 0,
+          }}
+        >
           {features.map((feature, index) => {
             const isHovered = hoverIndex === index;
             const isFlipping = currentFlipIndex === index && isInView;
-            
+
             return (
               <motion.div
                 key={index}
@@ -307,10 +344,10 @@ const ChooseUsSection: React.FC = () => {
                 onMouseEnter={() => setHoverIndex(index)}
                 onMouseLeave={() => setHoverIndex(null)}
                 variants={itemVariants}
-                transition={{ 
+                transition={{
                   delay: 0.2 + index * 0.1,
                   duration: 0.8,
-                  ease: [0.16, 0.77, 0.47, 0.97]
+                  ease: [0.16, 0.77, 0.47, 0.97],
                 }}
                 whileHover={{ y: -5 }}
               >
@@ -321,7 +358,8 @@ const ChooseUsSection: React.FC = () => {
                     left: 0,
                     right: 0,
                     height: isHovered ? "100%" : 0,
-                    background: "linear-gradient(to top, #0ea5e9 0%, #3b82f6 100%)",
+                    background:
+                      "linear-gradient(to top, #0ea5e9 0%, #3b82f6 100%)",
                     transition: "height 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
                     zIndex: 1,
                     borderRadius: 12, // Added to match parent's borderRadius
@@ -330,7 +368,7 @@ const ChooseUsSection: React.FC = () => {
                     height: isHovered ? "100%" : 0,
                   }}
                 />
-                
+
                 <motion.div
                   style={{
                     ...cardStyle,
@@ -371,21 +409,31 @@ const ChooseUsSection: React.FC = () => {
                       <motion.div
                         style={{
                           ...iconWrapperStyle,
-                          backgroundColor: isHovered ? "white" : feature.iconBgColor,
+                          backgroundColor: isHovered
+                            ? "white"
+                            : feature.iconBgColor,
                           display: "flex",
                           justifyContent: "center",
                           alignItems: "center",
                         }}
                         animate={{
-                          backgroundColor: isHovered ? "white" : feature.iconBgColor,
+                          backgroundColor: isHovered
+                            ? "white"
+                            : feature.iconBgColor,
                         }}
                         transition={{ duration: 0.4 }}
                       >
                         {React.cloneElement(
-                          feature.icon as React.ReactElement<{ style?: React.CSSProperties }>,
+                          feature.icon as React.ReactElement<{
+                            style?: React.CSSProperties;
+                          }>,
                           {
                             style: {
-                              ...(feature.icon as React.ReactElement<{ style?: React.CSSProperties }>).props.style,
+                              ...(
+                                feature.icon as React.ReactElement<{
+                                  style?: React.CSSProperties;
+                                }>
+                              ).props.style,
                               color: isHovered ? "#3b82f6" : feature.iconColor,
                               fontSize: 24,
                             },
@@ -405,13 +453,13 @@ const ChooseUsSection: React.FC = () => {
                       style={{
                         ...cardDescStyle,
                         color: isHovered ? "white" : "#94a3b8",
-                        marginBottom: 0
+                        marginBottom: 0,
                       }}
                     >
                       {feature.description}
                     </p>
                   </motion.div>
-                  
+
                   {/* Back Content */}
                   <motion.div
                     style={{
@@ -443,10 +491,16 @@ const ChooseUsSection: React.FC = () => {
                       }}
                     >
                       {React.cloneElement(
-                        feature.icon as React.ReactElement<{ style?: React.CSSProperties }>,
+                        feature.icon as React.ReactElement<{
+                          style?: React.CSSProperties;
+                        }>,
                         {
                           style: {
-                            ...(feature.icon as React.ReactElement<{ style?: React.CSSProperties }>).props.style,
+                            ...(
+                              feature.icon as React.ReactElement<{
+                                style?: React.CSSProperties;
+                              }>
+                            ).props.style,
                             color: "white",
                             fontSize: 24,
                           },
@@ -465,7 +519,8 @@ const ChooseUsSection: React.FC = () => {
                         padding: "8px 16px",
                         borderRadius: 6,
                         border: "none",
-                        background: "linear-gradient(to right, #3b82f6, #1d4ed8)",
+                        background:
+                          "linear-gradient(to right, #3b82f6, #1d4ed8)",
                         color: "white",
                         fontWeight: 600,
                         cursor: "pointer",
@@ -491,8 +546,9 @@ const sectionStyle: React.CSSProperties = {
   padding: "6rem 1rem",
   color: "white",
   fontFamily: "'Inter', 'Segoe UI', Arial, sans-serif",
-  backgroundImage: "radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)",
-  overflow: "hidden"
+  backgroundImage:
+    "radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)",
+  overflow: "hidden",
 };
 
 const containerStyle: React.CSSProperties = {
@@ -502,7 +558,7 @@ const containerStyle: React.CSSProperties = {
   gap: 40,
   padding: "0 1rem",
   width: "100%",
-  boxSizing: "border-box"
+  boxSizing: "border-box",
 };
 
 const leftContentStyle: React.CSSProperties = {
@@ -571,7 +627,7 @@ const statBoxStyle: React.CSSProperties = {
   minHeight: "160px",
   display: "flex",
   flexDirection: "column",
-  justifyContent: "center"
+  justifyContent: "center",
 };
 
 const statNumberStyle: React.CSSProperties = {

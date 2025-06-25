@@ -1,12 +1,26 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { Heart, ArrowRight, Zap, Target, Users, Calendar, Truck, Droplets, Home, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import {
+  Heart,
+  ArrowRight,
+  Zap,
+  Target,
+  Users,
+  Calendar,
+  Truck,
+  Droplets,
+  Home,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 interface HeroSectionProps {
   scrollToSection: (sectionId: string) => void;
 }
 
-const HealthcareCarousel: React.FC<HeroSectionProps> = ({ scrollToSection }) => {
+const HealthcareCarousel: React.FC<HeroSectionProps> = ({
+  scrollToSection,
+}) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const carouselData = [
@@ -14,46 +28,74 @@ const HealthcareCarousel: React.FC<HeroSectionProps> = ({ scrollToSection }) => 
       id: 1,
       title: "Book Appointments",
       subtitle: "Schedule with Ease",
-      description: "Connect with top-rated Indian doctors and specialists instantly. Book appointments 24/7 with our smart scheduling system and get confirmed slots within minutes.",
-      features: ["Instant Booking", "Top Doctors", "24/7 Availability", "Smart Scheduling"],
-      image: "https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?w=500&h=500&fit=crop&crop=face",
+      description:
+        "Connect with top-rated Indian doctors and specialists instantly. Book appointments 24/7 with our smart scheduling system and get confirmed slots within minutes.",
+      features: [
+        "Instant Booking",
+        "Top Doctors",
+        "24/7 Availability",
+        "Smart Scheduling",
+      ],
+      image:
+        "https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?w=500&h=500&fit=crop&crop=face",
       icon: <Calendar className="w-8 h-8" />,
       color: "#3b82f6",
-      gradient: "linear-gradient(135deg, #3b82f6 0%, #93c5fd 100%)"
+      gradient: "linear-gradient(135deg, #3b82f6 0%, #93c5fd 100%)",
     },
     {
       id: 2,
       title: "Verified Ambulance Services",
       subtitle: "Immediate Medical Attention",
-      description: "Fast, reliable emergency medical services with certified Indian doctors. Our emergency network ensures you get immediate medical attention when every second counts.",
-      features: ["24/7 Emergency", "Certified Doctors", "Quick Response", "Advanced Care"],
-      image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=500&h=500&fit=crop&crop=face",
+      description:
+        "Fast, reliable emergency medical services with certified Indian doctors. Our emergency network ensures you get immediate medical attention when every second counts.",
+      features: [
+        "24/7 Emergency",
+        "Certified Doctors",
+        "Quick Response",
+        "Advanced Care",
+      ],
+      image:
+        "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=500&h=500&fit=crop&crop=face",
       icon: <Truck className="w-8 h-8" />,
       color: "#ef4444",
-      gradient: "linear-gradient(135deg, #ef4444 0%, #fca5a5 100%)"
+      gradient: "linear-gradient(135deg, #ef4444 0%, #fca5a5 100%)",
     },
     {
       id: 3,
       title: "Live Blood Bank Updates",
       subtitle: "Life-Saving Resources",
-      description: "Real-time blood availability updates from certified blood banks across India. Find the right blood type when you need it most with our comprehensive network.",
-      features: ["Real-time Updates", "Multiple Blood Banks", "Emergency Access", "Verified Sources"],
-      image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=500&h=500&fit=crop&crop=face",
+      description:
+        "Real-time blood availability updates from certified blood banks across India. Find the right blood type when you need it most with our comprehensive network.",
+      features: [
+        "Real-time Updates",
+        "Multiple Blood Banks",
+        "Emergency Access",
+        "Verified Sources",
+      ],
+      image:
+        "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=500&h=500&fit=crop&crop=face",
       icon: <Droplets className="w-8 h-8" />,
       color: "#dc2626",
-      gradient: "linear-gradient(135deg, #dc2626 0%, #f87171 100%)"
+      gradient: "linear-gradient(135deg, #dc2626 0%, #f87171 100%)",
     },
     {
       id: 4,
       title: "Certified Home Healthcare",
       subtitle: "Care at Your Doorstep",
-      description: "Professional healthcare services delivered to your home by certified medical professionals. Get quality care without leaving the comfort of your home.",
-      features: ["Home Visits", "Certified Staff", "Convenient Care", "Professional Service"],
-      image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=500&h=500&fit=crop&crop=face",
+      description:
+        "Professional healthcare services delivered to your home by certified medical professionals. Get quality care without leaving the comfort of your home.",
+      features: [
+        "Home Visits",
+        "Certified Staff",
+        "Convenient Care",
+        "Professional Service",
+      ],
+      image:
+        "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=500&h=500&fit=crop&crop=face",
       icon: <Home className="w-8 h-8" />,
       color: "#059669",
-      gradient: "linear-gradient(135deg, #059669 0%, #6ee7b7 100%)"
-    }
+      gradient: "linear-gradient(135deg, #059669 0%, #6ee7b7 100%)",
+    },
   ];
 
   // Auto-rotate carousel every 3 seconds
@@ -70,7 +112,9 @@ const HealthcareCarousel: React.FC<HeroSectionProps> = ({ scrollToSection }) => 
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + carouselData.length) % carouselData.length);
+    setCurrentSlide(
+      (prev) => (prev - 1 + carouselData.length) % carouselData.length
+    );
   };
 
   const goToSlide = (index: number) => {
@@ -83,11 +127,10 @@ const HealthcareCarousel: React.FC<HeroSectionProps> = ({ scrollToSection }) => 
         .hero-section {
           position: relative;
           min-height: 100vh;
-          background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 25%, #60a5fa 100%);
+          background-color: #00203f;
           overflow: hidden;
           display: flex;
           align-items: center;
-          margin-top: 4rem;
         }
 
         .hero-bg-pattern {
@@ -96,17 +139,33 @@ const HealthcareCarousel: React.FC<HeroSectionProps> = ({ scrollToSection }) => 
           left: 0;
           right: 0;
           bottom: 0;
-          background-image: 
-            radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
-            linear-gradient(45deg, transparent 49%, rgba(255, 255, 255, 0.02) 50%, transparent 51%);
+          background-image: radial-gradient(
+              circle at 25% 25%,
+              rgba(59, 130, 246, 0.1) 0%,
+              transparent 50%
+            ),
+            radial-gradient(
+              circle at 75% 75%,
+              rgba(16, 185, 129, 0.08) 0%,
+              transparent 50%
+            ),
+            linear-gradient(
+              45deg,
+              transparent 49%,
+              rgba(255, 255, 255, 0.02) 50%,
+              transparent 51%
+            );
           background-size: 100px 100px, 150px 150px, 20px 20px;
           animation: patternMove 20s linear infinite;
         }
 
         @keyframes patternMove {
-          0% { transform: translate(0, 0); }
-          100% { transform: translate(20px, 20px); }
+          0% {
+            transform: translate(0, 0);
+          }
+          100% {
+            transform: translate(20px, 20px);
+          }
         }
 
         .medical-grid {
@@ -115,16 +174,26 @@ const HealthcareCarousel: React.FC<HeroSectionProps> = ({ scrollToSection }) => 
           left: 0;
           right: 0;
           bottom: 0;
-          background-image: 
-            linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+          background-image: linear-gradient(
+              rgba(59, 130, 246, 0.03) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              90deg,
+              rgba(59, 130, 246, 0.03) 1px,
+              transparent 1px
+            );
           background-size: 50px 50px;
           animation: gridPulse 4s ease-in-out infinite alternate;
         }
 
         @keyframes gridPulse {
-          0% { opacity: 0.3; }
-          100% { opacity: 0.1; }
+          0% {
+            opacity: 0.3;
+          }
+          100% {
+            opacity: 0.1;
+          }
         }
 
         .hero-container {
@@ -307,7 +376,7 @@ const HealthcareCarousel: React.FC<HeroSectionProps> = ({ scrollToSection }) => 
             gap: 2rem;
             text-align: center;
           }
-          
+
           .doctor-image {
             width: 300px;
             height: 400px;
@@ -318,7 +387,7 @@ const HealthcareCarousel: React.FC<HeroSectionProps> = ({ scrollToSection }) => 
           .hero-container {
             padding: 1rem;
           }
-          
+
           .doctor-image {
             width: 250px;
             height: 320px;
@@ -347,9 +416,9 @@ const HealthcareCarousel: React.FC<HeroSectionProps> = ({ scrollToSection }) => 
 
         <div className="hero-container">
           <div className="doctor-image-container">
-            <img 
-              src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face" 
-              alt="Indian Doctor" 
+            <img
+              src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=800&fit=crop&crop=face"
+              alt="Indian Doctor"
               className="doctor-image"
             />
           </div>
@@ -358,11 +427,16 @@ const HealthcareCarousel: React.FC<HeroSectionProps> = ({ scrollToSection }) => 
             {carouselData.map((card, index) => (
               <div
                 key={card.id}
-                className={`carousel-card ${index === currentSlide ? 'active' : ''}`}
-                style={{ minHeight: index === currentSlide ? 'auto' : '400px' }}
+                className={`carousel-card ${
+                  index === currentSlide ? "active" : ""
+                }`}
+                style={{ minHeight: index === currentSlide ? "auto" : "400px" }}
               >
                 <div className="carousel-card-header">
-                  <div className="carousel-icon" style={{ background: card.gradient }}>
+                  <div
+                    className="carousel-icon"
+                    style={{ background: card.gradient }}
+                  >
                     {card.icon}
                   </div>
                   <div>
@@ -370,9 +444,9 @@ const HealthcareCarousel: React.FC<HeroSectionProps> = ({ scrollToSection }) => 
                     <p className="carousel-subtitle">{card.subtitle}</p>
                   </div>
                 </div>
-                
+
                 <p className="carousel-description">{card.description}</p>
-                
+
                 <div className="carousel-features">
                   {card.features.map((feature, featureIndex) => (
                     <div key={featureIndex} className="carousel-feature">
@@ -387,17 +461,19 @@ const HealthcareCarousel: React.FC<HeroSectionProps> = ({ scrollToSection }) => 
               <button className="carousel-nav-btn" onClick={prevSlide}>
                 <ChevronLeft size={20} />
               </button>
-              
+
               <div className="carousel-dots">
                 {carouselData.map((_, index) => (
                   <div
                     key={index}
-                    className={`carousel-dot ${index === currentSlide ? 'active' : ''}`}
+                    className={`carousel-dot ${
+                      index === currentSlide ? "active" : ""
+                    }`}
                     onClick={() => goToSlide(index)}
                   />
                 ))}
               </div>
-              
+
               <button className="carousel-nav-btn" onClick={nextSlide}>
                 <ChevronRight size={20} />
               </button>

@@ -285,13 +285,15 @@ const AddWalkInPatient: React.FC = () => {
             lastName: userData.lastname || "",
             gender: userData.gender || "",
             age: userData.DOB
-              ? `${new Date().getFullYear() -
-              parseInt(userData.DOB.split("-")[2])
-              }`
+              ? `${
+                  new Date().getFullYear() -
+                  parseInt(userData.DOB.split("-")[2])
+                }`
               : "",
             dateOfBirth: userData.DOB
-              ? `${userData.DOB.split("-")[2]}-${userData.DOB.split("-")[1]}-${userData.DOB.split("-")[0]
-              }`
+              ? `${userData.DOB.split("-")[2]}-${userData.DOB.split("-")[1]}-${
+                  userData.DOB.split("-")[0]
+                }`
               : "",
           }));
           setUserFound(true);
@@ -318,12 +320,14 @@ const AddWalkInPatient: React.FC = () => {
           lastName: userData.lastname || "",
           gender: userData.gender || "",
           age: userData.DOB
-            ? `${new Date().getFullYear() - parseInt(userData.DOB.split("-")[2])
-            }`
+            ? `${
+                new Date().getFullYear() - parseInt(userData.DOB.split("-")[2])
+              }`
             : "",
           dateOfBirth: userData.DOB
-            ? `${userData.DOB.split("-")[2]}-${userData.DOB.split("-")[1]}-${userData.DOB.split("-")[0]
-            }`
+            ? `${userData.DOB.split("-")[2]}-${userData.DOB.split("-")[1]}-${
+                userData.DOB.split("-")[0]
+              }`
             : "",
         }));
         setUserFound(true);
@@ -371,8 +375,9 @@ const AddWalkInPatient: React.FC = () => {
         ? `${new Date().getFullYear() - parseInt(userData.DOB.split("-")[2])}`
         : "",
       dateOfBirth: userData.DOB
-        ? `${userData.DOB.split("-")[2]}-${userData.DOB.split("-")[1]}-${userData.DOB.split("-")[0]
-        }`
+        ? `${userData.DOB.split("-")[2]}-${userData.DOB.split("-")[1]}-${
+            userData.DOB.split("-")[0]
+          }`
         : "",
     }));
     setUserFound(true);
@@ -456,7 +461,7 @@ const AddWalkInPatient: React.FC = () => {
         break;
     }
 
-    // Set error if any
+    // Set the error if validation failed
     if (error) {
       setFieldErrors((prev) => ({
         ...prev,
@@ -464,46 +469,249 @@ const AddWalkInPatient: React.FC = () => {
       }));
     }
 
-    // Update patient data
-    setPatientData((prev) => ({
-      ...prev,
-      [field]: validatedValue,
-    }));
+    // Update the state
+    setPatientData((prev) => {
+      const updated = {
+        ...prev,
+        [field]: validatedValue,
+      };
+
+      // Auto-calculate DOB when age changes
+      if (field === "age" && validatedValue && validateAge(validatedValue)) {
+        updated.dateOfBirth = calculateDOBFromAge(validatedValue);
+      }
+
+      return updated;
+    });
+
+    // Clear API error when user starts typing
+    if (apiError) {
+      setApiError("");
+    }
   };
 
-  // Helper: Format date for API
-  const formatDateForAPI = (date: Date): string => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+  // Handle Enter key press in search input
+  const handleSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   };
 
-  // Helper: Format time for API
-  const formatTimeForAPI = (timeSlot: string): string => {
-    // Convert time slot like "1:00 PM" to "13:00"
-    const [time, period] = timeSlot.split(" ");
-    let [hours, minutes] = time.split(":");
+  // Calculate DOB from age
+  const calculateDOBFromAge = (age: string): string => {
+    if (!age || isNaN(Number(age))) return "";
 
-    if (period === "PM" && hours !== "12") {
-      hours = String(Number(hours) + 12);
-    } else if (period === "AM" && hours === "12") {
-      hours = "00";
+    const currentDate = new Date();
+    const birthYear = currentDate.getFullYear() - parseInt(age);
+    const birthDate = new Date(birthYear, 0, 1); // January 1st of the birth year
+
+    return birthDate.toISOString().split("T")[0]; // YYYY-MM-DD format
+  };
+
+  // Validate patient data
+  const validatePatientData = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    // Required fields validation
+    if (!patientData.firstName.trim())
+      errors.firstName = "First name is required";
+    if (!patientData.lastName.trim()) errors.lastName = "Last name is required";
+    if (!patientData.phoneNumber.trim())
+      errors.phoneNumber = "Phone number is required";
+    if (!patientData.age.trim()) errors.age = "Age is required";
+    if (!patientData.gender) errors.gender = "Gender is required";
+    if (!patientData.dateOfBirth)
+      errors.dateOfBirth = "Date of birth is required";
+
+    // Field-specific validation
+    if (patientData.firstName && !validateName(patientData.firstName)) {
+      errors.firstName = "Invalid first name format";
     }
 
-    return `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`;
+    if (patientData.lastName && !validateName(patientData.lastName)) {
+      errors.lastName = "Invalid last name format";
+    }
+
+    if (
+      patientData.phoneNumber &&
+      !validatePhoneNumber(patientData.phoneNumber)
+    ) {
+      errors.phoneNumber = "Invalid phone number format";
+    }
+
+    if (patientData.age && !validateAge(patientData.age)) {
+      errors.age = "Age must be between 1 and 120";
+    }
+
+    if (patientData.dateOfBirth && !validateDOB(patientData.dateOfBirth)) {
+      errors.dateOfBirth = "Date of birth cannot be in the future";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return false;
+    }
+
+    return true;
   };
 
-  // Dummy createAppointment function (replace with actual API call)
-  const createAppointment = async (appointmentRequest: any) => {
-    // Replace with actual API call
-    return { success: true, data: { appointmentId: "dummyAppointmentId" }, message: "Appointment created" };
+  // Validate appointment data
+  const validateAppointmentData = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    if (!patientData.doctorId) errors.doctorId = "Doctor selection is required";
+    if (!patientData.appointmentType)
+      errors.appointmentType = "Appointment type is required";
+    if (!patientData.department) errors.department = "Department is required";
+    if (!patientData.selectedTimeSlot)
+      errors.selectedTimeSlot = "Time slot selection is required";
+    if (!consultationFee || consultationFee <= 0)
+      errors.consultationFee = "Valid consultation fee is required";
+    if (discount < 0) errors.discount = "Discount cannot be negative";
+
+    if (discountType === "percentage" && discount > 100) {
+      errors.discount = "Percentage discount cannot exceed 100%";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return false;
+    }
+
+    return true;
   };
 
-  // Dummy createPatient function (replace with actual API call)
-  const createPatient = async (patientRequest: any) => {
-    // Replace with actual API call
-    return { success: true, data: { patientId: "dummyId" }, message: "Patient created" };
+  // API call to create patient
+  const createPatient = async (
+    patientInfo: CreatePatientRequest
+  ): Promise<ApiResponse> => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/doctor/createPatient`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(patientInfo),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || `HTTP error! status: ${response.status}`
+        );
+      }
+
+      return {
+        success: true,
+        message: data.message || "Patient created successfully",
+        data: data,
+      };
+    } catch (error) {
+      console.error("API Error:", error);
+      return {
+        success: false,
+        message:
+          error instanceof Error ? error.message : "Failed to create patient",
+      };
+    }
+  };
+
+  // API call to create appointment
+  const createAppointment = async (
+    appointmentInfo: CreateAppointmentRequest
+  ): Promise<ApiResponse> => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/appointment/createAppointment`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${getAuthToken()}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(appointmentInfo),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || `HTTP error! status: ${response.status}`
+        );
+      }
+
+      return {
+        success: true,
+        message: data.message || "Appointment created successfully",
+        data: data,
+      };
+    } catch (error) {
+      console.error("API Error:", error);
+      return {
+        success: false,
+        message:
+          error instanceof Error
+            ? error.message
+            : "Failed to create appointment",
+      };
+    }
+  };
+
+  // Handle patient creation
+  const handleCreatePatient = async () => {
+    if (!validatePatientData()) {
+      return;
+    }
+
+    setIsCreatingPatient(true);
+    setApiError("");
+
+    try {
+      // Format DOB for API (DD-MM-YYYY)
+      const formatDOBForAPI = (dateString: string) => {
+        if (!dateString) return "";
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+      };
+
+      const patientRequest: CreatePatientRequest = {
+        firstname: patientData.firstName.trim(),
+        lastname: patientData.lastName.trim(),
+        gender: patientData.gender,
+        DOB: formatDOBForAPI(patientData.dateOfBirth),
+        mobile: patientData.phoneNumber.trim(),
+      };
+
+      // Call the Patient API
+      const patientResult = await createPatient(patientRequest);
+
+      if (patientResult.success) {
+        // Extract patient ID from response
+        const patientId =
+          patientResult.data?.patientId ||
+          patientResult.data?.userId ||
+          "NEWPATIENT";
+        setCreatedPatientId(patientId);
+        setPatientCreated(true);
+        setApiError("");
+        alert(`Patient created successfully! Patient ID: ${patientId}`);
+      } else {
+        setApiError(patientResult.message);
+      }
+    } catch (error) {
+      console.error("Patient creation error:", error);
+      setApiError(
+        "An unexpected error occurred while creating patient. Please try again."
+      );
+    } finally {
+      setIsCreatingPatient(false);
+    }
   };
 
   // Handle appointment creation and payment
@@ -521,6 +729,27 @@ const AddWalkInPatient: React.FC = () => {
     setApiError("");
 
     try {
+      const formatDateForAPI = (date: Date): string => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      };
+
+      const formatTimeForAPI = (timeSlot: string): string => {
+        // Convert time slot like "1:00 PM" to "13:00"
+        const [time, period] = timeSlot.split(" ");
+        let [hours, minutes] = time.split(":");
+
+        if (period === "PM" && hours !== "12") {
+          hours = String(Number(hours) + 12);
+        } else if (period === "AM" && hours === "12") {
+          hours = "00";
+        }
+
+        return `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`;
+      };
+
       // Prepare Appointment API request data
       const appointmentRequest: CreateAppointmentRequest = {
         userId: createdPatientId,
@@ -568,7 +797,42 @@ const AddWalkInPatient: React.FC = () => {
     }
   };
 
-  // Helper: Format date for display
+  // Handle doctor selection
+  const handleDoctorSelect = (doctorId: string) => {
+    const doctor = doctors.find((d) => d.doctorId === doctorId);
+    setSelectedDoctor(doctor || null);
+    setPatientData((prev) => ({
+      ...prev,
+      doctorId: doctorId,
+      department:
+        doctor?.doctor?.department || doctor?.doctor?.specialization || "",
+    }));
+  };
+
+  // Calendar functionality
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+
+    const days = [];
+
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null);
+    }
+
+    // Add days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(day);
+    }
+
+    return days;
+  };
+
   const formatDate = (date: Date) => {
     return date.toLocaleDateString("en-US", {
       weekday: "short",
@@ -650,26 +914,6 @@ const AddWalkInPatient: React.FC = () => {
   const days = getDaysInMonth(currentMonth);
   const dayNames = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
-  function handleSearchKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
-    // Optionally implement search on Enter key
-    if (e.key === "Enter") {
-      handleSearch();
-    }
-  }
-
-  function handleCreatePatient(event: React.MouseEvent<HTMLButtonElement>): void {
-    // Implement patient creation logic here
-    // For now, just simulate patient creation
-    setIsCreatingPatient(true);
-    setTimeout(() => {
-      setPatientCreated(true);
-      setUserFound(false);
-      setCreatedPatientId("dummyId");
-      setIsCreatingPatient(false);
-      setApiError("");
-    }, 1000);
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header Placeholder */}
@@ -743,68 +987,69 @@ const AddWalkInPatient: React.FC = () => {
               {/* Search Section */}
               <div className="bg-white rounded-lg p-6 shadow-sm">
                 <div className="flex items-end space-x-2">
-                  {/* Search input - smaller width */}
-                  <div className="relative w-48">
-                    <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      placeholder="Mobile Number"
-                      value={searchQuery}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/\D/g, "");
-                        setSearchQuery(value);
-                      }}
-                      onKeyPress={(e) => {
-                        if (!/[0-9]/.test(e.key)) {
-                          e.preventDefault();
-                        } else {
-                          handleSearchKeyPress(e);
-                        }
-                      }}
-                      className="w-full pl-10 pr-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                      disabled={isSearching}
-                      maxLength={10}
-                    />
-                    {fieldErrors.phoneNumber && (
-                      <p className="text-red-500 text-xs mt-1">
-                        {fieldErrors.phoneNumber}
-                      </p>
-                    )}
-                  </div>
-                  {/* Dropdown for multiple patients */}
-                  {searchResults.length > 1 && (
-                    <div className="w-44">
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
-                        Select Patient
-                      </label>
-                      <div className="relative">
-                        <select
-                          value={selectedUserIndex !== null ? selectedUserIndex : ""}
-                          onChange={(e) => handleUserSelect(Number(e.target.value))}
-                          className="w-full appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                        >
-                          <option value="">Select Patient</option>
-                          {searchResults.map((user, idx) => (
-                            <option key={user.userId || idx} value={idx}>
-                              {user.firstname} {user.lastname}
-                            </option>
-                          ))}
-                        </select>
-                        <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />
-                      </div>
+                    {/* Search input - smaller width */}
+                    <div className="relative w-48">
+                        <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Mobile Number"
+                            value={searchQuery}
+                            onChange={(e) => {
+                                const value = e.target.value.replace(/\D/g, "");
+                                setSearchQuery(value);
+                            }}
+                            onKeyPress={(e) => {
+                                if (!/[0-9]/.test(e.key)) {
+                                    e.preventDefault();
+                                } else {
+                                    handleSearchKeyPress(e);
+                                }
+                            }}
+                            className="w-full pl-10 pr-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                            disabled={isSearching}
+                            maxLength={10}
+                        />
+                        {fieldErrors.phoneNumber && (
+                            <p className="text-red-500 text-xs mt-1">
+                                {fieldErrors.phoneNumber}
+                            </p>
+                        )}
                     </div>
-                  )}
-                  {/* Search button */}
-                  <button
-                    onClick={handleSearch}
-                    disabled={isSearching || searchQuery.length !== 10}
-                    className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${isSearching || searchQuery.length !== 10
-                      ? "bg-gray-400 cursor-not-allowed text-white"
-                      : "bg-blue-600 text-white hover:bg-blue-700"
-                      }`}
-                  >
-                    {isSearching ? "..." : "Search"}
-                  </button>
+                    {/* Dropdown for multiple patients */}
+                    {searchResults.length > 1 && (
+                        <div className="w-44">
+                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                                Select Patient
+                            </label>
+                            <div className="relative">
+                                <select
+                                    value={selectedUserIndex !== null ? selectedUserIndex : ""}
+                                    onChange={(e) => handleUserSelect(Number(e.target.value))}
+                                    className="w-full appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                >
+                                    <option value="">Select Patient</option>
+                                    {searchResults.map((user, idx) => (
+                                        <option key={user.userId || idx} value={idx}>
+                                            {user.firstname} {user.lastname}
+                                        </option>
+                                    ))}
+                                </select>
+                                <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />
+                            </div>
+                        </div>
+                    )}
+                    {/* Search button */}
+                    <button
+                        onClick={handleSearch}
+                        disabled={isSearching || searchQuery.length !== 10}
+                        className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${
+                            isSearching || searchQuery.length !== 10
+                                ? "bg-gray-400 cursor-not-allowed text-white"
+                                : "bg-blue-600 text-white hover:bg-blue-700"
+                        }`}
+                    >
+                        {isSearching ? "..." : "Search"}
+                    </button>
                 </div>
                 {isLoadingDoctors && (
                   <p className="text-blue-600 text-sm mt-2">
@@ -844,10 +1089,11 @@ const AddWalkInPatient: React.FC = () => {
                       onChange={(e) =>
                         handleInputChange("firstName", e.target.value)
                       }
-                      className={`w-full px-3 py-2 border ${fieldErrors.firstName
-                        ? "border-red-500"
-                        : "border-gray-300"
-                        } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                      className={`w-full px-3 py-2 border ${
+                        fieldErrors.firstName
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                       disabled={isCreatingPatient || userFound}
                     />
                     {fieldErrors.firstName && (
@@ -868,10 +1114,11 @@ const AddWalkInPatient: React.FC = () => {
                       onChange={(e) =>
                         handleInputChange("lastName", e.target.value)
                       }
-                      className={`w-full px-3 py-2 border ${fieldErrors.lastName
-                        ? "border-red-500"
-                        : "border-gray-300"
-                        } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                      className={`w-full px-3 py-2 border ${
+                        fieldErrors.lastName
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                       disabled={isCreatingPatient || userFound}
                     />
                     {fieldErrors.lastName && (
@@ -894,10 +1141,11 @@ const AddWalkInPatient: React.FC = () => {
                       }
                       maxLength={10}
                       pattern="[6-9][0-9]{9}"
-                      className={`w-full px-3 py-2 border                      ${fieldErrors.phoneNumber
-                        ? "border-red-500"
-                        : "border-gray-300"
-                        } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                      className={`w-full px-3 py-2 border                      ${
+                        fieldErrors.phoneNumber
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                       disabled={isCreatingPatient || userFound}
                     />
                     {fieldErrors.phoneNumber && (
@@ -916,8 +1164,9 @@ const AddWalkInPatient: React.FC = () => {
                       placeholder="25"
                       value={patientData.age}
                       onChange={(e) => handleInputChange("age", e.target.value)}
-                      className={`w-full px-3 py-2 border ${fieldErrors.age ? "border-red-500" : "border-gray-300"
-                        } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                      className={`w-full px-3 py-2 border ${
+                        fieldErrors.age ? "border-red-500" : "border-gray-300"
+                      } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                       disabled={isCreatingPatient || userFound}
                       min="1"
                       max="120"
@@ -939,10 +1188,11 @@ const AddWalkInPatient: React.FC = () => {
                         onChange={(e) =>
                           handleInputChange("gender", e.target.value)
                         }
-                        className={`w-full appearance-none bg-white border ${fieldErrors.gender
-                          ? "border-red-500"
-                          : "border-gray-300"
-                          } rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                        className={`w-full appearance-none bg-white border ${
+                          fieldErrors.gender
+                            ? "border-red-500"
+                            : "border-gray-300"
+                        } rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                         disabled={isCreatingPatient || userFound}
                       >
                         <option value="">Gender</option>
@@ -970,10 +1220,11 @@ const AddWalkInPatient: React.FC = () => {
                       onChange={(e) =>
                         handleInputChange("dateOfBirth", e.target.value)
                       }
-                      className={`w-full px-3 py-2 border ${fieldErrors.dateOfBirth
-                        ? "border-red-500"
-                        : "border-gray-300"
-                        } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                      className={`w-full px-3 py-2 border ${
+                        fieldErrors.dateOfBirth
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                       disabled={isCreatingPatient || userFound}
                       max={new Date().toISOString().split("T")[0]} // Set max to today
                     />
@@ -992,10 +1243,11 @@ const AddWalkInPatient: React.FC = () => {
                       type="button"
                       onClick={handleCreatePatient}
                       disabled={isCreatingPatient}
-                      className={`py-2 px-6 rounded-lg font-semibold transition-colors ${isCreatingPatient
-                        ? "bg-gray-400 cursor-not-allowed text-white"
-                        : "bg-blue-600 text-white hover:bg-blue-700"
-                        }`}
+                      className={`py-2 px-6 rounded-lg font-semibold transition-colors ${
+                        isCreatingPatient
+                          ? "bg-gray-400 cursor-not-allowed text-white"
+                          : "bg-blue-600 text-white hover:bg-blue-700"
+                      }`}
                     >
                       {isCreatingPatient
                         ? "Creating Patient..."
@@ -1026,10 +1278,11 @@ const AddWalkInPatient: React.FC = () => {
                           onChange={(e) =>
                             handleInputChange("appointmentType", e.target.value)
                           }
-                          className={`w-full appearance-none bg-white border ${fieldErrors.appointmentType
-                            ? "border-red-500"
-                            : "border-gray-300"
-                            } rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                          className={`w-full appearance-none bg-white border ${
+                            fieldErrors.appointmentType
+                              ? "border-red-500"
+                              : "border-gray-300"
+                          } rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                           disabled={!patientCreated && !userFound}
                         >
                           <option value="">Select Type</option>
@@ -1075,10 +1328,11 @@ const AddWalkInPatient: React.FC = () => {
                           onChange={(e) =>
                             handleInputChange("department", e.target.value)
                           }
-                          className={`w-full appearance-none bg-white border ${fieldErrors.department
-                            ? "border-red-500"
-                            : "border-gray-300"
-                            } rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                          className={`w-full appearance-none bg-white border ${
+                            fieldErrors.department
+                              ? "border-red-500"
+                              : "border-gray-300"
+                          } rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                           disabled={!patientCreated && !userFound}
                         >
                           <option value="">Select Department</option>
@@ -1108,10 +1362,11 @@ const AddWalkInPatient: React.FC = () => {
                           placeholder="Timings"
                           value={patientData.selectedTimeSlot}
                           readOnly
-                          className={`w-full px-3 py-2 border ${fieldErrors.selectedTimeSlot
-                            ? "border-red-500"
-                            : "border-gray-300"
-                            } rounded-lg bg-gray-50`}
+                          className={`w-full px-3 py-2 border ${
+                            fieldErrors.selectedTimeSlot
+                              ? "border-red-500"
+                              : "border-gray-300"
+                          } rounded-lg bg-gray-50`}
                         />
                         <Clock className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
                       </div>
@@ -1178,15 +1433,17 @@ const AddWalkInPatient: React.FC = () => {
                         className={`
                           h-10 text-sm rounded-lg transition-colors
                           ${!day ? "invisible" : ""}
-                          ${day ===
+                          ${
+                            day ===
                             patientData.selectedDate.getDate()
-                            ? "bg-blue-600 text-white"
-                            : "hover:bg-gray-100 text-gray-700"
+                              ? "bg-blue-600 text-white"
+                              : "hover:bg-gray-100 text-gray-700"
                           }
-                          ${!patientCreated &&
+                          ${
+                            !patientCreated &&
                             !userFound
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
                           }
                         `}
                       >
@@ -1211,15 +1468,17 @@ const AddWalkInPatient: React.FC = () => {
                         disabled={!patientCreated && !userFound}
                         className={`
                           px-4 py-2 rounded-lg text-sm font-medium transition-colors
-                          ${patientData.selectedTimeSlot ===
+                          ${
+                            patientData.selectedTimeSlot ===
                             slot
-                            ? "bg-blue-600 text-white"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                              ? "bg-blue-600 text-white"
+                              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                           }
-                          ${!patientCreated &&
+                          ${
+                            !patientCreated &&
                             !userFound
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
                           }
                         `}
                       >
@@ -1241,15 +1500,17 @@ const AddWalkInPatient: React.FC = () => {
                         disabled={!patientCreated && !userFound}
                         className={`
                           px-4 py-2 rounded-lg text-sm font-medium transition-colors
-                          ${patientData.selectedTimeSlot ===
+                          ${
+                            patientData.selectedTimeSlot ===
                             slot
-                            ? "bg-blue-600 text-white"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                              ? "bg-blue-600 text-white"
+                              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                           }
-                          ${!patientCreated &&
+                          ${
+                            !patientCreated &&
                             !userFound
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
                           }
                         `}
                       >
@@ -1292,10 +1553,11 @@ const AddWalkInPatient: React.FC = () => {
                           });
                         }
                       }}
-                      className={`w-full px-3 py-2 border ${fieldErrors.consultationFee
-                        ? "border-red-500"
-                        : "border-gray-300"
-                        } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                      className={`w-full px-3 py-2 border ${
+                        fieldErrors.consultationFee
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                       min="0"
                       step="0.01"
                       placeholder="Enter consultation fee"
@@ -1356,10 +1618,11 @@ const AddWalkInPatient: React.FC = () => {
                           }
                         }
                       }}
-                      className={`w-full px-3 py-2 border ${fieldErrors.discount
-                        ? "border-red-500"
-                        : "border-gray-300"
-                        } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                      className={`w-full px-3 py-2 border ${
+                        fieldErrors.discount
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                       min="0"
                       max={discountType === "percentage" ? "100" : undefined}
                       step="0.01"
@@ -1435,10 +1698,11 @@ const AddWalkInPatient: React.FC = () => {
               <button
                 onClick={handleContinueToPayment}
                 disabled={isCreatingAppointment || !patientCreated}
-                className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${isCreatingAppointment || !patientCreated
-                  ? "bg-gray-400 cursor-not-allowed text-white"
-                  : "bg-blue-600 text-white hover:bg-blue-700"
-                  }`}
+                className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${
+                  isCreatingAppointment || !patientCreated
+                    ? "bg-gray-400 cursor-not-allowed text-white"
+                    : "bg-blue-600 text-white hover:bg-blue-700"
+                }`}
               >
                 {isCreatingAppointment
                   ? "Processing..."
@@ -1453,30 +1717,3 @@ const AddWalkInPatient: React.FC = () => {
 };
 
 export default AddWalkInPatient;
-
-function validateAppointmentData() {
-  // Add your validation logic here if needed
-  return true;
-}
-
-
-function getDaysInMonth(currentMonth: Date) {
-  const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
-  const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
-  const daysInMonth = lastDay.getDate();
-  const startingDayOfWeek = firstDay.getDay();
-
-  const days: (number | null)[] = [];
-
-  // Add empty cells for days before the first day of the month
-  for (let i = 0; i < startingDayOfWeek; i++) {
-    days.push(null);
-  }
-
-  // Add days of the month
-  for (let day = 1; day <= daysInMonth; day++) {
-    days.push(day);
-  }
-
-  return days;
-}

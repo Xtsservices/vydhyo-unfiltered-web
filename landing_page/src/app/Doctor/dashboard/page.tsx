@@ -164,7 +164,7 @@ export default function MedicalDashboard() {
     { key: 'logout', icon: <UserOutlined />, label: 'Logout', path: '/logout' }
   ];
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status : any) => {
     switch (status) {
       case 'confirmed': return 'green';
       case 'pending': return 'orange';
@@ -173,7 +173,7 @@ export default function MedicalDashboard() {
     }
   };
 
-  const getInvoiceStatusColor = (status) => {
+  const getInvoiceStatusColor = (status : any) => {
     switch (status) {
       case 'paid': return 'green';
       case 'pending': return 'orange';
@@ -212,7 +212,6 @@ export default function MedicalDashboard() {
           {menuItems.map(item => (
             <Menu.Item key={item.key} icon={item.icon}>
               <span>{item.label}</span>
-              {item.badge && <Badge count={item.badge} size="small" style={{ marginLeft: '8px' }} />}
             </Menu.Item>
           ))}
         </Menu>

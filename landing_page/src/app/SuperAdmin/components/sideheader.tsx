@@ -149,7 +149,7 @@ const SideHeader: React.FC<SideHeaderProps> = ({ selectedKey = 'dashboard' }) =>
         color: 'white',
         marginTop: '84px'
       }}>
-        <Text strong style={{ color: 'white' }}>Main</Text>
+        <Text strong style={{ color: 'white' }}>Super Admin</Text>
       </div>
       
       <Menu

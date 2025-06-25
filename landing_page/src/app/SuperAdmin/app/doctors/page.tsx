@@ -422,7 +422,7 @@ const DoctorList = () => {
                 lineHeight: 'normal',
                 marginTop: '-84px',
             }}>
-                <SideHeader/>
+                <SideHeader selectedKey = 'doctors'/>
             </AntHeader>
 
             <Content style={{ 
@@ -482,7 +482,7 @@ const DoctorList = () => {
                         marginBottom: '20px',
                         alignItems: 'center'
                     }}>
-                        <Select
+                        {/* <Select
                             placeholder="All Status"
                             style={{ width: 120 }}
                             value={statusFilter}
@@ -492,9 +492,9 @@ const DoctorList = () => {
                             <Option value="active">Active</Option>
                             <Option value="inactive">Inactive</Option>
                             <Option value="pending">Pending</Option>
-                        </Select>
+                        </Select> */}
                         
-                        <Select
+                        {/* <Select
                             placeholder="All Specializations"
                             style={{ width: 200 }}
                             value={specializationFilter}
@@ -504,13 +504,13 @@ const DoctorList = () => {
                             {getUniqueSpecializations().map(specialization => (
                                 <Option key={specialization} value={specialization}>{specialization}</Option>
                             ))}
-                        </Select>
+                        </Select> */}
 
-                        <RangePicker 
+                        {/* <RangePicker 
                             placeholder={['Start Date', 'End Date']}
                             suffixIcon={<CalendarOutlined />}
                             style={{ borderRadius: '6px' }}
-                        />
+                        /> */}
                     </div>
 
                     {/* Table */}

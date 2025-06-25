@@ -518,142 +518,122 @@ const NeedApproval = () => {
                 <UserOutlined />
                 <span>Personal Information</span>
               </div>
-            }
-            style={{ marginBottom: "16px" }}
-          >
-            <Row gutter={[16, 16]}>
-              <Col span={6}>
-                <div style={{ textAlign: "center" }}>
-                  <Avatar
-                    size={100}
-                    src={getImageSrc(selectedDoctor.profilepic)}
-                    style={{
-                      cursor: getImageSrc(selectedDoctor.profilepic)
-                        ? "pointer"
-                        : "default",
-                    }}
-                    onClick={() =>
-                      showImageModal(
-                        getImageSrc(selectedDoctor.profilepic)!,
-                        "Profile Picture"
-                      )
-                    }
-                    icon={
-                      !getImageSrc(selectedDoctor.profilepic) ? (
-                        <UserOutlined />
-                      ) : undefined
-                    }
-                  >
-                    {!getImageSrc(selectedDoctor.profilepic) &&
-                      `${selectedDoctor.firstname?.[0] ?? ""}${
-                        selectedDoctor.lastname?.[0] ?? ""
-                      }`}
-                  </Avatar>
-                  <div style={{ marginTop: "8px", fontWeight: 500 }}>
-                    Dr. {selectedDoctor.firstname} {selectedDoctor.lastname}
-                  </div>
-                </div>
-              </Col>
-              <Col span={18}>
-                <Descriptions column={2} size="small">
-                  <Descriptions.Item label="Full Name">
-                    {selectedDoctor.firstname} {selectedDoctor.lastname}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Email">
-                    {selectedDoctor.email || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Mobile">
-                    {selectedDoctor.mobile || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Gender">
-                    {selectedDoctor.gender || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Date of Birth">
-                    {selectedDoctor.DOB || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Blood Group">
-                    {selectedDoctor.bloodgroup || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Marital Status">
-                    {selectedDoctor.maritalStatus || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Registration Number">
-                    {selectedDoctor.medicalRegistrationNumber || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Status">
-                    <Tag color={getStatusColor(selectedDoctor.status)}>
-                      {selectedDoctor.status || "Unknown"}
-                    </Tag>
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Verified">
-                    <Tag
-                      color={selectedDoctor.isVerified ? "success" : "warning"}
-                    >
-                      {selectedDoctor.isVerified ? "Verified" : "Pending"}
-                    </Tag>
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Languages">
-                    {selectedDoctor.spokenLanguage?.join(", ") || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Registered On">
-                    {formatDate(selectedDoctor.createdAt)}
-                  </Descriptions.Item>
-                </Descriptions>
-              </Col>
-            </Row>
-          </Card>
 
-          {/* Specialization Information */}
-          <Card
-            title={
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                }}
-              >
-                <MedicineBoxOutlined />
-                <span>Specialization Information</span>
-              </div>
-            }
-            style={{ marginBottom: "16px" }}
-          >
-            {selectedDoctor.specialization &&
-            selectedDoctor.specialization.length > 0 ? (
-              <div>
-                {selectedDoctor.specialization.map((spec, index) => (
-                  <Card
-                    key={spec.userId || index}
-                    size="small"
-                    style={{ marginBottom: "12px" }}
-                  >
-                    <Row gutter={[16, 16]} align="middle">
-                      <Col span={8}>
-                        <Descriptions column={1} size="small">
-                          <Descriptions.Item label="Specialization">
-                            <Tag color="blue" style={{ fontWeight: 500 }}>
-                              {spec.name}
-                            </Tag>
-                          </Descriptions.Item>
-                          <Descriptions.Item label="Experience">
-                            {spec.experience} years
-                          </Descriptions.Item>
-                          <Descriptions.Item label="ID">
-                            {spec.id || spec.userId}
-                          </Descriptions.Item>
-                        </Descriptions>
-                      </Col>
-                      <Col span={16}>
-                        <Row gutter={[16, 16]}>
-                          {/* Degree Certificate */}
-                          <Col span={12}>
-                            <div style={{ textAlign: "center" }}>
-                              <div
-                                style={{
-                                  marginBottom: "8px",
-                                  fontWeight: 500,
-                                }}
+                            />
+                            <Button
+                                onClick={fetchDoctors}
+                                loading={loading}
+                                style={{ borderRadius: '6px' }}
+                            >
+                                Refresh
+                            </Button>
+                        </Space>
+                    </div>
+
+                    {/* Filters */}
+                    <div style={{
+                        display: 'flex',
+                        gap: '12px',
+                        marginBottom: '20px',
+                        alignItems: 'center'
+                    }}>
+                        {/* <Select
+                            placeholder="All Status"
+                            style={{ width: 120 }}
+                            value={statusFilter}
+                            onChange={setStatusFilter}
+                        >
+                            <Option value="all">All Status</Option>
+                            <Option value="active">Active</Option>
+                            <Option value="inactive">Inactive</Option>
+                            <Option value="pending">Pending</Option>
+                        </Select> */}
+
+                        {/* <RangePicker
+                            placeholder={['Start Date', 'End Date']}
+                            suffixIcon={<CalendarOutlined />}
+                            style={{ borderRadius: '6px' }}
+                        /> */}
+                    </div>
+
+                    {/* Table */}
+                    <Spin spinning={loading}>
+                        <Table
+                            columns={columns}
+                            dataSource={filteredDoctors}
+                            pagination={{
+                                current: 1,
+                                pageSize: 10,
+                                total: filteredDoctors.length,
+                                showSizeChanger: true,
+                                showQuickJumper: true,
+                                showTotal: (total, range) =>
+                                    `${range[0]}-${range[1]} of ${total} doctors`,
+                                style: { marginTop: '20px' }
+                            }}
+                            style={{
+                                backgroundColor: 'white'
+                            }}
+                            scroll={{ x: true }}
+                        />
+                    </Spin>
+
+                    {/* Footer */}
+                    <div style={{
+                        marginTop: '16px',
+                        color: '#8c8c8c',
+                        fontSize: '14px'
+                    }}>
+                        Showing {filteredDoctors.length} of {doctors.length} doctors
+                    </div>
+                </div>
+
+                {/* Image Modal */}
+                <Modal
+                    title="Profile Picture"
+                    open={imageModalVisible}
+                    onCancel={() => setImageModalVisible(false)}
+                    footer={null}
+                    width={600}
+                    centered
+                >
+                    <div style={{ textAlign: 'center' }}>
+                        <img
+                            src={selectedImage}
+                            alt="Profile"
+                            style={{
+                                maxWidth: '100%',
+                                maxHeight: '500px',
+                                objectFit: 'contain'
+                            }}
+                        />
+                    </div>
+                </Modal>
+
+                {/* Doctor Details Modal */}
+                <Modal
+                    title={
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <UserOutlined style={{ fontSize: '20px', color: '#1890ff' }} />
+                            <span style={{ fontSize: '18px', fontWeight: 600 }}>
+                                Doctor Details - Dr. {selectedDoctor?.firstname} {selectedDoctor?.lastname}
+                            </span>
+                        </div>
+                    }
+                    open={detailModalVisible}
+                    onCancel={() => setDetailModalVisible(false)}
+                    width={1000}
+                    centered
+                    footer={
+                        selectedDoctor && (
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
+                                <Button
+                                    type="primary"
+                                    icon={<CheckOutlined />}
+                                    onClick={() => handleApprove(selectedDoctor._id)}
+                                    loading={updatingStatus === selectedDoctor._id}
+                                    disabled={updatingStatus === selectedDoctor._id || selectedDoctor.status?.toLowerCase() === 'active'}
+
                               >
                                 Degree Certificate
                               </div>
@@ -661,6 +641,7 @@ const NeedApproval = () => {
                               spec.degreeCertificate.data ? (
                                 <div>
                                   <div
+
                                     style={{
                                       width: "150px",
                                       height: "100px",

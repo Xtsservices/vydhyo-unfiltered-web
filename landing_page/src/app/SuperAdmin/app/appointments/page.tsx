@@ -165,11 +165,11 @@ export default function AppointmentsTable() {
         background: '#fff',
         boxShadow: '0 1px 4px rgba(0, 21, 41, 0.08)',
         zIndex: 1,
-        height: 'auto',
+        height: '550px',
         lineHeight: 'normal'
       }}>
         <AppHeader />
-        <SideHeader />
+        <SideHeader selectedKey='appointments' />
       </AntHeader>
 
       <Content style={{ 

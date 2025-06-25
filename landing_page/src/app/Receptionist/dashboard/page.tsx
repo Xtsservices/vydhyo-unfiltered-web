@@ -38,6 +38,15 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 const { Sider, Content } = Layout;
 
+const headerStyle = {
+  height: '100px', // Adjust this value as needed
+  lineHeight: '100px', // Should match height for vertical centering
+  position: 'fixed',
+  width: '100%',
+  zIndex: 1000,
+  // Add any other header styles you want to maintain
+};
+
 const DoctorDashboardPage = () => {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -243,7 +252,11 @@ const DoctorDashboardPage = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       {/* Header */}
-      <Header />
+      <Header style={{ 
+  ...headerStyle, 
+  height: '100px',
+  lineHeight: '100px' 
+}} />
       
       <Layout>
        

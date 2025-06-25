@@ -15,10 +15,12 @@ const AppHeader = () => {
         {
             key: '1',
             label: 'Profile',
+            onClick: () => router.push('/Doctor/profile'),
         },
         {
             key: '2',
             label: 'Settings',
+            onClick: () => router.push('/Doctor/app/settings'),
         },
         {
             key: '3',

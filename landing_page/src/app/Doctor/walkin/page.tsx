@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -115,6 +114,7 @@ const AddWalkInPatient: React.FC = () => {
     const [consultationFee, setConsultationFee] = useState<number | undefined>(undefined);
     const [discount, setDiscount] = useState(10);
     const [discountType, setDiscountType] = useState('percentage');
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
     // Calculate total amount
     const calculateTotalAmount = () => {
@@ -210,6 +210,109 @@ const AddWalkInPatient: React.FC = () => {
         }
     };
 
+    // Validate name input (only letters, spaces, and certain special characters)
+    const validateName = (name: string): boolean => {
+        const nameRegex = /^[a-zA-Z\s\-'.]+$/;
+        return nameRegex.test(name);
+    };
+
+    // Validate phone number
+    const validatePhoneNumber = (phone: string): boolean => {
+        const phoneRegex = /^[6-9][0-9]{9}$/;
+        return phoneRegex.test(phone);
+    };
+
+    // Validate age
+    const validateAge = (age: string): boolean => {
+        const ageNum = parseInt(age);
+        return !isNaN(ageNum) && ageNum >= 1 && ageNum <= 120;
+    };
+
+    // Validate date of birth
+    const validateDOB = (dob: string): boolean => {
+        if (!dob) return false;
+        const dobDate = new Date(dob);
+        const today = new Date();
+        return dobDate <= today;
+    };
+
+    // Handle input changes with validation
+    const handleInputChange = (field: keyof PatientData, value: string) => {
+        // Clear any existing error for this field
+        setFieldErrors(prev => {
+            const newErrors = {...prev};
+            delete newErrors[field];
+            return newErrors;
+        });
+
+        let validatedValue = value;
+        let error = '';
+
+        // Field-specific validation
+        switch (field) {
+            case 'firstName':
+            case 'lastName':
+                if (value && !validateName(value)) {
+                    error = 'Only letters, spaces, hyphens, and apostrophes are allowed';
+                }
+                break;
+                
+            case 'phoneNumber':
+                validatedValue = value.replace(/\D/g, ''); // Remove non-digits
+                if (validatedValue && !validatePhoneNumber(validatedValue)) {
+                    error = 'Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9';
+                }
+                break;
+                
+            case 'age':
+                validatedValue = value.replace(/\D/g, ''); // Remove non-digits
+                if (validatedValue && !validateAge(validatedValue)) {
+                    error = 'Please enter a valid age between 1 and 120';
+                }
+                break;
+                
+            case 'dateOfBirth':
+                if (value && !validateDOB(value)) {
+                    error = 'Date of birth cannot be in the future';
+                }
+                break;
+                
+            case 'visitReason':
+                if (value.length > 500) {
+                    validatedValue = value.substring(0, 500);
+                }
+                break;
+        }
+
+        // Set the error if validation failed
+        if (error) {
+            setFieldErrors(prev => ({
+                ...prev,
+                [field]: error
+            }));
+        }
+
+        // Update the state
+        setPatientData(prev => {
+            const updated = {
+                ...prev,
+                [field]: validatedValue
+            };
+
+            // Auto-calculate DOB when age changes
+            if (field === 'age' && validatedValue && validateAge(validatedValue)) {
+                updated.dateOfBirth = calculateDOBFromAge(validatedValue);
+            }
+
+            return updated;
+        });
+
+        // Clear API error when user starts typing
+        if (apiError) {
+            setApiError('');
+        }
+    };
+
     // Handle search functionality
     const handleSearch = async () => {
         if (!searchQuery.trim()) {
@@ -218,8 +321,7 @@ const AddWalkInPatient: React.FC = () => {
         }
 
         // Validate mobile number format
-        const phoneRegex = /^[6-9][0-9]{9}$/;
-        if (!phoneRegex.test(searchQuery)) {
+        if (!validatePhoneNumber(searchQuery)) {
             setApiError('Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9');
             return;
         }
@@ -298,50 +400,65 @@ const AddWalkInPatient: React.FC = () => {
 
     // Validate patient data
     const validatePatientData = (): boolean => {
-        const errors: string[] = [];
+        const errors: Record<string, string> = {};
 
-        if (!patientData.firstName.trim()) errors.push('First name is required');
-        if (!patientData.lastName.trim()) errors.push('Last name is required');
-        if (!patientData.phoneNumber.trim()) errors.push('Phone number is required');
-        if (!patientData.age.trim()) errors.push('Age is required');
-        if (!patientData.gender) errors.push('Gender is required');
+        // Required fields validation
+        if (!patientData.firstName.trim()) errors.firstName = 'First name is required';
+        if (!patientData.lastName.trim()) errors.lastName = 'Last name is required';
+        if (!patientData.phoneNumber.trim()) errors.phoneNumber = 'Phone number is required';
+        if (!patientData.age.trim()) errors.age = 'Age is required';
+        if (!patientData.gender) errors.gender = 'Gender is required';
+        if (!patientData.dateOfBirth) errors.dateOfBirth = 'Date of birth is required';
 
-        // Phone number validation
-        const phoneRegex = /^[6-9][0-9]{9}$/;
-        if (patientData.phoneNumber && !phoneRegex.test(patientData.phoneNumber)) {
-            errors.push('Please enter a valid 10-digit phone number starting with 6, 7, 8, or 9');
+        // Field-specific validation
+        if (patientData.firstName && !validateName(patientData.firstName)) {
+            errors.firstName = 'Invalid first name format';
+        }
+        
+        if (patientData.lastName && !validateName(patientData.lastName)) {
+            errors.lastName = 'Invalid last name format';
+        }
+        
+        if (patientData.phoneNumber && !validatePhoneNumber(patientData.phoneNumber)) {
+            errors.phoneNumber = 'Invalid phone number format';
+        }
+        
+        if (patientData.age && !validateAge(patientData.age)) {
+            errors.age = 'Age must be between 1 and 120';
+        }
+        
+        if (patientData.dateOfBirth && !validateDOB(patientData.dateOfBirth)) {
+            errors.dateOfBirth = 'Date of birth cannot be in the future';
         }
 
-        // Age validation
-        const ageNum = parseInt(patientData.age);
-        if (patientData.age && (isNaN(ageNum) || ageNum < 1 || ageNum > 120)) {
-            errors.push('Please enter a valid age between 1 and 120');
-        }
-
-        if (errors.length > 0) {
-            setApiError(errors.join(', '));
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
             return false;
         }
 
-        setApiError('');
         return true;
     };
 
     // Validate appointment data
     const validateAppointmentData = (): boolean => {
-        const errors: string[] = [];
+        const errors: Record<string, string> = {};
 
-        if (!patientData.doctorId) errors.push('Doctor selection is required');
-        if (!patientData.appointmentType) errors.push('Appointment type is required');
-        if (!patientData.department) errors.push('Department is required');
-        if (!patientData.selectedTimeSlot) errors.push('Time slot selection is required');
+        if (!patientData.doctorId) errors.doctorId = 'Doctor selection is required';
+        if (!patientData.appointmentType) errors.appointmentType = 'Appointment type is required';
+        if (!patientData.department) errors.department = 'Department is required';
+        if (!patientData.selectedTimeSlot) errors.selectedTimeSlot = 'Time slot selection is required';
+        if (!consultationFee || consultationFee <= 0) errors.consultationFee = 'Valid consultation fee is required';
+        if (discount < 0) errors.discount = 'Discount cannot be negative';
+        
+        if (discountType === 'percentage' && discount > 100) {
+            errors.discount = 'Percentage discount cannot exceed 100%';
+        }
 
-        if (errors.length > 0) {
-            setApiError(errors.join(', '));
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
             return false;
         }
 
-        setApiError('');
         return true;
     };
 
@@ -591,27 +708,6 @@ const AddWalkInPatient: React.FC = () => {
         '5:00 PM', '5:30 PM', '6:00 PM', '6:30 PM', '7:00 PM'
     ];
 
-    const handleInputChange = (field: keyof PatientData, value: string) => {
-        setPatientData(prev => {
-            const updated = {
-                ...prev,
-                [field]: value
-            };
-
-            // Auto-calculate DOB when age changes
-            if (field === 'age') {
-                updated.dateOfBirth = calculateDOBFromAge(value);
-            }
-
-            return updated;
-        });
-
-        // Clear error when user starts typing
-        if (apiError) {
-            setApiError('');
-        }
-    };
-
     const handleDateSelect = (day: number | null) => {
         if (day) {
             const newDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
@@ -652,6 +748,10 @@ const AddWalkInPatient: React.FC = () => {
         setUserFound(false);
         setPatientCreated(false);
         setCreatedPatientId('');
+        setConsultationFee(undefined);
+        setDiscount(10);
+        setDiscountType('percentage');
+        setFieldErrors({});
 
         // Reset to first doctor if available
         if (doctors.length > 0) {
@@ -745,14 +845,17 @@ const AddWalkInPatient: React.FC = () => {
                                             disabled={isSearching}
                                             maxLength={10} // Assuming 10-digit mobile numbers
                                         />
-                                        {searchQuery && searchQuery.length < 10 && (
-                                            <p className="text-red-500 text-xs mt-1">Mobile number must be 10 digits</p>
+                                        {fieldErrors.phoneNumber && (
+                                            <p className="text-red-500 text-xs mt-1">{fieldErrors.phoneNumber}</p>
                                         )}
                                     </div>
                                     <button
                                         onClick={() => {
                                             if (searchQuery.length !== 10) {
-                                                alert('Please enter a valid 10-digit mobile number');
+                                                setFieldErrors({
+                                                    ...fieldErrors,
+                                                    phoneNumber: 'Mobile number must be 10 digits'
+                                                });
                                                 return;
                                             }
                                             handleSearch();
@@ -787,8 +890,8 @@ const AddWalkInPatient: React.FC = () => {
                                             ))}
                                         </select>
                                         <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />
-                                        {!patientData.doctorId && (
-                                            <p className="text-red-500 text-xs mt-1">Please select a doctor</p>
+                                        {fieldErrors.doctorId && (
+                                            <p className="text-red-500 text-xs mt-1">{fieldErrors.doctorId}</p>
                                         )}
                                     </div>
                                 </div>
@@ -824,9 +927,12 @@ const AddWalkInPatient: React.FC = () => {
                                             placeholder="Enter First name"
                                             value={patientData.firstName}
                                             onChange={(e) => handleInputChange('firstName', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            className={`w-full px-3 py-2 border ${fieldErrors.firstName ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                                             disabled={isCreatingPatient || userFound}
                                         />
+                                        {fieldErrors.firstName && (
+                                            <p className="text-red-500 text-xs mt-1">{fieldErrors.firstName}</p>
+                                        )}
                                     </div>
 
                                     <div>
@@ -838,9 +944,12 @@ const AddWalkInPatient: React.FC = () => {
                                             placeholder="Enter Last name"
                                             value={patientData.lastName}
                                             onChange={(e) => handleInputChange('lastName', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            className={`w-full px-3 py-2 border ${fieldErrors.lastName ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                                             disabled={isCreatingPatient || userFound}
                                         />
+                                        {fieldErrors.lastName && (
+                                            <p className="text-red-500 text-xs mt-1">{fieldErrors.lastName}</p>
+                                        )}
                                     </div>
 
                                     <div>
@@ -854,14 +963,11 @@ const AddWalkInPatient: React.FC = () => {
                                             onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
                                             maxLength={10}
                                             pattern="[6-9][0-9]{9}"
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            className={`w-full px-3 py-2 border ${fieldErrors.phoneNumber ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                                             disabled={isCreatingPatient || userFound}
                                         />
-                                        {patientData.phoneNumber.length > 0 && patientData.phoneNumber.length < 10 && (
-                                            <p className="text-red-500 text-xs mt-1">Phone number must be 10 digits</p>
-                                        )}
-                                        {patientData.phoneNumber.length === 1 && !['6', '7', '8', '9'].includes(patientData.phoneNumber[0]) && (
-                                            <p className="text-red-500 text-xs mt-1">Phone number must start with 6, 7, 8, or 9</p>
+                                        {fieldErrors.phoneNumber && (
+                                            <p className="text-red-500 text-xs mt-1">{fieldErrors.phoneNumber}</p>
                                         )}
                                     </div>
 
@@ -874,11 +980,14 @@ const AddWalkInPatient: React.FC = () => {
                                             placeholder="25"
                                             value={patientData.age}
                                             onChange={(e) => handleInputChange('age', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            className={`w-full px-3 py-2 border ${fieldErrors.age ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                                             disabled={isCreatingPatient || userFound}
                                             min="1"
                                             max="120"
                                         />
+                                        {fieldErrors.age && (
+                                            <p className="text-red-500 text-xs mt-1">{fieldErrors.age}</p>
+                                        )}
                                     </div>
 
                                     <div>
@@ -889,7 +998,7 @@ const AddWalkInPatient: React.FC = () => {
                                             <select
                                                 value={patientData.gender}
                                                 onChange={(e) => handleInputChange('gender', e.target.value)}
-                                                className="w-full appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className={`w-full appearance-none bg-white border ${fieldErrors.gender ? 'border-red-500' : 'border-gray-300'} rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                                                 disabled={isCreatingPatient || userFound}
                                             >
                                                 <option value="">Gender</option>
@@ -899,6 +1008,9 @@ const AddWalkInPatient: React.FC = () => {
                                             </select>
                                             <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />
                                         </div>
+                                        {fieldErrors.gender && (
+                                            <p className="text-red-500 text-xs mt-1">{fieldErrors.gender}</p>
+                                        )}
                                     </div>
 
                                     {/* Display calculated DOB */}
@@ -910,9 +1022,13 @@ const AddWalkInPatient: React.FC = () => {
                                             type="date"
                                             value={patientData.dateOfBirth}
                                             onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            className={`w-full px-3 py-2 border ${fieldErrors.dateOfBirth ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                                             disabled={isCreatingPatient || userFound}
+                                            max={new Date().toISOString().split('T')[0]} // Set max to today
                                         />
+                                        {fieldErrors.dateOfBirth && (
+                                            <p className="text-red-500 text-xs mt-1">{fieldErrors.dateOfBirth}</p>
+                                        )}
                                     </div>
                                 </div>
 
@@ -951,7 +1067,7 @@ const AddWalkInPatient: React.FC = () => {
                                                 <select
                                                     value={patientData.appointmentType}
                                                     onChange={(e) => handleInputChange('appointmentType', e.target.value)}
-                                                    className="w-full appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    className={`w-full appearance-none bg-white border ${fieldErrors.appointmentType ? 'border-red-500' : 'border-gray-300'} rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                                                     disabled={!patientCreated && !userFound}
                                                 >
                                                     <option value="">Select Type</option>
@@ -962,6 +1078,9 @@ const AddWalkInPatient: React.FC = () => {
                                                 </select>
                                                 <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />
                                             </div>
+                                            {fieldErrors.appointmentType && (
+                                                <p className="text-red-500 text-xs mt-1">{fieldErrors.appointmentType}</p>
+                                            )}
                                         </div>
 
                                         <div>
@@ -990,7 +1109,7 @@ const AddWalkInPatient: React.FC = () => {
                                                 <select
                                                     value={patientData.department}
                                                     onChange={(e) => handleInputChange('department', e.target.value)}
-                                                    className="w-full appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    className={`w-full appearance-none bg-white border ${fieldErrors.department ? 'border-red-500' : 'border-gray-300'} rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                                                     disabled={!patientCreated && !userFound}
                                                 >
                                                     <option value="">Select Department</option>
@@ -1001,6 +1120,9 @@ const AddWalkInPatient: React.FC = () => {
                                                 </select>
                                                 <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />
                                             </div>
+                                            {fieldErrors.department && (
+                                                <p className="text-red-500 text-xs mt-1">{fieldErrors.department}</p>
+                                            )}
                                         </div>
 
                                         <div>
@@ -1013,10 +1135,13 @@ const AddWalkInPatient: React.FC = () => {
                                                     placeholder="Timings"
                                                     value={patientData.selectedTimeSlot}
                                                     readOnly
-                                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                                                    className={`w-full px-3 py-2 border ${fieldErrors.selectedTimeSlot ? 'border-red-500' : 'border-gray-300'} rounded-lg bg-gray-50`}
                                                 />
                                                 <Clock className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
                                             </div>
+                                            {fieldErrors.selectedTimeSlot && (
+                                                <p className="text-red-500 text-xs mt-1">{fieldErrors.selectedTimeSlot}</p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -1038,7 +1163,11 @@ const AddWalkInPatient: React.FC = () => {
                                         rows={3}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         disabled={!patientCreated && !userFound}
+                                        maxLength={500}
                                     />
+                                    <p className="text-xs text-gray-500 mt-1 text-right">
+                                        {patientData.visitReason.length}/500 characters
+                                    </p>
                                 </div>
                             </div>
 
@@ -1129,15 +1258,29 @@ const AddWalkInPatient: React.FC = () => {
 
                                 <div className="space-y-4">
                                     <div>
-                                        <label className="block text-sm text-gray-600 mb-1">Consultation Fee (₹)</label>
+                                        <label className="block text-sm text-gray-600 mb-1">Consultation Fee (₹)*</label>
                                         <input
                                             type="number"
-                                            value={consultationFee}
-                                            onChange={(e) => setConsultationFee(Number(e.target.value))}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            value={consultationFee ?? ''}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                setConsultationFee(value ? parseFloat(value) : undefined);
+                                                if (fieldErrors.consultationFee) {
+                                                    setFieldErrors(prev => {
+                                                        const newErrors = {...prev};
+                                                        delete newErrors.consultationFee;
+                                                        return newErrors;
+                                                    });
+                                                }
+                                            }}
+                                            className={`w-full px-3 py-2 border ${fieldErrors.consultationFee ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                                             min="0"
+                                            step="0.01"
                                             placeholder="Enter consultation fee"
                                         />
+                                        {fieldErrors.consultationFee && (
+                                            <p className="text-red-500 text-xs mt-1">{fieldErrors.consultationFee}</p>
+                                        )}
                                     </div>
 
                                     <div>
@@ -1145,7 +1288,16 @@ const AddWalkInPatient: React.FC = () => {
                                         <div className="relative">
                                             <select
                                                 value={discountType}
-                                                onChange={(e) => setDiscountType(e.target.value)}
+                                                onChange={(e) => {
+                                                    setDiscountType(e.target.value);
+                                                    if (fieldErrors.discount) {
+                                                        setFieldErrors(prev => {
+                                                            const newErrors = {...prev};
+                                                            delete newErrors.discount;
+                                                            return newErrors;
+                                                        });
+                                                    }
+                                                }}
                                                 className="w-full appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                             >
                                                 <option value="percentage">Percentage (%)</option>
@@ -1155,7 +1307,80 @@ const AddWalkInPatient: React.FC = () => {
                                         </div>
                                     </div>
 
-                                    {/* ... rest of the payment summary code remains the same ... */}
+                                    <div>
+                                        <label className="block text-sm text-gray-600 mb-1">
+                                            {discountType === 'percentage' ? 'Discount (%)' : 'Discount (₹)'}*
+                                        </label>
+                                        <input
+                                            type="number"
+                                            value={discount}
+                                            onChange={(e) => {
+                                                const value = parseFloat(e.target.value);
+                                                if (!isNaN(value)) {
+                                                    setDiscount(value);
+                                                    if (fieldErrors.discount) {
+                                                        setFieldErrors(prev => {
+                                                            const newErrors = {...prev};
+                                                            delete newErrors.discount;
+                                                            return newErrors;
+                                                        });
+                                                    }
+                                                }
+                                            }}
+                                            className={`w-full px-3 py-2 border ${fieldErrors.discount ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                                            min="0"
+                                            max={discountType === 'percentage' ? '100' : undefined}
+                                            step="0.01"
+                                        />
+                                        {fieldErrors.discount && (
+                                            <p className="text-red-500 text-xs mt-1">{fieldErrors.discount}</p>
+                                        )}
+                                    </div>
+
+                                    <div className="pt-4 border-t border-gray-200">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="text-sm font-medium text-gray-600">Subtotal</span>
+                                            <span className="text-sm font-medium text-gray-800">₹{consultationFee?.toFixed(2) || '0.00'}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="text-sm font-medium text-gray-600">Discount</span>
+                                            <span className="text-sm font-medium text-red-600">
+                                                {discountType === 'percentage' ? `${discount}%` : `₹${discount.toFixed(2)}`}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-200">
+                                            <span className="text-base font-semibold text-gray-800">Total Amount</span>
+                                            <span className="text-lg font-bold text-green-600">₹{totalAmount.toFixed(2)}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="pt-4">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Payment Status</label>
+                                        <div className="flex space-x-4">
+                                            <label className="inline-flex items-center">
+                                                <input
+                                                    type="radio"
+                                                    className="form-radio h-4 w-4 text-blue-600"
+                                                    name="paymentStatus"
+                                                    value="paid"
+                                                    checked={paymentStatus === 'paid'}
+                                                    onChange={() => setPaymentStatus('paid')}
+                                                />
+                                                <span className="ml-2 text-gray-700">Paid</span>
+                                            </label>
+                                            <label className="inline-flex items-center">
+                                                <input
+                                                    type="radio"
+                                                    className="form-radio h-4 w-4 text-blue-600"
+                                                    name="paymentStatus"
+                                                    value="pending"
+                                                    checked={paymentStatus === 'pending'}
+                                                    onChange={() => setPaymentStatus('pending')}
+                                                />
+                                                <span className="ml-2 text-gray-700">Pending</span>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 

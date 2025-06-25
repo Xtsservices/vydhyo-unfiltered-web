@@ -59,7 +59,7 @@ interface Specialization {
     name: string;
     experience: number;
     id: string;
-    drgreeCertificate?: {
+    degreeCertificate?: {
         data: string;
         mimeType: string;
     };
@@ -113,6 +113,7 @@ const NeedApproval = () => {
     const [statusFilter, setStatusFilter] = useState('all');
     const [imageModalVisible, setImageModalVisible] = useState(false);
     const [selectedImage, setSelectedImage] = useState('');
+    const [selectedImageTitle, setSelectedImageTitle] = useState('');
     const [detailModalVisible, setDetailModalVisible] = useState(false);
     const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
     const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
@@ -290,8 +291,13 @@ const NeedApproval = () => {
         return null;
     };
 
-    const showImageModal = (imageSrc: string) => {
+    const showImageModal = (imageSrc: string, title: string = 'Image') => {
+        if (!imageSrc) {
+            message.warning('Image not available');
+            return;
+        }
         setSelectedImage(imageSrc);
+        setSelectedImageTitle(title);
         setImageModalVisible(true);
     };
 
@@ -347,6 +353,7 @@ const NeedApproval = () => {
                             size={40}
                             src={imageSrc}
                             style={{ flexShrink: 0 }}
+                            icon={!imageSrc ? <UserOutlined /> : undefined}
                         >
                             {!imageSrc && `${record.firstname?.[0] ?? ''}${record.lastname?.[0] ?? ''}`}
                         </Avatar>
@@ -473,7 +480,7 @@ const NeedApproval = () => {
                             fontWeight: 600,
                             color: '#262626'
                         }}>
-                            Doctor List
+                            Pending Doctor's List
                         </h2>
                         <Space>
                             <Input
@@ -556,42 +563,48 @@ const NeedApproval = () => {
 
                 {/* Image Modal */}
                 <Modal
-                    title="Profile Picture"
+                    title={selectedImageTitle}
                     open={imageModalVisible}
                     onCancel={() => setImageModalVisible(false)}
                     footer={null}
                     width={600}
                     centered
                 >
-                    <div style={{ textAlign: 'center' }}>
-                        <img
-                            src={selectedImage}
-                            alt="Profile"
-                            style={{
-                                maxWidth: '100%',
-                                maxHeight: '500px',
-                                objectFit: 'contain'
-                            }}
-                        />
-                    </div>
+                    {selectedImage ? (
+                        <div style={{ textAlign: 'center' }}>
+                            <img
+                                src={selectedImage}
+                                alt={selectedImageTitle}
+                                style={{
+                                    maxWidth: '100%',
+                                    maxHeight: '500px',
+                                    objectFit: 'contain'
+                                }}
+                            />
+                        </div>
+                    ) : (
+                        <div style={{ textAlign: 'center', padding: '20px' }}>
+                            <p>Image not available</p>
+                        </div>
+                    )}
                 </Modal>
 
                 {/* Doctor Details Modal */}
-                <Modal
-                    title={
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                            <UserOutlined style={{ fontSize: '20px', color: '#1890ff' }} />
-                            <span style={{ fontSize: '18px', fontWeight: 600 }}>
-                                Doctor Details - Dr. {selectedDoctor?.firstname} {selectedDoctor?.lastname}
-                            </span>
-                        </div>
-                    }
-                    open={detailModalVisible}
-                    onCancel={() => setDetailModalVisible(false)}
-                    width={1000}
-                    centered
-                    footer={
-                        selectedDoctor && (
+                {selectedDoctor && (
+                    <Modal
+                        title={
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <UserOutlined style={{ fontSize: '20px', color: '#1890ff' }} />
+                                <span style={{ fontSize: '18px', fontWeight: 600 }}>
+                                    Doctor Details - Dr. {selectedDoctor.firstname} {selectedDoctor.lastname}
+                                </span>
+                            </div>
+                        }
+                        open={detailModalVisible}
+                        onCancel={() => setDetailModalVisible(false)}
+                        width={1200}
+                        centered
+                        footer={
                             <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
                                 <Button
                                     type="primary"
@@ -619,10 +632,8 @@ const NeedApproval = () => {
                                     Reject
                                 </Button>
                             </div>
-                        )
-                    }
-                >
-                    {selectedDoctor && (
+                        }
+                    >
                         <div style={{ maxHeight: '70vh', overflowY: 'auto', padding: '8px' }}>
                             {/* Personal Information */}
                             <Card title={
@@ -638,7 +649,8 @@ const NeedApproval = () => {
                                                 size={100}
                                                 src={getImageSrc(selectedDoctor.profilepic)}
                                                 style={{ cursor: getImageSrc(selectedDoctor.profilepic) ? 'pointer' : 'default' }}
-                                                onClick={getImageSrc(selectedDoctor.profilepic) ? () => showImageModal(getImageSrc(selectedDoctor.profilepic)!) : undefined}
+                                                onClick={() => showImageModal(getImageSrc(selectedDoctor.profilepic)!, 'Profile Picture')}
+                                                icon={!getImageSrc(selectedDoctor.profilepic) ? <UserOutlined /> : undefined}
                                             >
                                                 {!getImageSrc(selectedDoctor.profilepic) && `${selectedDoctor.firstname?.[0] ?? ''}${selectedDoctor.lastname?.[0] ?? ''}`}
                                             </Avatar>
@@ -692,6 +704,182 @@ const NeedApproval = () => {
                                         </Descriptions>
                                     </Col>
                                 </Row>
+                            </Card>
+
+                            {/* Specialization Information */}
+                            <Card title={
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <MedicineBoxOutlined />
+                                    <span>Specialization Information</span>
+                                </div>
+                            } style={{ marginBottom: '16px' }}>
+                                {selectedDoctor.specialization && selectedDoctor.specialization.length > 0 ? (
+                                    <div>
+                                        {selectedDoctor.specialization.map((spec, index) => (
+                                            <Card key={spec._id || index} size="small" style={{ marginBottom: '12px' }}>
+                                                <Row gutter={[16, 16]} align="middle">
+                                                    <Col span={8}>
+                                                        <Descriptions column={1} size="small">
+                                                            <Descriptions.Item label="Specialization">
+                                                                <Tag color="blue" style={{ fontWeight: 500 }}>
+                                                                    {spec.name}
+                                                                </Tag>
+                                                            </Descriptions.Item>
+                                                            <Descriptions.Item label="Experience">
+                                                                {spec.experience} years
+                                                            </Descriptions.Item>
+                                                            <Descriptions.Item label="ID">
+                                                                {spec.id || spec._id}
+                                                            </Descriptions.Item>
+                                                        </Descriptions>
+                                                    </Col>
+                                                    <Col span={16}>
+                                                        <Row gutter={[16, 16]}>
+                                                            {/* Degree Certificate */}
+                                                            <Col span={12}>
+                                                                <div style={{ textAlign: 'center' }}>
+                                                                    <div style={{ marginBottom: '8px', fontWeight: 500 }}>
+                                                                        Degree Certificate
+                                                                    </div>
+                                                                    {spec.degreeCertificate && spec.degreeCertificate.data ? (
+                                                                        <div>
+                                                                            <div 
+                                                                                style={{ 
+                                                                                    width: '150px', 
+                                                                                    height: '100px', 
+                                                                                    border: '1px solid #d9d9d9',
+                                                                                    borderRadius: '4px',
+                                                                                    display: 'flex',
+                                                                                    alignItems: 'center',
+                                                                                    justifyContent: 'center',
+                                                                                    cursor: 'pointer',
+                                                                                    backgroundImage: `url(data:${spec.degreeCertificate.mimeType};base64,${spec.degreeCertificate.data})`,
+                                                                                    backgroundSize: 'cover',
+                                                                                    backgroundPosition: 'center',
+                                                                                    margin: '0 auto 8px'
+                                                                                }}
+                                                                                onClick={() => showImageModal(
+                                                                                    `data:${spec.degreeCertificate?.mimeType};base64,${spec.degreeCertificate?.data}`,
+                                                                                    `Degree Certificate - ${spec.name}`
+                                                                                )}
+                                                                            >
+                                                                                <EyeOutlined style={{ fontSize: '24px', color: '#fff', textShadow: '0 0 4px rgba(0,0,0,0.5)' }} />
+                                                                            </div>
+                                                                            <Space>
+                                                                                <Button
+                                                                                    size="small"
+                                                                                    icon={<EyeOutlined />}
+                                                                                    onClick={() => showImageModal(
+                                                                                        `data:${spec.degreeCertificate?.mimeType};base64,${spec.degreeCertificate?.data}`,
+                                                                                        `Degree Certificate - ${spec.name}`
+                                                                                    )}
+                                                                                >
+                                                                                    View
+                                                                                </Button>
+                                                                                <Button
+                                                                                    size="small"
+                                                                                    icon={<DownloadOutlined />}
+                                                                                    onClick={() => downloadCertificate(
+                                                                                        spec.degreeCertificate,
+                                                                                        `degree_certificate_${spec.name}.${spec.degreeCertificate?.mimeType?.split('/')[1] || 'jpg'}`
+                                                                                    )}
+                                                                                >
+                                                                                    Download
+                                                                                </Button>
+                                                                            </Space>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div style={{ 
+                                                                            color: '#8c8c8c', 
+                                                                            fontStyle: 'italic',
+                                                                            padding: '20px 0'
+                                                                        }}>
+                                                                            Not Available
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </Col>
+                                                            
+                                                            {/* Specialization Certificate */}
+                                                            <Col span={12}>
+                                                                <div style={{ textAlign: 'center' }}>
+                                                                    <div style={{ marginBottom: '8px', fontWeight: 500 }}>
+                                                                        Specialization Certificate
+                                                                    </div>
+                                                                    {spec.specializationCertificate && spec.specializationCertificate.data ? (
+                                                                        <div>
+                                                                            <div 
+                                                                                style={{ 
+                                                                                    width: '150px', 
+                                                                                    height: '100px', 
+                                                                                    border: '1px solid #d9d9d9',
+                                                                                    borderRadius: '4px',
+                                                                                    display: 'flex',
+                                                                                    alignItems: 'center',
+                                                                                    justifyContent: 'center',
+                                                                                    cursor: 'pointer',
+                                                                                    backgroundImage: `url(data:${spec.specializationCertificate.mimeType};base64,${spec.specializationCertificate.data})`,
+                                                                                    backgroundSize: 'cover',
+                                                                                    backgroundPosition: 'center',
+                                                                                    margin: '0 auto 8px'
+                                                                                }}
+                                                                                onClick={() => showImageModal(
+                                                                                    `data:${spec.specializationCertificate?.mimeType};base64,${spec.specializationCertificate?.data}`,
+                                                                                    `Specialization Certificate - ${spec.name}`
+                                                                                )}
+                                                                            >
+                                                                                <EyeOutlined style={{ fontSize: '24px', color: '#fff', textShadow: '0 0 4px rgba(0,0,0,0.5)' }} />
+                                                                            </div>
+                                                                            <Space>
+                                                                                <Button
+                                                                                    size="small"
+                                                                                    icon={<EyeOutlined />}
+                                                                                    onClick={() => showImageModal(
+                                                                                        `data:${spec.specializationCertificate?.mimeType};base64,${spec.specializationCertificate?.data}`,
+                                                                                        `Specialization Certificate - ${spec.name}`
+                                                                                    )}
+                                                                                >
+                                                                                    View
+                                                                                </Button>
+                                                                                <Button
+                                                                                    size="small"
+                                                                                    icon={<DownloadOutlined />}
+                                                                                    onClick={() => downloadCertificate(
+                                                                                        spec.specializationCertificate,
+                                                                                        `specialization_certificate_${spec.name}.${spec.specializationCertificate?.mimeType?.split('/')[1] || 'jpg'}`
+                                                                                    )}
+                                                                                >
+                                                                                    Download
+                                                                                </Button>
+                                                                            </Space>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div style={{ 
+                                                                            color: '#8c8c8c', 
+                                                                            fontStyle: 'italic',
+                                                                            padding: '20px 0'
+                                                                        }}>
+                                                                            Not Available
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Card>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div style={{
+                                        textAlign: 'center',
+                                        color: '#8c8c8c',
+                                        fontStyle: 'italic',
+                                        padding: '16px 0'
+                                    }}>
+                                        No specialization information available
+                                    </div>
+                                )}
                             </Card>
 
                             {/* Consultation Fees */}
@@ -775,8 +963,8 @@ const NeedApproval = () => {
                                 </Card>
                             )}
                         </div>
-                    )}
-                </Modal>
+                    </Modal>
+                )}
             </Content>
         </Layout>
     );

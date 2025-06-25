@@ -660,6 +660,7 @@ const AddWalkInPatient: React.FC = () => {
   function handleCreatePatient(event: React.MouseEvent<HTMLButtonElement>): void {
     // Implement patient creation logic here
     // For now, just simulate patient creation
+    //imlement api call to create patient
     setIsCreatingPatient(true);
     setTimeout(() => {
       setPatientCreated(true);

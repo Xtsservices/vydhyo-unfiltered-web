@@ -672,811 +672,811 @@ const AddWalkInPatient: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-          {/* Header Placeholder */}
-          <div className="w-full h-16 bg-white shadow-sm border-b mb-6">
-            <div className="flex items-center justify-between px-6 h-full">
-              <h1 className="text-xl font-semibold text-gray-800">
-                Hospital Management System
-              </h1>
-              <div className="flex items-center space-x-4">
-                <Bell className="w-6 h-6 text-gray-600" />
-                <User className="w-6 h-6 text-gray-600" />
-              </div>
-            </div>
+      {/* Header Placeholder */}
+      <div className="w-full h-16 bg-white shadow-sm border-b mb-6">
+        <div className="flex items-center justify-between px-6 h-full">
+          <h1 className="text-xl font-semibold text-gray-800">
+            Hospital Management System
+          </h1>
+          <div className="flex items-center space-x-4">
+            <Bell className="w-6 h-6 text-gray-600" />
+            <User className="w-6 h-6 text-gray-600" />
           </div>
+        </div>
+      </div>
 
-          <div className="flex">
-            {/* Sidebar */}
-            <div className="w-16 bg-white shadow-sm border-r min-h-screen">
-              <div className="flex flex-col items-center py-6 space-y-6">
-                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                  <User className="w-6 h-6 text-blue-600" />
-                </div>
-              </div>
-            </div>
-
-            {/* Main Content */}
-            <div className="flex-1 p-6">
-              {/* Page Header */}
-              <div className="mb-6">
-                <div className="flex items-center space-x-3 mb-2">
-                  <h1 className="text-2xl font-semibold text-gray-800">
-                    Add Walk-in Patient
-                  </h1>
-                </div>
-                <p className="text-gray-600">
-                  Search for existing patient or enter new patient details for
-                  walk-in consultation
-                </p>
-              </div>
-
-              {/* Error Display */}
-              {apiError && (
-                <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
-                  <p className="text-red-700 text-sm">{apiError}</p>
-                </div>
-              )}
-
-              {/* Success Message for Found User */}
-              {userFound && (
-                <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
-                  <p className="text-green-700 text-sm">
-                    Patient found! Details have been pre-filled. You can proceed to
-                    create appointment.
-                  </p>
-                </div>
-              )}
-
-              {/* Success Message for Patient Created */}
-              {patientCreated && !userFound && (
-                <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <p className="text-blue-700 text-sm">
-                    Patient created successfully! You can now proceed to create
-                    appointment.
-                  </p>
-                </div>
-              )}
-
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Left Column - Patient Details */}
-                <div className="lg:col-span-2 space-y-6">
-                  {/* Search Section */}
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <div className="flex items-end space-x-2">
-                      {/* Search input - smaller width */}
-                      <div className="relative w-48">
-                        <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                        <input
-                          type="text"
-                          placeholder="Mobile Number"
-                          value={searchQuery}
-                          onChange={(e) => {
-                            const value = e.target.value.replace(/\D/g, "");
-                            setSearchQuery(value);
-                          }}
-                          onKeyPress={(e) => {
-                            if (!/[0-9]/.test(e.key)) {
-                              e.preventDefault();
-                            } else {
-                              handleSearchKeyPress(e);
-                            }
-                          }}
-                          className="w-full pl-10 pr-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                          disabled={isSearching}
-                          maxLength={10}
-                        />
-                        {fieldErrors.phoneNumber && (
-                          <p className="text-red-500 text-xs mt-1">
-                            {fieldErrors.phoneNumber}
-                          </p>
-                        )}
-                      </div>
-                      {/* Dropdown for multiple patients */}
-                      {searchResults.length > 1 && (
-                        <div className="w-44">
-                          <label className="block text-xs font-medium text-gray-700 mb-1">
-                            Select Patient
-                          </label>
-                          <div className="relative">
-                            <select
-                              value={selectedUserIndex !== null ? selectedUserIndex : ""}
-                              onChange={(e) => handleUserSelect(Number(e.target.value))}
-                              className="w-full appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                            >
-                              <option value="">Select Patient</option>
-                              {searchResults.map((user, idx) => (
-                                <option key={user.userId || idx} value={idx}>
-                                  {user.firstname} {user.lastname}
-                                </option>
-                              ))}
-                            </select>
-                            <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />
-                          </div>
-                        </div>
-                      )}
-                      {/* Search button */}
-                      <button
-                        onClick={handleSearch}
-                        disabled={isSearching || searchQuery.length !== 10}
-                        className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${isSearching || searchQuery.length !== 10
-                            ? "bg-gray-400 cursor-not-allowed text-white"
-                            : "bg-blue-600 text-white hover:bg-blue-700"
-                          }`}
-                      >
-                        {isSearching ? "..." : "Search"}
-                      </button>
-                    </div>
-                    {isLoadingDoctors && (
-                      <p className="text-blue-600 text-sm mt-2">
-                        Loading doctors...
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Basic Information */}
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <div className="flex items-center space-x-2 mb-4">
-                      <User className="w-5 h-5 text-blue-600" />
-                      <h2 className="text-lg font-semibold text-gray-800">
-                        Basic Information
-                      </h2>
-                      {userFound && (
-                        <span className="ml-2 px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                          Existing Patient
-                        </span>
-                      )}
-                      {patientCreated && !userFound && (
-                        <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                          Patient Created
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Patient First Name *
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Enter First name"
-                          value={patientData.firstName}
-                          onChange={(e) =>
-                            handleInputChange("firstName", e.target.value)
-                          }
-                          className={`w-full px-3 py-2 border ${fieldErrors.firstName
-                              ? "border-red-500"
-                              : "border-gray-300"
-                            } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                          disabled={isCreatingPatient || userFound}
-                        />
-                        {fieldErrors.firstName && (
-                          <p className="text-red-500 text-xs mt-1">
-                            {fieldErrors.firstName}
-                          </p>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Patient Last Name *
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Enter Last name"
-                          value={patientData.lastName}
-                          onChange={(e) =>
-                            handleInputChange("lastName", e.target.value)
-                          }
-                          className={`w-full px-3 py-2 border ${fieldErrors.lastName
-                              ? "border-red-500"
-                              : "border-gray-300"
-                            } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                          disabled={isCreatingPatient || userFound}
-                        />
-                        {fieldErrors.lastName && (
-                          <p className="text-red-500 text-xs mt-1">
-                            {fieldErrors.lastName}
-                          </p>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Phone Number *
-                        </label>
-                        <input
-                          type="tel"
-                          placeholder="Enter phone number"
-                          value={patientData.phoneNumber}
-                          onChange={(e) =>
-                            handleInputChange("phoneNumber", e.target.value)
-                          }
-                          maxLength={10}
-                          pattern="[6-9][0-9]{9}"
-                          className={`w-full px-3 py-2 border                      ${fieldErrors.phoneNumber
-                              ? "border-red-500"
-                              : "border-gray-300"
-                            } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                          disabled={isCreatingPatient || userFound}
-                        />
-                        {fieldErrors.phoneNumber && (
-                          <p className="text-red-500 text-xs mt-1">
-                            {fieldErrors.phoneNumber}
-                          </p>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Age *
-                        </label>
-                        <input
-                          type="number"
-                          placeholder="25"
-                          value={patientData.age}
-                          onChange={(e) => handleInputChange("age", e.target.value)}
-                          className={`w-full px-3 py-2 border ${fieldErrors.age ? "border-red-500" : "border-gray-300"
-                            } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                          disabled={isCreatingPatient || userFound}
-                          min="1"
-                          max="120"
-                        />
-                        {fieldErrors.age && (
-                          <p className="text-red-500 text-xs mt-1">
-                            {fieldErrors.age}
-                          </p>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Gender*
-                        </label>
-                        <div className="relative">
-                          <select
-                            value={patientData.gender}
-                            onChange={(e) =>
-                              handleInputChange("gender", e.target.value)
-                            }
-                            className={`w-full appearance-none bg-white border ${fieldErrors.gender
-                                ? "border-red-500"
-                                : "border-gray-300"
-                              } rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                            disabled={isCreatingPatient || userFound}
-                          >
-                            <option value="">Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                          </select>
-                          <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />
-                        </div>
-                        {fieldErrors.gender && (
-                          <p className="text-red-500 text-xs mt-1">
-                            {fieldErrors.gender}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Display calculated DOB */}
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Date of Birth *
-                        </label>
-                        <input
-                          type="date"
-                          value={patientData.dateOfBirth}
-                          onChange={(e) =>
-                            handleInputChange("dateOfBirth", e.target.value)
-                          }
-                          className={`w-full px-3 py-2 border ${fieldErrors.dateOfBirth
-                              ? "border-red-500"
-                              : "border-gray-300"
-                            } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                          disabled={isCreatingPatient || userFound}
-                          max={new Date().toISOString().split("T")[0]} // Set max to today
-                        />
-                        {fieldErrors.dateOfBirth && (
-                          <p className="text-red-500 text-xs mt-1">
-                            {fieldErrors.dateOfBirth}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Create Patient Button - Only show if patient not found/created */}
-                    {!userFound && !patientCreated && (
-                      <div className="mt-6 flex justify-end">
-                        <button
-                          type="button"
-                          onClick={handleCreatePatient}
-                          disabled={isCreatingPatient}
-                          className={`py-2 px-6 rounded-lg font-semibold transition-colors ${isCreatingPatient
-                              ? "bg-gray-400 cursor-not-allowed text-white"
-                              : "bg-blue-600 text-white hover:bg-blue-700"
-                            }`}
-                        >
-                          {isCreatingPatient
-                            ? "Creating Patient..."
-                            : "Create Patient"}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Appointment Details */}
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <div className="flex items-center space-x-2 mb-4">
-                      <Calendar className="w-5 h-5 text-blue-600" />
-                      <h2 className="text-lg font-semibold text-gray-800">
-                        Appointment Details
-                      </h2>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Appointment Type *
-                          </label>
-                          <div className="relative">
-                            <select
-                              value={patientData.appointmentType}
-                              onChange={(e) =>
-                                handleInputChange("appointmentType", e.target.value)
-                              }
-                              className={`w-full appearance-none bg-white border ${fieldErrors.appointmentType
-                                  ? "border-red-500"
-                                  : "border-gray-300"
-                                } rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                              disabled={!patientCreated && !userFound}
-                            >
-                              <option value="">Select Type</option>
-                              <option value="consultation">Consultation</option>
-                              <option value="follow-up">Follow-up</option>
-                              <option value="emergency">Emergency</option>
-                              <option value="home-visit">Home Visit</option>
-                            </select>
-                            <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />
-                          </div>
-                          {fieldErrors.appointmentType && (
-                            <p className="text-red-500 text-xs mt-1">
-                              {fieldErrors.appointmentType}
-                            </p>
-                          )}
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Date *
-                          </label>
-                          <div className="relative">
-                            <input
-                              type="text"
-                              placeholder="Availability Date"
-                              value={formatDate(patientData.selectedDate)}
-                              readOnly
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
-                            />
-                            <Calendar className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Department *
-                          </label>
-                          <div className="relative">
-                            <select
-                              value={patientData.department}
-                              onChange={(e) =>
-                                handleInputChange("department", e.target.value)
-                              }
-                              className={`w-full appearance-none bg-white border ${fieldErrors.department
-                                  ? "border-red-500"
-                                  : "border-gray-300"
-                                } rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                              disabled={!patientCreated && !userFound}
-                            >
-                              <option value="">Select Department</option>
-                              <option value="cardiology">Cardiology</option>
-                              <option value="neurology">Neurology</option>
-                              <option value="orthopedics">Orthopedics</option>
-                              <option value="General Physician">
-                                General Physician
-                              </option>
-                            </select>
-                            <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />
-                          </div>
-                          {fieldErrors.department && (
-                            <p className="text-red-500 text-xs mt-1">
-                              {fieldErrors.department}
-                            </p>
-                          )}
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Time *
-                          </label>
-                          <div className="relative">
-                            <input
-                              type="text"
-                              placeholder="Timings"
-                              value={patientData.selectedTimeSlot}
-                              readOnly
-                              className={`w-full px-3 py-2 border ${fieldErrors.selectedTimeSlot
-                                  ? "border-red-500"
-                                  : "border-gray-300"
-                                } rounded-lg bg-gray-50`}
-                            />
-                            <Clock className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
-                          </div>
-                          {fieldErrors.selectedTimeSlot && (
-                            <p className="text-red-500 text-xs mt-1">
-                              {fieldErrors.selectedTimeSlot}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Visit Reason */}
-                    <div className="mt-4">
-                      <div className="flex items-center space-x-2 mb-2">
-                        <div className="w-4 h-4 bg-blue-600 rounded flex items-center justify-center">
-                          <span className="text-white text-xs">+</span>
-                        </div>
-                        <label className="text-sm font-medium text-gray-700">
-                          Visit Reason / Symptoms
-                        </label>
-                      </div>
-                      <textarea
-                        placeholder="Describe the reason for visit and symptoms..."
-                        value={patientData.visitReason}
-                        onChange={(e) =>
-                          handleInputChange("visitReason", e.target.value)
-                        }
-                        rows={3}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        disabled={!patientCreated && !userFound}
-                        maxLength={500}
-                      />
-                      <p className="text-xs text-gray-500 mt-1 text-right">
-                        {patientData.visitReason.length}/500 characters
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Select Date Calendar */}
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                      Select Date
-                    </h3>
-
-                    <div className="mb-4">
-                      <div className="grid grid-cols-7 gap-1 mb-2">
-                        {dayNames.map((day) => (
-                          <div
-                            key={day}
-                            className="text-center text-sm font-medium text-gray-500 py-2"
-                          >
-                            {day}
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="grid grid-cols-7 gap-1">
-                        {days.map((day, index) => (
-                          <button
-                            key={index}
-                            onClick={() => handleDateSelect(day)}
-                            disabled={!day || (!patientCreated && !userFound)}
-                            className={`
-                          h-10 text-sm rounded-lg transition-colors
-                          ${!day ? "invisible" : ""}
-                          ${day ===
-                                patientData.selectedDate.getDate()
-                                ? "bg-blue-600 text-white"
-                                : "hover:bg-gray-100 text-gray-700"
-                              }
-                          ${!patientCreated &&
-                                !userFound
-                                ? "opacity-50 cursor-not-allowed"
-                                : ""
-                              }
-                        `}
-                          >
-                            {day}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Time Slots */}
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <div className="mb-6">
-                      <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                        Afternoon 7 slots
-                      </h3>
-                      <div className="grid grid-cols-4 gap-3">
-                        {afternoonSlots.map((slot, index) => (
-                          <button
-                            key={index}
-                            onClick={() => handleTimeSlotSelect(slot)}
-                            disabled={!patientCreated && !userFound}
-                            className={`
-                          px-4 py-2 rounded-lg text-sm font-medium transition-colors
-                          ${patientData.selectedTimeSlot ===
-                                slot
-                                ? "bg-blue-600 text-white"
-                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                              }
-                          ${!patientCreated &&
-                                !userFound
-                                ? "opacity-50 cursor-not-allowed"
-                                : ""
-                              }
-                        `}
-                          >
-                            {slot}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                        Evening 5 slots
-                      </h3>
-                      <div className="grid grid-cols-4 gap-3">
-                        {eveningSlots.map((slot, index) => (
-                          <button
-                            key={index}
-                            onClick={() => handleTimeSlotSelect(slot)}
-                            disabled={!patientCreated && !userFound}
-                            className={`
-                          px-4 py-2 rounded-lg text-sm font-medium transition-colors
-                          ${patientData.selectedTimeSlot ===
-                                slot
-                                ? "bg-blue-600 text-white"
-                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                              }
-                          ${!patientCreated &&
-                                !userFound
-                                ? "opacity-50 cursor-not-allowed"
-                                : ""
-                              }
-                        `}
-                          >
-                            {slot}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right Column - Payment Summary */}
-                <div className="space-y-6">
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <div className="flex items-center space-x-2 mb-4">
-                      <span className="text-green-600">₹</span>
-                      <h2 className="text-lg font-semibold text-gray-800">
-                        Payment Summary
-                      </h2>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm text-gray-600 mb-1">
-                          Consultation Fee (₹)*
-                        </label>
-                        <input
-                          type="number"
-                          value={consultationFee ?? ""}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            setConsultationFee(
-                              value ? parseFloat(value) : undefined
-                            );
-                            if (fieldErrors.consultationFee) {
-                              setFieldErrors((prev) => {
-                                const newErrors = { ...prev };
-                                delete newErrors.consultationFee;
-                                return newErrors;
-                              });
-                            }
-                          }}
-                          className={`w-full px-3 py-2 border ${fieldErrors.consultationFee
-                              ? "border-red-500"
-                              : "border-gray-300"
-                            } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                          min="0"
-                          step="0.01"
-                          placeholder="Enter consultation fee"
-                        />
-                        {fieldErrors.consultationFee && (
-                          <p className="text-red-500 text-xs mt-1">
-                            {fieldErrors.consultationFee}
-                          </p>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-sm text-gray-600 mb-1">
-                          Discount Type
-                        </label>
-                        <div className="relative">
-                          <select
-                            value={discountType}
-                            onChange={(e) => {
-                              setDiscountType(e.target.value);
-                              if (fieldErrors.discount) {
-                                setFieldErrors((prev) => {
-                                  const newErrors = { ...prev };
-                                  delete newErrors.discount;
-                                  return newErrors;
-                                });
-                              }
-                            }}
-                            className="w-full appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          >
-                            <option value="percentage">Percentage (%)</option>
-                            <option value="flat">Flat Amount</option>
-                          </select>
-                          <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm text-gray-600 mb-1">
-                          {discountType === "percentage"
-                            ? "Discount (%)"
-                            : "Discount (₹)"}
-                          *
-                        </label>
-                        <input
-                          type="number"
-                          value={discount}
-                          onChange={(e) => {
-                            const value = parseFloat(e.target.value);
-                            if (!isNaN(value)) {
-                              setDiscount(value);
-                              if (fieldErrors.discount) {
-                                setFieldErrors((prev) => {
-                                  const newErrors = { ...prev };
-                                  delete newErrors.discount;
-                                  return newErrors;
-                                });
-                              }
-                            }
-                          }}
-                          className={`w-full px-3 py-2 border ${fieldErrors.discount
-                              ? "border-red-500"
-                              : "border-gray-300"
-                            } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                          min="0"
-                          max={discountType === "percentage" ? "100" : undefined}
-                          step="0.01"
-                        />
-                        {fieldErrors.discount && (
-                          <p className="text-red-500 text-xs mt-1">
-                            {fieldErrors.discount}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="pt-4 border-t border-gray-200">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-medium text-gray-600">
-                            Subtotal
-                          </span>
-                          <span className="text-sm font-medium text-gray-800">
-                            ₹{consultationFee?.toFixed(2) || "0.00"}
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-medium text-gray-600">
-                            Discount
-                          </span>
-                          <span className="text-sm font-medium text-red-600">
-                            {discountType === "percentage"
-                              ? `${discount}%`
-                              : `₹${discount.toFixed(2)}`}
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-200">
-                          <span className="text-base font-semibold text-gray-800">
-                            Total Amount
-                          </span>
-                          <span className="text-lg font-bold text-green-600">
-                            ₹{totalAmount.toFixed(2)}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="pt-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Payment Status
-                        </label>
-                        <div className="flex space-x-4">
-                          <label className="inline-flex items-center">
-                            <input
-                              type="radio"
-                              className="form-radio h-4 w-4 text-blue-600"
-                              name="paymentStatus"
-                              value="paid"
-                              checked={paymentStatus === "paid"}
-                              onChange={() => setPaymentStatus("paid")}
-                            />
-                            <span className="ml-2 text-gray-700">Paid</span>
-                          </label>
-                          <label className="inline-flex items-center">
-                            <input
-                              type="radio"
-                              className="form-radio h-4 w-4 text-blue-600"
-                              name="paymentStatus"
-                              value="pending"
-                              checked={paymentStatus === "pending"}
-                              onChange={() => setPaymentStatus("pending")}
-                            />
-                            <span className="ml-2 text-gray-700">Pending</span>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={handleContinueToPayment}
-                    disabled={isCreatingAppointment || !patientCreated}
-                    className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${isCreatingAppointment || !patientCreated
-                        ? "bg-gray-400 cursor-not-allowed text-white"
-                        : "bg-blue-600 text-white hover:bg-blue-700"
-                      }`}
-                  >
-                    {isCreatingAppointment
-                      ? "Processing..."
-                      : "Continue to Payment"}
-                  </button>
-                </div>
-              </div>
+      <div className="flex">
+        {/* Sidebar */}
+        <div className="w-16 bg-white shadow-sm border-r min-h-screen">
+          <div className="flex flex-col items-center py-6 space-y-6">
+            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+              <User className="w-6 h-6 text-blue-600" />
             </div>
           </div>
         </div>
-      );
-    };
 
-    export default AddWalkInPatient;
+        {/* Main Content */}
+        <div className="flex-1 p-6">
+          {/* Page Header */}
+          <div className="mb-6">
+            <div className="flex items-center space-x-3 mb-2">
+              <h1 className="text-2xl font-semibold text-gray-800">
+                Add Walk-in Patient
+              </h1>
+            </div>
+            <p className="text-gray-600">
+              Search for existing patient or enter new patient details for
+              walk-in consultation
+            </p>
+          </div>
 
-    function validateAppointmentData() {
-      // Add your validation logic here if needed
-      return true;
-    }
+          {/* Error Display */}
+          {apiError && (
+            <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+              <p className="text-red-700 text-sm">{apiError}</p>
+            </div>
+          )}
+
+          {/* Success Message for Found User */}
+          {userFound && (
+            <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
+              <p className="text-green-700 text-sm">
+                Patient found! Details have been pre-filled. You can proceed to
+                create appointment.
+              </p>
+            </div>
+          )}
+
+          {/* Success Message for Patient Created */}
+          {patientCreated && !userFound && (
+            <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <p className="text-blue-700 text-sm">
+                Patient created successfully! You can now proceed to create
+                appointment.
+              </p>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left Column - Patient Details */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Search Section */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <div className="flex items-end space-x-2">
+                  {/* Search input - smaller width */}
+                  <div className="relative w-48">
+                    <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                    <input
+                      type="text"
+                      placeholder="Mobile Number"
+                      value={searchQuery}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, "");
+                        setSearchQuery(value);
+                      }}
+                      onKeyPress={(e) => {
+                        if (!/[0-9]/.test(e.key)) {
+                          e.preventDefault();
+                        } else {
+                          handleSearchKeyPress(e);
+                        }
+                      }}
+                      className="w-full pl-10 pr-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      disabled={isSearching}
+                      maxLength={10}
+                    />
+                    {fieldErrors.phoneNumber && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {fieldErrors.phoneNumber}
+                      </p>
+                    )}
+                  </div>
+                  {/* Dropdown for multiple patients */}
+                  {searchResults.length > 1 && (
+                    <div className="w-44">
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Select Patient
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={selectedUserIndex !== null ? selectedUserIndex : ""}
+                          onChange={(e) => handleUserSelect(Number(e.target.value))}
+                          className="w-full appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                        >
+                          <option value="">Select Patient</option>
+                          {searchResults.map((user, idx) => (
+                            <option key={user.userId || idx} value={idx}>
+                              {user.firstname} {user.lastname}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />
+                      </div>
+                    </div>
+                  )}
+                  {/* Search button */}
+                  <button
+                    onClick={handleSearch}
+                    disabled={isSearching || searchQuery.length !== 10}
+                    className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${isSearching || searchQuery.length !== 10
+                      ? "bg-gray-400 cursor-not-allowed text-white"
+                      : "bg-blue-600 text-white hover:bg-blue-700"
+                      }`}
+                  >
+                    {isSearching ? "..." : "Search"}
+                  </button>
+                </div>
+                {isLoadingDoctors && (
+                  <p className="text-blue-600 text-sm mt-2">
+                    Loading doctors...
+                  </p>
+                )}
+              </div>
+
+              {/* Basic Information */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <div className="flex items-center space-x-2 mb-4">
+                  <User className="w-5 h-5 text-blue-600" />
+                  <h2 className="text-lg font-semibold text-gray-800">
+                    Basic Information
+                  </h2>
+                  {userFound && (
+                    <span className="ml-2 px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                      Existing Patient
+                    </span>
+                  )}
+                  {patientCreated && !userFound && (
+                    <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                      Patient Created
+                    </span>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Patient First Name *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter First name"
+                      value={patientData.firstName}
+                      onChange={(e) =>
+                        handleInputChange("firstName", e.target.value)
+                      }
+                      className={`w-full px-3 py-2 border ${fieldErrors.firstName
+                        ? "border-red-500"
+                        : "border-gray-300"
+                        } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                      disabled={isCreatingPatient || userFound}
+                    />
+                    {fieldErrors.firstName && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {fieldErrors.firstName}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Patient Last Name *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter Last name"
+                      value={patientData.lastName}
+                      onChange={(e) =>
+                        handleInputChange("lastName", e.target.value)
+                      }
+                      className={`w-full px-3 py-2 border ${fieldErrors.lastName
+                        ? "border-red-500"
+                        : "border-gray-300"
+                        } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                      disabled={isCreatingPatient || userFound}
+                    />
+                    {fieldErrors.lastName && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {fieldErrors.lastName}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Phone Number *
+                    </label>
+                    <input
+                      type="tel"
+                      placeholder="Enter phone number"
+                      value={patientData.phoneNumber}
+                      onChange={(e) =>
+                        handleInputChange("phoneNumber", e.target.value)
+                      }
+                      maxLength={10}
+                      pattern="[6-9][0-9]{9}"
+                      className={`w-full px-3 py-2 border                      ${fieldErrors.phoneNumber
+                        ? "border-red-500"
+                        : "border-gray-300"
+                        } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                      disabled={isCreatingPatient || userFound}
+                    />
+                    {fieldErrors.phoneNumber && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {fieldErrors.phoneNumber}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Age *
+                    </label>
+                    <input
+                      type="number"
+                      placeholder="25"
+                      value={patientData.age}
+                      onChange={(e) => handleInputChange("age", e.target.value)}
+                      className={`w-full px-3 py-2 border ${fieldErrors.age ? "border-red-500" : "border-gray-300"
+                        } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                      disabled={isCreatingPatient || userFound}
+                      min="1"
+                      max="120"
+                    />
+                    {fieldErrors.age && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {fieldErrors.age}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Gender*
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={patientData.gender}
+                        onChange={(e) =>
+                          handleInputChange("gender", e.target.value)
+                        }
+                        className={`w-full appearance-none bg-white border ${fieldErrors.gender
+                          ? "border-red-500"
+                          : "border-gray-300"
+                          } rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                        disabled={isCreatingPatient || userFound}
+                      >
+                        <option value="">Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />
+                    </div>
+                    {fieldErrors.gender && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {fieldErrors.gender}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Display calculated DOB */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Date of Birth *
+                    </label>
+                    <input
+                      type="date"
+                      value={patientData.dateOfBirth}
+                      onChange={(e) =>
+                        handleInputChange("dateOfBirth", e.target.value)
+                      }
+                      className={`w-full px-3 py-2 border ${fieldErrors.dateOfBirth
+                        ? "border-red-500"
+                        : "border-gray-300"
+                        } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                      disabled={isCreatingPatient || userFound}
+                      max={new Date().toISOString().split("T")[0]} // Set max to today
+                    />
+                    {fieldErrors.dateOfBirth && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {fieldErrors.dateOfBirth}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Create Patient Button - Only show if patient not found/created */}
+                {!userFound && !patientCreated && (
+                  <div className="mt-6 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={handleCreatePatient}
+                      disabled={isCreatingPatient}
+                      className={`py-2 px-6 rounded-lg font-semibold transition-colors ${isCreatingPatient
+                        ? "bg-gray-400 cursor-not-allowed text-white"
+                        : "bg-blue-600 text-white hover:bg-blue-700"
+                        }`}
+                    >
+                      {isCreatingPatient
+                        ? "Creating Patient..."
+                        : "Create Patient"}
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Appointment Details */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <div className="flex items-center space-x-2 mb-4">
+                  <Calendar className="w-5 h-5 text-blue-600" />
+                  <h2 className="text-lg font-semibold text-gray-800">
+                    Appointment Details
+                  </h2>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Appointment Type *
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={patientData.appointmentType}
+                          onChange={(e) =>
+                            handleInputChange("appointmentType", e.target.value)
+                          }
+                          className={`w-full appearance-none bg-white border ${fieldErrors.appointmentType
+                            ? "border-red-500"
+                            : "border-gray-300"
+                            } rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                          disabled={!patientCreated && !userFound}
+                        >
+                          <option value="">Select Type</option>
+                          <option value="consultation">Consultation</option>
+                          <option value="follow-up">Follow-up</option>
+                          <option value="emergency">Emergency</option>
+                          <option value="home-visit">Home Visit</option>
+                        </select>
+                        <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />
+                      </div>
+                      {fieldErrors.appointmentType && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {fieldErrors.appointmentType}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Date *
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder="Availability Date"
+                          value={formatDate(patientData.selectedDate)}
+                          readOnly
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                        />
+                        <Calendar className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Department *
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={patientData.department}
+                          onChange={(e) =>
+                            handleInputChange("department", e.target.value)
+                          }
+                          className={`w-full appearance-none bg-white border ${fieldErrors.department
+                            ? "border-red-500"
+                            : "border-gray-300"
+                            } rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                          disabled={!patientCreated && !userFound}
+                        >
+                          <option value="">Select Department</option>
+                          <option value="cardiology">Cardiology</option>
+                          <option value="neurology">Neurology</option>
+                          <option value="orthopedics">Orthopedics</option>
+                          <option value="General Physician">
+                            General Physician
+                          </option>
+                        </select>
+                        <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />
+                      </div>
+                      {fieldErrors.department && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {fieldErrors.department}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Time *
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder="Timings"
+                          value={patientData.selectedTimeSlot}
+                          readOnly
+                          className={`w-full px-3 py-2 border ${fieldErrors.selectedTimeSlot
+                            ? "border-red-500"
+                            : "border-gray-300"
+                            } rounded-lg bg-gray-50`}
+                        />
+                        <Clock className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
+                      </div>
+                      {fieldErrors.selectedTimeSlot && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {fieldErrors.selectedTimeSlot}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Visit Reason */}
+                <div className="mt-4">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <div className="w-4 h-4 bg-blue-600 rounded flex items-center justify-center">
+                      <span className="text-white text-xs">+</span>
+                    </div>
+                    <label className="text-sm font-medium text-gray-700">
+                      Visit Reason / Symptoms
+                    </label>
+                  </div>
+                  <textarea
+                    placeholder="Describe the reason for visit and symptoms..."
+                    value={patientData.visitReason}
+                    onChange={(e) =>
+                      handleInputChange("visitReason", e.target.value)
+                    }
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    disabled={!patientCreated && !userFound}
+                    maxLength={500}
+                  />
+                  <p className="text-xs text-gray-500 mt-1 text-right">
+                    {patientData.visitReason.length}/500 characters
+                  </p>
+                </div>
+              </div>
+
+              {/* Select Date Calendar */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                  Select Date
+                </h3>
+
+                <div className="mb-4">
+                  <div className="grid grid-cols-7 gap-1 mb-2">
+                    {dayNames.map((day) => (
+                      <div
+                        key={day}
+                        className="text-center text-sm font-medium text-gray-500 py-2"
+                      >
+                        {day}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="grid grid-cols-7 gap-1">
+                    {days.map((day, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleDateSelect(day)}
+                        disabled={!day || (!patientCreated && !userFound)}
+                        className={`
+                          h-10 text-sm rounded-lg transition-colors
+                          ${!day ? "invisible" : ""}
+                          ${day ===
+                            patientData.selectedDate.getDate()
+                            ? "bg-blue-600 text-white"
+                            : "hover:bg-gray-100 text-gray-700"
+                          }
+                          ${!patientCreated &&
+                            !userFound
+                            ? "opacity-50 cursor-not-allowed"
+                            : ""
+                          }
+                        `}
+                      >
+                        {day}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Time Slots */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                    Afternoon 7 slots
+                  </h3>
+                  <div className="grid grid-cols-4 gap-3">
+                    {afternoonSlots.map((slot, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleTimeSlotSelect(slot)}
+                        disabled={!patientCreated && !userFound}
+                        className={`
+                          px-4 py-2 rounded-lg text-sm font-medium transition-colors
+                          ${patientData.selectedTimeSlot ===
+                            slot
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          }
+                          ${!patientCreated &&
+                            !userFound
+                            ? "opacity-50 cursor-not-allowed"
+                            : ""
+                          }
+                        `}
+                      >
+                        {slot}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                    Evening 5 slots
+                  </h3>
+                  <div className="grid grid-cols-4 gap-3">
+                    {eveningSlots.map((slot, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleTimeSlotSelect(slot)}
+                        disabled={!patientCreated && !userFound}
+                        className={`
+                          px-4 py-2 rounded-lg text-sm font-medium transition-colors
+                          ${patientData.selectedTimeSlot ===
+                            slot
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          }
+                          ${!patientCreated &&
+                            !userFound
+                            ? "opacity-50 cursor-not-allowed"
+                            : ""
+                          }
+                        `}
+                      >
+                        {slot}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column - Payment Summary */}
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <div className="flex items-center space-x-2 mb-4">
+                  <span className="text-green-600">₹</span>
+                  <h2 className="text-lg font-semibold text-gray-800">
+                    Payment Summary
+                  </h2>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-1">
+                      Consultation Fee (₹)*
+                    </label>
+                    <input
+                      type="number"
+                      value={consultationFee ?? ""}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setConsultationFee(
+                          value ? parseFloat(value) : undefined
+                        );
+                        if (fieldErrors.consultationFee) {
+                          setFieldErrors((prev) => {
+                            const newErrors = { ...prev };
+                            delete newErrors.consultationFee;
+                            return newErrors;
+                          });
+                        }
+                      }}
+                      className={`w-full px-3 py-2 border ${fieldErrors.consultationFee
+                        ? "border-red-500"
+                        : "border-gray-300"
+                        } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                      min="0"
+                      step="0.01"
+                      placeholder="Enter consultation fee"
+                    />
+                    {fieldErrors.consultationFee && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {fieldErrors.consultationFee}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-1">
+                      Discount Type
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={discountType}
+                        onChange={(e) => {
+                          setDiscountType(e.target.value);
+                          if (fieldErrors.discount) {
+                            setFieldErrors((prev) => {
+                              const newErrors = { ...prev };
+                              delete newErrors.discount;
+                              return newErrors;
+                            });
+                          }
+                        }}
+                        className="w-full appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      >
+                        <option value="percentage">Percentage (%)</option>
+                        <option value="flat">Flat Amount</option>
+                      </select>
+                      <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-gray-400" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-1">
+                      {discountType === "percentage"
+                        ? "Discount (%)"
+                        : "Discount (₹)"}
+                      *
+                    </label>
+                    <input
+                      type="number"
+                      value={discount}
+                      onChange={(e) => {
+                        const value = parseFloat(e.target.value);
+                        if (!isNaN(value)) {
+                          setDiscount(value);
+                          if (fieldErrors.discount) {
+                            setFieldErrors((prev) => {
+                              const newErrors = { ...prev };
+                              delete newErrors.discount;
+                              return newErrors;
+                            });
+                          }
+                        }
+                      }}
+                      className={`w-full px-3 py-2 border ${fieldErrors.discount
+                        ? "border-red-500"
+                        : "border-gray-300"
+                        } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                      min="0"
+                      max={discountType === "percentage" ? "100" : undefined}
+                      step="0.01"
+                    />
+                    {fieldErrors.discount && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {fieldErrors.discount}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="pt-4 border-t border-gray-200">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm font-medium text-gray-600">
+                        Subtotal
+                      </span>
+                      <span className="text-sm font-medium text-gray-800">
+                        ₹{consultationFee?.toFixed(2) || "0.00"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm font-medium text-gray-600">
+                        Discount
+                      </span>
+                      <span className="text-sm font-medium text-red-600">
+                        {discountType === "percentage"
+                          ? `${discount}%`
+                          : `₹${discount.toFixed(2)}`}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-200">
+                      <span className="text-base font-semibold text-gray-800">
+                        Total Amount
+                      </span>
+                      <span className="text-lg font-bold text-green-600">
+                        ₹{totalAmount.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="pt-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Payment Status
+                    </label>
+                    <div className="flex space-x-4">
+                      <label className="inline-flex items-center">
+                        <input
+                          type="radio"
+                          className="form-radio h-4 w-4 text-blue-600"
+                          name="paymentStatus"
+                          value="paid"
+                          checked={paymentStatus === "paid"}
+                          onChange={() => setPaymentStatus("paid")}
+                        />
+                        <span className="ml-2 text-gray-700">Paid</span>
+                      </label>
+                      <label className="inline-flex items-center">
+                        <input
+                          type="radio"
+                          className="form-radio h-4 w-4 text-blue-600"
+                          name="paymentStatus"
+                          value="pending"
+                          checked={paymentStatus === "pending"}
+                          onChange={() => setPaymentStatus("pending")}
+                        />
+                        <span className="ml-2 text-gray-700">Pending</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={handleContinueToPayment}
+                disabled={isCreatingAppointment || !patientCreated}
+                className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${isCreatingAppointment || !patientCreated
+                  ? "bg-gray-400 cursor-not-allowed text-white"
+                  : "bg-blue-600 text-white hover:bg-blue-700"
+                  }`}
+              >
+                {isCreatingAppointment
+                  ? "Processing..."
+                  : "Continue to Payment"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AddWalkInPatient;
+
+function validateAppointmentData() {
+  // Add your validation logic here if needed
+  return true;
+}
 
 
-    function getDaysInMonth(currentMonth: Date) {
-      const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
-      const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
-      const daysInMonth = lastDay.getDate();
-      const startingDayOfWeek = firstDay.getDay();
+function getDaysInMonth(currentMonth: Date) {
+  const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+  const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+  const daysInMonth = lastDay.getDate();
+  const startingDayOfWeek = firstDay.getDay();
 
-      const days: (number | null)[] = [];
+  const days: (number | null)[] = [];
 
-      // Add empty cells for days before the first day of the month
-      for (let i = 0; i < startingDayOfWeek; i++) {
-        days.push(null);
-      }
+  // Add empty cells for days before the first day of the month
+  for (let i = 0; i < startingDayOfWeek; i++) {
+    days.push(null);
+  }
 
-      // Add days of the month
-      for (let day = 1; day <= daysInMonth; day++) {
-        days.push(day);
-      }
+  // Add days of the month
+  for (let day = 1; day <= daysInMonth; day++) {
+    days.push(day);
+  }
 
-      return days;
-    }
+  return days;
+}

@@ -473,7 +473,7 @@ const NeedApproval = () => {
                             fontWeight: 600,
                             color: '#262626'
                         }}>
-                            Doctor List
+                            Pending Doctor's List
                         </h2>
                         <Space>
                             <Input

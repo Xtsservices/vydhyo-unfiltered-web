@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, JSX } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import sideHeader from '../../components/sideheader';
-import AppHeader from '../../components/header'
+import AppHeader from '../../components/header';
 import {
   Layout,
   Card,
@@ -63,54 +62,59 @@ const MedicalDashboard = () => {
   const [doctors, setDoctors] = useState([]);
   const [doctorsCount, setDoctorsCount] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [statsData, setStatsData] = useState([
+
+  const handleNavigation = useCallback((path: string) => {
+    message.loading('Navigating...', 0.5);
+    setTimeout(() => {
+      router.push(path);
+    }, 50);
+  }, [router]);
+
+  const statsData = useMemo(() => [
     {
       title: 'Doctors',
-      value: 0, // Will be updated from API
+      value: doctorsCount,
       color: '#1890ff',
-      onClick: () => router.push('/Admin/app/doctors')
+      onClick: () => handleNavigation('/Admin/app/doctors')
     },
     {
       title: 'Patients',
       value: 487,
       color: '#52c41a',
-      onClick: () => router.push('/Admin/app/patients')
+      onClick: () => handleNavigation('/Admin/app/patients')
     },
     {
       title: 'Appointment',
       value: 485,
       color: '#ff4d4f',
-      onClick: () => router.push('/Admin/app/appointments')
+      onClick: () => handleNavigation('/Admin/app/appointments')
     },
     {
       title: 'Revenue',
       value: '$62523',
       color: '#faad14',
-      onClick: () => router.push('/Admin/app/doctors')
+      onClick: () => handleNavigation('/Admin/app/revenue')
     }
-  ]);
+  ], [doctorsCount, handleNavigation]);
 
-  // Revenue chart data
-  const revenueData = [
+  const revenueData = useMemo(() => [
     { year: '2013', revenue: 50 },
     { year: '2014', revenue: 75 },
     { year: '2015', revenue: 225 },
     { year: '2016', revenue: 120 },
     { year: '2017', revenue: 75 },
     { year: '2018', revenue: 200 }
-  ];
+  ], []);
 
-  // Status chart data
-  const statusData = [
+  const statusData = useMemo(() => [
     { year: '2015', orange: 25, blue: 100 },
     { year: '2016', orange: 50, blue: 25 },
     { year: '2017', orange: 125, blue: 90 },
     { year: '2018', orange: 75, blue: 50 },
     { year: '2019', orange: 150, blue: 125 }
-  ];
+  ], []);
 
-  // Doctors list data
-  const doctorsList = [
+  const doctorsList = useMemo(() => [
     {
       key: '1',
       name: 'Dr. Ruby Perrin',
@@ -143,10 +147,9 @@ const MedicalDashboard = () => {
       reviews: 4.3,
       avatar: 'https://via.placeholder.com/40'
     }
-  ];
+  ], []);
 
-  // Patients list data
-  const patientsList = [
+  const patientsList = useMemo(() => [
     {
       key: '1',
       name: 'Charlene Reed',
@@ -179,149 +182,9 @@ const MedicalDashboard = () => {
       paid: '$150.00',
       avatar: 'https://via.placeholder.com/40'
     }
-  ];
+  ], []);
 
-  const doctorColumns = [
-    {
-      title: 'Doctor Name',
-      dataIndex: 'name',
-      key: 'name',
-      width: 150,
-      render: (text: string, record: any) => (
-        <Space>
-          <Avatar src={record.avatar} size="small" />
-          <Text strong style={{ fontSize: '12px' }}>{text}</Text>
-        </Space>
-      )
-    },
-    {
-      title: 'Specialty',
-      dataIndex: 'specialty',
-      key: 'specialty',
-      width: 100,
-      render: (text: string) => <Text style={{ fontSize: '12px' }}>{text}</Text>
-    },
-    {
-      title: 'Earned',
-      dataIndex: 'earned',
-      key: 'earned',
-      width: 80,
-      render: (text: string) => <Text strong style={{ fontSize: '12px' }}>{text}</Text>
-    },
-    {
-      title: 'Reviews',
-      dataIndex: 'reviews',
-      key: 'reviews',
-      width: 100,
-      render: (rating: number) => (
-        <Space size="small">
-          <StarFilled style={{ color: '#faad14', fontSize: '12px' }} />
-          <StarFilled style={{ color: '#faad14', fontSize: '12px' }} />
-          <StarFilled style={{ color: '#faad14', fontSize: '12px' }} />
-          <Text style={{ fontSize: '11px' }}>{rating}</Text>
-        </Space>
-      )
-    }
-  ];
-
-  const patientColumns = [
-    {
-      title: 'Patient Name',
-      dataIndex: 'name',
-      key: 'name',
-      width: 150,
-      render: (text: string, record: any) => (
-        <Space>
-          <Avatar src={record.avatar} size="small" />
-          <Text strong style={{ fontSize: '12px' }}>{text}</Text>
-        </Space>
-      )
-    },
-    {
-      title: 'Phone',
-      dataIndex: 'phone',
-      key: 'phone',
-      width: 120,
-      render: (text: string) => <Text style={{ fontSize: '12px' }}>{text}</Text>
-    },
-    {
-      title: 'Last Visit',
-      dataIndex: 'lastVisit',
-      key: 'lastVisit',
-      width: 100,
-      render: (text: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined) => <Text style={{ fontSize: '12px' }}>{text}</Text>
-    },
-    {
-      title: 'Paid',
-      dataIndex: 'paid',
-      key: 'paid',
-      width: 80,
-      render: (text: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined) => <Text strong style={{ fontSize: '12px' }}>{text}</Text>
-    }
-  ];
-
-  // Appointment List Columns
-  const appointmentColumns = [
-    {
-      title: 'Appointment ID',
-      dataIndex: 'id',
-      key: 'id',
-      width: 120,
-      render: (text: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined) => <Text style={{ fontSize: '12px' }}>{text}</Text>
-    },
-    {
-      title: 'Patient Name',
-      dataIndex: 'patientName',
-      key: 'patientName',
-      width: 150,
-      render: (text: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined, record: { patientAvatar: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; }) => (
-        <Space>
-          <Avatar src={record.patientAvatar} size="small" />
-          <Text strong style={{ fontSize: '12px' }}>{text}</Text>
-        </Space>
-      )
-    },
-    {
-      title: 'Doctor Name',
-      dataIndex: 'doctorName',
-      key: 'doctorName',
-      width: 150,
-      render: (text: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined, record: { doctorAvatar: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; }) => (
-        <Space>
-          <Avatar src={record.doctorAvatar} size="small" />
-          <Text strong style={{ fontSize: '12px' }}>{text}</Text>
-        </Space>
-      )
-    },
-    {
-      title: 'Date',
-      dataIndex: 'date',
-      key: 'date',
-      width: 120,
-      render: (text: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined) => <Text style={{ fontSize: '12px' }}>{text}</Text>
-    },
-    {
-      title: 'Time',
-      dataIndex: 'time',
-      key: 'time',
-      width: 100,
-      render: (text: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined) => <Text style={{ fontSize: '12px' }}>{text}</Text>
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      width: 100,
-      render: (status: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined) => (
-        <Tag color={status === 'Completed' ? 'green' : status === 'Pending' ? 'orange' : 'red'}>
-          {status}
-        </Tag>
-      )
-    }
-  ];
-
-  // Appointment List Data
-  const appointmentsList = [
+  const appointmentsList = useMemo(() => [
     {
       key: '1',
       id: 'APT001',
@@ -377,9 +240,147 @@ const MedicalDashboard = () => {
       time: '03:00 PM',
       status: 'Pending'
     }
-  ];
+  ], []);
 
-  const fetchUsers = async () => {
+  const doctorColumns = useMemo(() => [
+    {
+      title: 'Doctor Name',
+      dataIndex: 'name',
+      key: 'name',
+      width: 150,
+      render: (text: string, record: any) => (
+        <Space>
+          <Avatar src={record.avatar} size="small" />
+          <Text strong style={{ fontSize: '12px' }}>{text}</Text>
+        </Space>
+      )
+    },
+    {
+      title: 'Specialty',
+      dataIndex: 'specialty',
+      key: 'specialty',
+      width: 100,
+      render: (text: string) => <Text style={{ fontSize: '12px' }}>{text}</Text>
+    },
+    {
+      title: 'Earned',
+      dataIndex: 'earned',
+      key: 'earned',
+      width: 80,
+      render: (text: string) => <Text strong style={{ fontSize: '12px' }}>{text}</Text>
+    },
+    {
+      title: 'Reviews',
+      dataIndex: 'reviews',
+      key: 'reviews',
+      width: 100,
+      render: (rating: number) => (
+        <Space size="small">
+          <StarFilled style={{ color: '#faad14', fontSize: '12px' }} />
+          <StarFilled style={{ color: '#faad14', fontSize: '12px' }} />
+          <StarFilled style={{ color: '#faad14', fontSize: '12px' }} />
+          <Text style={{ fontSize: '11px' }}>{rating}</Text>
+        </Space>
+      )
+    }
+  ], []);
+
+  const patientColumns = useMemo(() => [
+    {
+      title: 'Patient Name',
+      dataIndex: 'name',
+      key: 'name',
+      width: 150,
+      render: (text: string, record: any) => (
+        <Space>
+          <Avatar src={record.avatar} size="small" />
+          <Text strong style={{ fontSize: '12px' }}>{text}</Text>
+        </Space>
+      )
+    },
+    {
+      title: 'Phone',
+      dataIndex: 'phone',
+      key: 'phone',
+      width: 120,
+      render: (text: string) => <Text style={{ fontSize: '12px' }}>{text}</Text>
+    },
+    {
+      title: 'Last Visit',
+      dataIndex: 'lastVisit',
+      key: 'lastVisit',
+      width: 100,
+      render: (text: any) => <Text style={{ fontSize: '12px' }}>{text}</Text>
+    },
+    {
+      title: 'Paid',
+      dataIndex: 'paid',
+      key: 'paid',
+      width: 80,
+      render: (text: any) => <Text strong style={{ fontSize: '12px' }}>{text}</Text>
+    }
+  ], []);
+
+  const appointmentColumns = useMemo(() => [
+    {
+      title: 'Appointment ID',
+      dataIndex: 'id',
+      key: 'id',
+      width: 120,
+      render: (text: any) => <Text style={{ fontSize: '12px' }}>{text}</Text>
+    },
+    {
+      title: 'Patient Name',
+      dataIndex: 'patientName',
+      key: 'patientName',
+      width: 150,
+      render: (text: any, record: any) => (
+        <Space>
+          <Avatar src={record.patientAvatar} size="small" />
+          <Text strong style={{ fontSize: '12px' }}>{text}</Text>
+        </Space>
+      )
+    },
+    {
+      title: 'Doctor Name',
+      dataIndex: 'doctorName',
+      key: 'doctorName',
+      width: 150,
+      render: (text: any, record: any) => (
+        <Space>
+          <Avatar src={record.doctorAvatar} size="small" />
+          <Text strong style={{ fontSize: '12px' }}>{text}</Text>
+        </Space>
+      )
+    },
+    {
+      title: 'Date',
+      dataIndex: 'date',
+      key: 'date',
+      width: 120,
+      render: (text: any) => <Text style={{ fontSize: '12px' }}>{text}</Text>
+    },
+    {
+      title: 'Time',
+      dataIndex: 'time',
+      key: 'time',
+      width: 100,
+      render: (text: any) => <Text style={{ fontSize: '12px' }}>{text}</Text>
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      width: 100,
+      render: (status: string) => (
+        <Tag color={status === 'Completed' ? 'green' : status === 'Pending' ? 'orange' : 'red'}>
+          {status}
+        </Tag>
+      )
+    }
+  ], []);
+
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('accessToken');
@@ -388,7 +389,7 @@ const MedicalDashboard = () => {
         return;
       }
 
-      const response = await fetch('http://216.10.251.239:3000/users/AllUsers?type=doctor&status=approved', {
+      const response = await fetch('http://192.168.1.42:3000/users/AllUsers?type=doctor&status=approved', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -396,26 +397,14 @@ const MedicalDashboard = () => {
         },
       });
 
-      console.log("response status", response.status);
-
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('Fetched doctors data:', data.data.length);
       setDoctors(data.data);
-      const count = data.data.length || 0;
-      setDoctorsCount(count);
+      setDoctorsCount(data.data.length || 0);
       
-      // Update the statsData with the actual doctor count
-      setStatsData(prevStats => {
-        const newStats = [...prevStats];
-        newStats[0].value = count; // Update doctors count
-        return newStats;
-      });
-      
-      console.log('Doctors fetched successfully:', data?.length);
     } catch (error) {
       console.error('Error fetching doctors:', error);
       message.error('Failed to fetch doctors data');
@@ -423,10 +412,17 @@ const MedicalDashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchUsers();
+  }, [fetchUsers]);
+
+  const handleCardClick = useCallback((onClick: () => void) => {
+    return (e: React.MouseEvent) => {
+      e.preventDefault();
+      onClick();
+    };
   }, []);
 
   return (
@@ -466,7 +462,6 @@ const MedicalDashboard = () => {
           </Header>
 
           <Content style={{ padding: '16px', marginTop: '8px', backgroundColor: '#f5f5f5', minHeight: 'calc(100vh - 64px)' }}>
-            {/* Stats Cards */}
             <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
               {statsData.map((stat, index) => (
                 <Col xs={24} sm={12} md={12} lg={6} xl={6} key={index}>
@@ -479,18 +474,10 @@ const MedicalDashboard = () => {
                       flexDirection: 'column',
                       justifyContent: 'center',
                       cursor: 'pointer',
-                      transition: 'all 0.3s ease',
+                      transition: 'all 0.2s ease',
                     }}
                     hoverable
-                    onClick={stat.onClick}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
-                    }}
+                    onClick={handleCardClick(stat.onClick)}
                   >
                     <div style={{
                       width: '50px',
@@ -535,7 +522,6 @@ const MedicalDashboard = () => {
             </Row>
 
             <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
-              {/* Revenue Chart */}
               <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                 <Card
                   title="Revenue"
@@ -567,7 +553,6 @@ const MedicalDashboard = () => {
                 </Card>
               </Col>
 
-              {/* Status Chart */}
               <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                 <Card
                   title="Status"
@@ -602,7 +587,6 @@ const MedicalDashboard = () => {
             </Row>
 
             <Row gutter={[16, 16]}>
-              {/* Doctors List */}
               <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                 <Card
                   title="Doctors List"
@@ -626,7 +610,6 @@ const MedicalDashboard = () => {
                 </Card>
               </Col>
 
-              {/* Patients List */}
               <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                 <Card
                   title="Patients List"
@@ -651,7 +634,6 @@ const MedicalDashboard = () => {
               </Col>
             </Row>
 
-            {/* Appointment List - Full Width */}
             <Row gutter={[16, 16]}>
               <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                 <Card

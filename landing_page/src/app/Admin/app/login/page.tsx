@@ -30,15 +30,16 @@ interface OTPValidationResponse {
 
 // User type configuration
 const USER_TYPES = {
+  '7093081512': { type: 'superadmin', route: '/SuperAdmin/app/dashboard' },
   '7093081518': { type: 'admin', route: '/Admin/app/dashboard' },
-  '9492856727': { type: 'doctor', route: '/Doctor/dashboard' },
-  '9490219062': { type: 'receptionist', route: '/Receptionist/dashboard' },
-  '9490219063': { type: 'Super Admin', route: '/SuperAdmin/app/dashboard' },
+  '8096147427': { type: 'doctor', route: '/Doctor/dashboard' },
+  '8886063950': { type: 'receptionist', route: '/Receptionist/dashboard' },
+  // '9490219063': { type: 'Super Admin', route: '/SuperAdmin/app/dashboard' },
 };
 
 const Login = () => {
   const router = useRouter();
-  const API_BASE_URL = "http://216.10.251.239:3000";
+  const API_BASE_URL = "http://192.168.1.42:3000";
 
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -355,7 +356,7 @@ const Login = () => {
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {otpSent ? 'Enter OTP' : 'Login Vydhyo'}
+              {otpSent ? 'Enter OTP' : 'Login'}
             </h1>
             {!otpSent && (
               <p className="text-gray-600">Enter your registered mobile number to continue</p>

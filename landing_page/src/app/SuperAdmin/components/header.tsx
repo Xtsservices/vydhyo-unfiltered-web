@@ -8,7 +8,7 @@ const { Header } = Layout;
 const { Text } = Typography;
 
 const AppHeader = () => {
-    const router = useRouter(); // Initialize the router hook
+  const router = useRouter(); // Initialize the router hook
 
     // Dropdown menu items for admin profile
     const adminMenuItems = [

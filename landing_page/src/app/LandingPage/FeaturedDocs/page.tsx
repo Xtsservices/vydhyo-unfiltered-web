@@ -10,7 +10,7 @@ const doctors = [
     rating: 5.0,
     fee: 1500,
     available: true,
-    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+    image: "/images/doc1.jpeg",
   },
   {
     name: "Dr. Priya Patel",
@@ -20,7 +20,7 @@ const doctors = [
     rating: 4.6,
     fee: 1200,
     available: true,
-    image: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+    image: "/images/doc3.jpeg",
   },
   {
     name: "Dr. Amit Kumar",
@@ -30,7 +30,7 @@ const doctors = [
     rating: 4.8,
     fee: 2000,
     available: true,
-    image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+    image: "/images/doctor.jpg",
   },
   {
     name: "Dr. Ananya Gupta",
@@ -40,7 +40,7 @@ const doctors = [
     rating: 4.8,
     fee: 1800,
     available: true,
-    image: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+    image: "/images/doc3.jpeg",
   },
   {
     name: "Dr. Sanjay Verma",
@@ -50,7 +50,7 @@ const doctors = [
     rating: 4.7,
     fee: 1600,
     available: true,
-    image: "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+    image: "/images/doc1.jpeg",
   },
   {
     name: "Dr. Neha Singh",
@@ -60,7 +60,7 @@ const doctors = [
     rating: 4.9,
     fee: 1900,
     available: true,
-    image: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+    image: "/images/doc3.jpeg",
   },
   {
     name: "Dr. Vikram Joshi",
@@ -70,7 +70,7 @@ const doctors = [
     rating: 4.8,
     fee: 2200,
     available: true,
-    image: "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+    image: "/images/doc1.jpeg",
   },
   {
     name: "Dr. Meera Nair",
@@ -80,7 +80,7 @@ const doctors = [
     rating: 4.5,
     fee: 1400,
     available: true,
-    image: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+    image: "/images/doc2.jpeg",
   },
 ];
 
@@ -131,6 +131,7 @@ const FeaturedDocs: React.FC = () => {
         minHeight: "100vh",
         paddingBottom: 60,
         fontFamily: "'Inter', sans-serif",
+
         paddingLeft: 16,
         paddingRight: 16,
       }}
@@ -144,22 +145,22 @@ const FeaturedDocs: React.FC = () => {
           marginRight: "auto",
         }}
       >
-         <span
-                        style={{
-                            background: "rgba(66, 133, 244, 0.9)",
-                            backdropFilter: "blur(10px)",
-                            color: "white",
-                            fontWeight: 600,
-                            fontSize: 14,
-                            borderRadius: 20,
-                            padding: "8px 20px",
-                            display: "inline-block",
-                            marginBottom: 20,
-                            boxShadow: "0 4px 15px rgba(66, 133, 244, 0.3)"
-                        }}
-                    >
-                        • Accessibility •
-                    </span>
+        <span
+          style={{
+            background: "#00203f",
+            backdropFilter: "blur(10px)",
+            color: "white",
+            fontWeight: 600,
+            fontSize: 14,
+            borderRadius: 20,
+            padding: "8px 20px",
+            display: "inline-block",
+            marginBottom: 20,
+            boxShadow: "0 4px 15px rgba(66, 133, 244, 0.3)",
+          }}
+        >
+          • Accessibility •
+        </span>
         <h1
           style={{
             fontSize: 28,
@@ -210,7 +211,13 @@ const FeaturedDocs: React.FC = () => {
                 flexDirection: "column",
               }}
             >
-              <div style={{ position: "relative", height: 180, background: "#f3f6fa" }}>
+              <div
+                style={{
+                  position: "relative",
+                  height: 180,
+                  background: "#f3f6fa",
+                }}
+              >
                 <img
                   src={doc.image}
                   alt={doc.name}
@@ -271,7 +278,12 @@ const FeaturedDocs: React.FC = () => {
                     e.currentTarget.style.transform = "scale(1)";
                   }}
                 >
-                  <svg width="18" height="18" fill="#e53e3e" viewBox="0 0 24 24">
+                  <svg
+                    width="18"
+                    height="18"
+                    fill="#e53e3e"
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                   </svg>
                 </button>
@@ -351,7 +363,12 @@ const FeaturedDocs: React.FC = () => {
                     gap: 8,
                   }}
                 >
-                  <svg width="16" height="16" fill="#64748b" viewBox="0 0 24 24">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="#64748b"
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
                   </svg>
                   {doc.location}
@@ -386,47 +403,61 @@ const FeaturedDocs: React.FC = () => {
                       Rs{doc.fee}
                     </div>
                   </div>
-                    <button
-                      style={{
-                        background: "#1a365d",
-                        color: "#fff",
-                        border: "none",
-                        borderRadius: 24,
-                        padding: "8px 15px",
-                        fontWeight: 500,
-                        fontSize: 14,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                        cursor: "pointer",
-                        transition: "all 0.3s ease",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "#2d3748";
-                        e.currentTarget.style.transform = "translateY(-2px)";
-                        e.currentTarget.style.boxShadow = "0 4px 12px rgba(26, 54, 93, 0.3)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "#1a365d";
-                        e.currentTarget.style.transform = "translateY(0)";
-                        e.currentTarget.style.boxShadow = "none";
-                      }}
+                  <button
+                    style={{
+                      background: "#1a365d",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: 24,
+                      padding: "8px 15px",
+                      fontWeight: 500,
+                      fontSize: 14,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      cursor: "pointer",
+                      transition: "all 0.3s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "#2d3748";
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                      e.currentTarget.style.boxShadow =
+                        "0 4px 12px rgba(26, 54, 93, 0.3)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "#1a365d";
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      style={{ display: "block" }}
                     >
-                        <svg
-                        width="16"
+                      <rect
+                        x="3"
+                        y="5"
+                        width="18"
                         height="16"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        style={{ display: "block" }}
-                        >
-                        <rect x="3" y="5" width="18" height="16" rx="4" stroke="#fff" strokeWidth="2" />
-                        <path d="M16 3v4M8 3v4M3 9h18" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
-                        <circle cx="8" cy="13" r="1.5" fill="#fff" />
-                        <circle cx="12" cy="13" r="1.5" fill="#fff" />
-                        <circle cx="16" cy="13" r="1.5" fill="#fff" />
-                        </svg>
-                      Book Now
-                    </button>
+                        rx="4"
+                        stroke="#fff"
+                        strokeWidth="2"
+                      />
+                      <path
+                        d="M16 3v4M8 3v4M3 9h18"
+                        stroke="#fff"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                      <circle cx="8" cy="13" r="1.5" fill="#fff" />
+                      <circle cx="12" cy="13" r="1.5" fill="#fff" />
+                      <circle cx="16" cy="13" r="1.5" fill="#fff" />
+                    </svg>
+                    Book Now
+                  </button>
                 </div>
               </div>
             </div>
@@ -464,7 +495,8 @@ const FeaturedDocs: React.FC = () => {
           onMouseEnter={(e) => {
             if (currentIndex !== 0) {
               e.currentTarget.style.transform = "scale(1.1)";
-              e.currentTarget.style.boxShadow = "0 6px 20px rgba(26, 54, 93, 0.3)";
+              e.currentTarget.style.boxShadow =
+                "0 6px 20px rgba(26, 54, 93, 0.3)";
             }
           }}
           onMouseLeave={(e) => {
@@ -482,8 +514,14 @@ const FeaturedDocs: React.FC = () => {
           onClick={nextSlide}
           disabled={currentIndex >= doctors.length - visibleCards}
           style={{
-            background: currentIndex >= doctors.length - visibleCards ? "#e2e8f0" : "#1a365d",
-            color: currentIndex >= doctors.length - visibleCards ? "#64748b" : "#fff",
+            background:
+              currentIndex >= doctors.length - visibleCards
+                ? "#e2e8f0"
+                : "#1a365d",
+            color:
+              currentIndex >= doctors.length - visibleCards
+                ? "#64748b"
+                : "#fff",
             border: "none",
             borderRadius: "50%",
             width: 50,
@@ -491,15 +529,22 @@ const FeaturedDocs: React.FC = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            cursor: currentIndex >= doctors.length - visibleCards ? "not-allowed" : "pointer",
+            cursor:
+              currentIndex >= doctors.length - visibleCards
+                ? "not-allowed"
+                : "pointer",
             boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
             transition: "all 0.3s ease",
-            transform: currentIndex >= doctors.length - visibleCards ? "scale(0.9)" : "scale(1)",
+            transform:
+              currentIndex >= doctors.length - visibleCards
+                ? "scale(0.9)"
+                : "scale(1)",
           }}
           onMouseEnter={(e) => {
             if (currentIndex < doctors.length - visibleCards) {
               e.currentTarget.style.transform = "scale(1.1)";
-              e.currentTarget.style.boxShadow = "0 6px 20px rgba(26, 54, 93, 0.3)";
+              e.currentTarget.style.boxShadow =
+                "0 6px 20px rgba(26, 54, 93, 0.3)";
             }
           }}
           onMouseLeave={(e) => {

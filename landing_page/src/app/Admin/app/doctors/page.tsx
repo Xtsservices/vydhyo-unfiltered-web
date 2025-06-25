@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { Table, Input, Button, DatePicker, Tag, Space, Select, Avatar, Modal, Spin, message, Layout } from 'antd';
 import { SearchOutlined, CalendarOutlined, DownloadOutlined} from '@ant-design/icons';
 import  AppHeader from '../../components/header';
@@ -105,7 +105,7 @@ const DoctorList = () => {
                 return;
             }
 
-            const response = await fetch('http://216.10.251.239:3000/users/AllUsers?type=doctor&status=approved', {
+            const response = await fetch('http://192.168.1.42:3000/users/AllUsers?type=doctor&status=approved', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -153,7 +153,7 @@ const DoctorList = () => {
                 return;
             }
 
-            const response = await fetch(`http://216.10.251.239:3000/admin/approveDoctor`, {
+            const response = await fetch(`http://192.168.1.42:3000/admin/approveDoctor`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -305,7 +305,7 @@ const DoctorList = () => {
                         <Avatar 
                             size={40} 
                             src={imageSrc}
-                            style={{ flexShrink: 0, cursor: imageSrc ? 'pointer' : 'default' }}
+                            style={{ cursor: imageSrc ? 'pointer' : 'default' }}
                             onClick={imageSrc ? () => showImageModal(imageSrc) : undefined}
                         >
                             {!imageSrc && `${record.firstname?.[0] ?? ''}${record.lastname?.[0] ?? ''}`}
@@ -343,7 +343,7 @@ const DoctorList = () => {
                                 specializations, 
                                 `Dr. ${record.firstname || ''} ${record.lastname || ''}`
                             )}
-                            style={{ padding: '0 4px', height: 'auto', fontSize: '12px' }}
+                            style={{ padding: '0 4px', fontSize: '12px' }}
                         >
                             View
                         </Button>
@@ -374,17 +374,18 @@ const DoctorList = () => {
             dataIndex: 'status',
             key: 'status',
             render: (status: string) => (
-                <Tag 
-                    color={getStatusColor(status)}
-                    style={{ 
-                        borderRadius: '4px',
-                        fontWeight: 500,
-                        border: 'none',
-                        textTransform: 'capitalize'
-                    }}
-                >
-                    {status || 'Unknown'}
-                </Tag>
+                <span style={{ textTransform: 'capitalize' } as any}>
+                    <Tag 
+                        color={getStatusColor(status)}
+                        style={{ 
+                            borderRadius: '4px',
+                            fontWeight: 500,
+                            border: 'none'
+                        }}
+                    >
+                        {status || 'Unknown'}
+                    </Tag>
+                </span>
             ),
         },
         {
@@ -406,11 +407,13 @@ const DoctorList = () => {
         }
     ];
 
+ 
+
     return (
         <>
     
             <AppHeader />
-            <Layout style={{ minHeight: '100vh',marginTop: '64px' }}>
+            <Layout style={{ minHeight: '100vh', marginTop: '64px' }}>
             <AntHeader style={{ 
                 display: 'flex', 
                 alignItems: 'center',
@@ -421,7 +424,7 @@ const DoctorList = () => {
                 height: 'auto',
                 lineHeight: 'normal',
                 marginTop: '-84px',
-            }}>
+            } as React.CSSProperties}>
                 <SideHeader/>
             </AntHeader>
 
@@ -435,14 +438,14 @@ const DoctorList = () => {
                     padding: '24px', 
                     borderRadius: '8px',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-                }}>
+                } as React.CSSProperties}>
                     {/* Header */}
                     <div style={{ 
                         display: 'flex', 
                         justifyContent: 'space-between', 
                         alignItems: 'center',
                         marginBottom: '24px'
-                    }}>
+                    } as React.CSSProperties}>
                         <h2 style={{ 
                             margin: 0, 
                             fontSize: '20px', 
@@ -452,15 +455,15 @@ const DoctorList = () => {
                             Doctor List
                         </h2>
                         <Space>
-                            <Input
+                            {/* <Input
                                 placeholder="Search by name, ID, email, or specialization"
                                 prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
                                 value={searchText}
                                 onChange={(e) => setSearchText(e.target.value)}
                                 style={{ 
-                                    width: 350,
+                                    width: '350px',
                                     borderRadius: '6px'
-                                }}
+                                } as React.CSSProperties}
                             />
                             <Button 
                                 onClick={fetchDoctors}
@@ -468,10 +471,10 @@ const DoctorList = () => {
                                 style={{ borderRadius: '6px' }}
                             >
                                 Refresh
-                            </Button>
-                            <Button onClick={() => router.push('/Admin/app/needApproval')}>
+                            </Button> */}
+                            {/* <Button onClick={() => router.push('/Admin/app/needApproval')}>
                                 Need For Approval of Doctors
-                            </Button>
+                            </Button> */}
                         </Space>
                     </div>
 
@@ -481,12 +484,12 @@ const DoctorList = () => {
                         gap: '12px', 
                         marginBottom: '20px',
                         alignItems: 'center'
-                    }}>
+                    } as React.CSSProperties}>
                         <Select
                             placeholder="All Status"
-                            style={{ width: 120 }}
                             value={statusFilter}
                             onChange={setStatusFilter}
+                            styles={{ popup: { root: { width: 120 } } }}
                         >
                             <Option value="all">All Status</Option>
                             <Option value="active">Active</Option>
@@ -494,17 +497,18 @@ const DoctorList = () => {
                             <Option value="pending">Pending</Option>
                         </Select>
                         
-                        <Select
-                            placeholder="All Specializations"
-                            style={{ width: 200 }}
-                            value={specializationFilter}
-                            onChange={setSpecializationFilter}
-                        >
-                            <Option value="all">All Specializations</Option>
-                            {getUniqueSpecializations().map(specialization => (
-                                <Option key={specialization} value={specialization}>{specialization}</Option>
-                            ))}
-                        </Select>
+                        <div style={{ width: 200 }}>
+                            <Select
+                                placeholder="All Specializations"
+                                value={specializationFilter}
+                                onChange={setSpecializationFilter}
+                            >
+                                <Option value="all">All Specializations</Option>
+                                {getUniqueSpecializations().map(specialization => (
+                                    <Option key={specialization} value={specialization}>{specialization}</Option>
+                                ))}
+                            </Select>
+                        </div>
 
                         <RangePicker 
                             placeholder={['Start Date', 'End Date']}
@@ -529,7 +533,7 @@ const DoctorList = () => {
                                 showQuickJumper: true,
                                 showTotal: (total, range) => 
                                     `${range[0]}-${range[1]} of ${total} doctors`,
-                                style: { marginTop: '20px' }
+                                style: { margin: '20px 0 0 0' }
                             }}
                             style={{
                                 backgroundColor: 'white'
@@ -557,7 +561,7 @@ const DoctorList = () => {
                     width={600}
                     centered
                 >
-                    <div style={{ textAlign: 'center' }}>
+                    <div style={{ textAlign: 'center' } as React.CSSProperties}>
                         <img 
                             src={selectedImage} 
                             alt="Profile" 
@@ -587,25 +591,25 @@ const DoctorList = () => {
                                 padding: '16px', 
                                 marginBottom: '16px',
                                 backgroundColor: '#fafafa'
-                            }}>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+                            } as React.CSSProperties}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' } as React.CSSProperties}>
                                     <div>
                                         <strong>Specialization:</strong>
-                                        <div style={{ marginTop: '4px', color: '#595959' }}>{specialization.name || 'Not specified'}</div>
+                                        <div style={{ margin: '4px 0 0 0', color: '#595959' }}>{specialization.name || 'Not specified'}</div>
                                     </div>
                                     <div>
                                         <strong>Experience:</strong>
-                                        <div style={{ marginTop: '4px', color: '#595959' }}>{specialization.experience || 0} years</div>
+                                        <div style={{ margin: '4px 0 0 0', color: '#595959' }}>{specialization.experience || 0} years</div>
                                     </div>
                                     <div>
                                         <strong>ID:</strong>
-                                        <div style={{ marginTop: '4px', color: '#595959' }}>{specialization.id || 'Not available'}</div>
+                                        <div style={{ margin: '4px 0 0 0', color: '#595959' }}>{specialization.id || 'Not available'}</div>
                                     </div>
                                 </div>
                                 <div style={{ gridColumn: '1 / -1' }}>
                                     <div>
                                         <strong>Certificates:</strong>
-                                        <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                        <div style={{ margin: '8px 0 0 0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                             {specialization.drgreeCertificate && specialization.drgreeCertificate.data ? (
                                                 <Button 
                                                     type="primary" 
@@ -647,7 +651,7 @@ const DoctorList = () => {
                         ))}
                         
                         {selectedSpecializations.length === 0 && (
-                            <div style={{ textAlign: 'center', color: '#8c8c8c', padding: '40px' }}>
+                            <div style={{ textAlign: 'center', color: '#8c8c8c', padding: '40px' } as React.CSSProperties}>
                                 No specialization details available
                             </div>
                         )}

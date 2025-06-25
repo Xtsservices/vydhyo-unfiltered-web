@@ -1,166 +1,204 @@
 "use client";
-import React from "react";
-// import  AppHeader from '../../components/header';
-// import SideHeader from '../../components/sideheader';
 
+import React, { useState } from 'react';
+import { Table, Input, Button, Tag, Space, Avatar, Layout } from 'antd';
+import { SearchOutlined, FilterOutlined } from '@ant-design/icons';
+import AppHeader from '../../components/header';
+import SideHeader from '../../components/sideheader';
+const { Header: AntHeader, Content } = Layout;
 
-const actions = [
-    {
-        label: "Book Appointment",
-        icon: "📅",
-        color: "#7B2FF2",
-    },
-    {
-        label: "Talk to Doctors",
-        icon: "👥",
-        color: "#2196F3",
-    },
-    {
-        label: "Hospitals & Clinics",
-        icon: "🏥",
-        color: "#E040FB",
-    },
-    {
-        label: "Healthcare",
-        icon: "💊",
-        color: "#00BCD4",
-    },
-    {
-        label: "Medicine & Supplies",
-        icon: "🩺",
-        color: "#7C4DFF",
-    },
-    {
-        label: "Lab Testing",
-        icon: "🧪",
-        color: "#FF5722",
-    },
-    {
-        label: "Home Care",
-        icon: "🏠",
-        color: "#009688",
-    },
-];
+interface Speciality {
+    key: string;
+    name: string;
+    department: string;
+    // status: string;
+    icon: string;
+}
 
-const TopSpecialities: React.FC = () => {
+const SpecialitiesList = () => {
+    const [searchText, setSearchText] = useState('');
+
+    const specialities: Speciality[] = [
+        {
+            key: '1',
+            name: 'Cardiology',
+            department: 'Heart & Vascular',
+            // status: 'Active',
+            icon: 'https://cdn-icons-png.flaticon.com/512/3448/3448590.png',
+        },
+        {
+            key: '2',
+            name: 'Dermatology',
+            department: 'Skin Care',
+            // status: 'Active',
+            icon: 'https://cdn-icons-png.flaticon.com/512/1087/1087924.png',
+        },
+        {
+            key: '3',
+            name: 'Neurology',
+            department: 'Brain & Nervous System',
+            // status: 'Inactive',
+            icon: 'https://cdn-icons-png.flaticon.com/512/2965/2965567.png',
+        },
+        {
+            key: '4',
+            name: 'Orthopedics',
+            department: 'Bones & Muscles',
+            // status: 'Active',
+            icon: 'https://cdn-icons-png.flaticon.com/512/1995/1995507.png',
+        },
+        {
+            key: '5',
+            name: 'Pediatrics',
+            department: 'Child Care',
+            // status: 'Active',
+            icon: 'https://cdn-icons-png.flaticon.com/512/4210/4210915.png',
+        },
+    ];
+
+    const columns = [
+        {
+            title: 'Speciality Name',
+            dataIndex: 'name',
+            key: 'name',
+            render: (text: string, record: Speciality) => (
+                <Space>
+                    <Avatar size={32} src={record.icon} />
+                    <span style={{ fontWeight: 500 }}>{text}</span>
+                </Space>
+            ),
+            width: 250,
+        },
+        {
+            title: 'Department',
+            dataIndex: 'department',
+            key: 'department',
+            width: 200,
+        },
+        // {
+        //     title: 'Status',
+        //     dataIndex: 'status',
+        //     key: 'status',
+        //     render: (status: string) => (
+        //         <Tag
+        //             color={status === 'Active' ? 'success' : 'error'}
+        //             style={{
+        //                 borderRadius: '4px',
+        //                 fontWeight: 500,
+        //                 fontSize: '12px',
+        //                 border: 'none',
+        //             }}
+        //         >
+        //             {status}
+        //         </Tag>
+        //     ),
+        //     width: 120,
+        // },
+    ];
+
     return (
-        <>
-            <AppHeader />
-            <SideHeader />
-            <div
+        <Layout style={{ minHeight: '100vh', marginTop: '64px' }}>
+            <AntHeader
                 style={{
-                    marginTop: "-5rem",
-                overflow: 'hidden',
-                marginBottom: "-20rem",
-            }}
-        >
-            {/* Blurred Background Layer */}
-            <div
-                style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background: "linear-gradient(135deg, #E3F2FD 0%, #F3E5F5 100%)",
-                    filter: 'blur(8px)',
-                    zIndex: -1,
-                    transform: 'scale(1.02)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: 0,
+                    background: '#fff',
+                    boxShadow: '0 1px 4px rgba(0, 21, 41, 0.08)',
+                    zIndex: 1,
+                    height: 'auto',
+                    lineHeight: 'normal',
+                    marginTop: '-84px',
                 }}
-            />
-            
-            {/* Semi-transparent overlay */}
-            <div
-                style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-                    zIndex: -1,
-                }}
-            />
+            >
+                <AppHeader />
+                <SideHeader selectedKey="specialities" />
+            </AntHeader>
 
-            {/* Content */}
-            <div style={{ position: 'relative', zIndex: 1 }}>
-                {/* Top Actions */}
+            <Content
+                style={{
+                    padding: '24px',
+                    backgroundColor: '#fafafa',
+                    minHeight: 'calc(100vh - 64px)',
+                }}
+            >
                 <div
                     style={{
-                        background: "rgba(255, 255, 255, 0.9)",
-                        borderRadius: 24,
-                        boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
-                        padding: "32px 40px",
-                        margin: "0 auto",
-                        maxWidth: 1200,
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        flexWrap: "wrap",
-                        gap: "20px",
-                        backdropFilter: "blur(4px)",
+                        backgroundColor: 'white',
+                        padding: '24px',
+                        borderRadius: '8px',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                     }}
                 >
-                    {actions.map((action) => (
-                        <div
-                            key={action.label}
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                flex: "1",
-                                minWidth: "120px",
-                                cursor: "pointer",
-                                transition: "transform 0.2s ease",
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = "translateY(-2px)";
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = "translateY(0)";
-                            }}
-                        >
-                            <div
+                    {/* Header */}
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginBottom: '24px',
+                        }}
+                    >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <h2
                                 style={{
-                                    background: action.color,
-                                    borderRadius: "50%",
-                                    width: 64,
-                                    height: 64,
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    marginBottom: 12,
-                                    boxShadow: `0 4px 16px ${action.color}40`,
+                                    margin: 0,
+                                    fontSize: '20px',
+                                    fontWeight: 600,
+                                    color: '#262626',
                                 }}
                             >
-                                <span
-                                    style={{
-                                        fontSize: "24px",
-                                        filter: "brightness(0) invert(1)",
-                                    }}
-                                >
-                                    {action.icon}
-                                </span>
-                            </div>
+                                Specialities
+                            </h2>
                             <span
                                 style={{
-                                    color: "#1A2C47",
+                                    color: '#1890ff',
+                                    fontSize: '14px',
                                     fontWeight: 500,
-                                    fontSize: 14,
-                                    textAlign: "center",
-                                    lineHeight: 1.3,
                                 }}
                             >
-                                {action.label}
+                                {specialities.length} total
                             </span>
                         </div>
-                    ))}
-                </div>
+                        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                            <Input
+                                placeholder="Search by name or department"
+                                prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
+                                value={searchText}
+                                onChange={(e) => setSearchText(e.target.value)}
+                                style={{
+                                    width: 300,
+                                    borderRadius: '6px',
+                                }}
+                            />
+                            <Button
+                                icon={<FilterOutlined />}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                }}
+                            >
+                                Filter
+                            </Button>
+                        </div>
+                    </div>
 
-            </div>
-        </div>
-        </>
+                    {/* Table */}
+                    <Table
+                        columns={columns}
+                        dataSource={specialities.filter((item) =>
+                            item.name.toLowerCase().includes(searchText.toLowerCase()) ||
+                            item.department.toLowerCase().includes(searchText.toLowerCase())
+                        )}
+                        scroll={{ x: 800 }}
+                        size="middle"
+                        style={{ backgroundColor: 'white' }}
+                    />
+                </div>
+            </Content>
+        </Layout>
     );
 };
 
-export default TopSpecialities;
+export default SpecialitiesList;

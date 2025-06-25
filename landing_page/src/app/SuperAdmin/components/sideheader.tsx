@@ -27,7 +27,7 @@ interface SideHeaderProps {
   selectedKey?: string;
 }
 
-const SideHeader: React.FC<SideHeaderProps> = ({ selectedKey = 'dashboard' }) => {
+const SideHeader: React.FC<SideHeaderProps> = ({ selectedKey }) => {
   const router = useRouter();
 
   const menuItems = [
@@ -50,11 +50,11 @@ const SideHeader: React.FC<SideHeaderProps> = ({ selectedKey = 'dashboard' }) =>
       onClick: () => router.push('/SuperAdmin/app/patients')
     },
     {
-    key: 'services',
-    icon: <ToolOutlined />,
-    label: 'Services',
-    onClick: () => router.push('/SuperAdmin/app/services')
-  },
+      key: 'services',
+      icon: <ToolOutlined />,
+      label: 'Services',
+      onClick: () => router.push('/SuperAdmin/app/services')
+    },
     {
       key: 'appointments',
       icon: <ScheduleOutlined />,
@@ -62,44 +62,42 @@ const SideHeader: React.FC<SideHeaderProps> = ({ selectedKey = 'dashboard' }) =>
       onClick: () => router.push('/SuperAdmin/app/appointments')
     },
     {
-      key: 'transactions',
+      key: 'revenue',
       icon: <MoneyCollectOutlined />,
-      label: 'Transactions',
-      onClick: () => router.push('/SuperAdmin/app/transactions')
+      label: 'Revenue',
+      onClick: () => router.push('/SuperAdmin/app/revenue')
     },
     {
-    key: 'departments',
-    icon: <BankOutlined />,
-    label: 'Billing Status',
-    onClick: () => router.push('/SuperAdmin/app/departments')
-  },
+      key: 'departments',
+      icon: <BankOutlined />,
+      label: 'Billing Status',
+      onClick: () => router.push('/SuperAdmin/app/departments')
+    },
     {
       key: 'specialities',
       icon: <MedicineBoxOutlined />,
       label: 'Specialities',
       onClick: () => router.push('/SuperAdmin/app/specialities')
     },
-    
-  
     {
       key: 'reviews',
       icon: <StarFilled />,
       label: 'Reviews/Feedback',
       onClick: () => router.push('/SuperAdmin/app/reviews')
     },
-    
-  //   {
-  //   key: 'features',
-  //   icon: <AppstoreOutlined />,
-  //   label: 'Features',
-  //   onClick: () => router.push('/SuperAdmin/app/features')
-  // },
-    {
-      key: 'settings',
-      icon: <SettingOutlined />,
-      label: 'Settings',
-      onClick: () => router.push('/SuperAdmin/app/settings')
-    },
+
+    //   {
+    //   key: 'features',
+    //   icon: <AppstoreOutlined />,
+    //   label: 'Features',
+    //   onClick: () => router.push('/SuperAdmin/app/features')
+    // },
+    // {
+    //   key: 'settings',
+    //   icon: <SettingOutlined />,
+    //   label: 'Settings',
+    //   onClick: () => router.push('/SuperAdmin/app/settings')
+    // },
     {
       key: 'reports',
       icon: <FileTextOutlined />,
@@ -115,21 +113,21 @@ const SideHeader: React.FC<SideHeaderProps> = ({ selectedKey = 'dashboard' }) =>
   ];
 
   const pageItems = [
-    {
-      key: 'profile',
-      icon: <UserOutlined />,
-      label: 'Profile',
-    },
-    {
-      key: 'authentication',
-      icon: <SettingOutlined />,
-      label: 'Authentication',
-    },
-    {
-      key: 'error-pages',
-      icon: <QuestionCircleOutlined />,
-      label: 'Error Pages',
-    }
+    // {
+    //   key: 'profile',
+    //   icon: <UserOutlined />,
+    //   label: 'Profile',
+    // },
+    // {
+    //   key: 'authentication',
+    //   icon: <SettingOutlined />,
+    //   label: 'Authentication',
+    // },
+    // {
+    //   key: 'error-pages',
+    //   icon: <QuestionCircleOutlined />,
+    //   label: 'Error Pages',
+    // }
   ];
 
   return (
@@ -143,7 +141,7 @@ const SideHeader: React.FC<SideHeaderProps> = ({ selectedKey = 'dashboard' }) =>
       }}
     >
       <div style={{
-        padding: '16px',
+        // padding: '16px',
         borderBottom: '1px solid rgba(255,255,255,0.1)',
         textAlign: 'center',
         color: 'white',
@@ -151,11 +149,11 @@ const SideHeader: React.FC<SideHeaderProps> = ({ selectedKey = 'dashboard' }) =>
       }}>
         <Text strong style={{ color: 'white' }}>Super Admin</Text>
       </div>
-      
+
       <Menu
         theme="dark"
         mode="inline"
-        defaultSelectedKeys={[selectedKey]}
+        defaultSelectedKeys={[selectedKey ? selectedKey : 'dashboard']}
         items={menuItems}
         style={{
           border: 'none',
@@ -163,7 +161,7 @@ const SideHeader: React.FC<SideHeaderProps> = ({ selectedKey = 'dashboard' }) =>
         }}
       />
 
-      <div style={{
+      {/* <div style={{
         padding: '16px',
         borderTop: '1px solid rgba(255,255,255,0.1)',
         marginTop: 'auto',
@@ -171,7 +169,7 @@ const SideHeader: React.FC<SideHeaderProps> = ({ selectedKey = 'dashboard' }) =>
       }}>
         <Text strong style={{ color: 'white' }}>Pages</Text>
       </div>
-      
+       */}
       <Menu
         theme="dark"
         mode="inline"

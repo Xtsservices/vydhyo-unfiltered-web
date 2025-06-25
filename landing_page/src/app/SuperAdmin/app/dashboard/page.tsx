@@ -34,11 +34,9 @@ import {
   HeartOutlined,
   DollarOutlined,
   UsergroupAddOutlined,
-  StarFilled,
   MessageOutlined,
   UserAddOutlined,
   CheckCircleOutlined,
-  ArrowUpOutlined
 } from '@ant-design/icons';
 import {
   LineChart,
@@ -66,12 +64,13 @@ const { Option } = Select;
 const SuperAdminDashboard = () => {
   const { token } = useToken();
   const router = useRouter();
-  // const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
   const [doctors, setDoctors] = useState([]);
   const [doctorsCount, setDoctorsCount] = useState(0);
   const [revenueTimeframe, setRevenueTimeframe] = useState('weekly');
   const [signinsTimeframe, setSigninsTimeframe] = useState('weekly');
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+  const [patientsTimeframe, setPatientsTimeframe] = useState('weekly');
+  // const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
 
   // Top statistics data
   const [topStats, setTopStats] = useState([
@@ -80,21 +79,24 @@ const SuperAdminDashboard = () => {
       value: 1234,
       icon: <UserAddOutlined />,
       color: '#1890ff',
-      change: '+12% from last week'
+      change: '+12% from last week',
+      // onClick: () => {}, // No navigation
     },
     {
       title: 'New Doctors',
       value: 45,
       icon: <MedicineBoxOutlined />,
       color: '#722ed1',
-      change: '+8% this month'
+      change: '+8% this month',
+      onClick: () => router.push('/SuperAdmin/app/doctors'), // Navigate to doctors
     },
     {
       title: 'New Patients',
       value: 156,
       icon: <TeamOutlined />,
       color: '#fa8c16',
-      change: '+15% this month'
+      change: '+15% this month',
+      onClick: () => router.push('/SuperAdmin/app/patients'), // Navigate to patienys
     },
     {
       title: 'New Messages',
@@ -102,6 +104,7 @@ const SuperAdminDashboard = () => {
       icon: <MessageOutlined />,
       color: '#13c2c2',
       change: '+5% this week',
+      // onClick: () => {}, // No navigation
     },
     {
       title: 'New Updates',
@@ -109,6 +112,7 @@ const SuperAdminDashboard = () => {
       icon: <MessageOutlined />,
       color: '#13c2c2',
       change: '+5% this week',
+      // onClick: () => {}, // No navigation
     },
     {
       title: 'Total Revenue',
@@ -116,6 +120,7 @@ const SuperAdminDashboard = () => {
       icon: <span style={{ fontSize: 20 }}>₹</span>,
       color: '#13c2c2',
       change: '+5% this week',
+      onClick: () => router.push('/SuperAdmin/app/revenue'),
     }
   ]);
 
@@ -564,7 +569,6 @@ const SuperAdminDashboard = () => {
 
   // API fetch function
   const fetchUsers = async () => {
-    setLoading(true);
     try {
       const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
 
@@ -605,7 +609,7 @@ const SuperAdminDashboard = () => {
       console.error('fetchUsers error:', error);
       message.error('Failed to load doctor data');
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -635,7 +639,7 @@ const SuperAdminDashboard = () => {
     <>
       <AppHeader />
       <Layout className="min-h-screen">
-        <SideHeader />
+        <SideHeader  selectedKey = 'dashboard'/>
 
         <Layout>
           <Header
@@ -653,11 +657,11 @@ const SuperAdminDashboard = () => {
           >
             <div style={{ flex: 1, minWidth: '200px' }}>
               <Title level={2} style={{ margin: 0, fontSize: '30px' }}>
-                Welcome SuperAdmin!
+                Welcome SuperAdmin
               </Title>
               <Text type="secondary" style={{ margin: 10, marginBottom:'0px', fontSize: '14px' }}>Super Admin Dashboard</Text>
             </div>
-            
+
             {/* Pending Approval */}
             <Space size="middle" style={{ flexWrap: 'wrap' }}>
               <Button
@@ -683,128 +687,208 @@ const SuperAdminDashboard = () => {
             {/* Top Statistics Cards */}
 
             <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
-              {/* New Sign-ins Card */}
-              <Col xs={24} sm={12} md={8}>
+                {/* New Sign-ins Card */}
+                <Col xs={24} sm={12} md={8}>
                 <Card style={{ borderRadius: '8px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Title level={4} style={{ margin: 0 }}>New Sign‑ins</Title>
-                    <Select
-                      size="small"
-                      value={signinsTimeframe}
-                      onChange={(val) => {
-                        setSigninsTimeframe(val);
-                        message.info(`Timeframe: ${val}`);
-                      }}
-                      style={{ width: 81 }}
-                    >
-                      <Option value="today">Today</Option>
-                      <Option value="weekly">Weekly</Option>
-                      <Option value="monthly">Monthly</Option>
-                      <Option value="yearly">Yearly</Option>
-                      <Option value="calendar">Calendar</Option>
-                    </Select>
+                  <Title level={4} style={{ margin: 0 }}>New Sign‑ins</Title>
+                  <Select
+                    size="small"
+                    value={signinsTimeframe}
+                    onChange={(val) => {
+                    setSigninsTimeframe(val);
+                    message.info(`Timeframe: ${val}`);
+                    }}
+                    style={{ width: 81 }}
+                  >
+                    <Option value="today">Today</Option>
+                    <Option value="weekly">Weekly</Option>
+                    <Option value="monthly">Monthly</Option>
+                    <Option value="yearly">Yearly</Option>
+                    <Option value="calendar">Calendar</Option>
+                  </Select>
                   </div>
                   {signinsTimeframe === 'calendar' && (
-                    <DatePicker
-                      style={{ marginTop: 8 }}
-                      onChange={(date) => {
-                        setSelectedDate(date);
-                        message.success(`Selected date: ${date?.format('YYYY-MM-DD')}`);
-                      }}
-                    />
+                  <DatePicker
+                    style={{ marginTop: 8 }}
+                    onChange={(date) => {
+                    // setSelectedDate(date);
+                    message.success(`Selected date: ${date?.format('YYYY-MM-DD')}`);
+                    }}
+                  />
                   )}
                   <Statistic
-                    value={1234}
-                    prefix={<UserAddOutlined style={{ color: '#1890ff' }} />}
-                    valueStyle={{ color: '#1890ff' }}
+                  value={
+                    signinsTimeframe === 'today'
+                    ? 56
+                    : signinsTimeframe === 'weekly'
+                    ? 1234
+                    : signinsTimeframe === 'monthly'
+                    ? 4321
+                    : signinsTimeframe === 'yearly'
+                    ? 15000
+                    : 1234 // default
+                  }
+                  prefix={<UserAddOutlined style={{ color: '#1890ff' }} />}
+                  valueStyle={{ color: '#1890ff' }}
                   />
                   <Text type="secondary" style={{ fontSize: '12px' }}>
-                    +12% from last week
+                  {signinsTimeframe === 'today'
+                    ? '+2% from yesterday'
+                    : signinsTimeframe === 'weekly'
+                    ? '+12% from last week'
+                    : signinsTimeframe === 'monthly'
+                    ? '+8% from last month'
+                    : signinsTimeframe === 'yearly'
+                    ? '+20% from last year'
+                    : '+12% from last week'}
                   </Text>
                 </Card>
-              </Col>
+                </Col>
 
-              {/* New Doctors Card */}
-              <Col xs={24} sm={12} md={8}>
-                <Card style={{ borderRadius: '8px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Title level={4} style={{ margin: 0 }}>New Doctors</Title>
-                    <Select
-                      size="small"
-                      value={signinsTimeframe}
-                      onChange={(val) => {
-                        setSigninsTimeframe(val);
-                        message.info(`Timeframe: ${val}`);
-                      }}
-                      style={{ width: 81 }}
-                    >
-                      <Option value="today">Today</Option>
-                      <Option value="weekly">Weekly</Option>
-                      <Option value="monthly">Monthly</Option>
-                      <Option value="yearly">Yearly</Option>
-                      <Option value="calendar">Calendar</Option>
-                    </Select>
-                  </div>
-                  {signinsTimeframe === 'calendar' && (
-                    <DatePicker
-                      style={{ marginTop: 8 }}
-                      onChange={(date) => {
-                        setSelectedDate(date);
-                        message.success(`Selected date: ${date?.format('YYYY-MM-DD')}`);
-                      }}
+                {/* New Doctors Card */}
+                <Col xs={24} sm={12} md={8}>
+                  <Card
+                    style={{ borderRadius: '8px', cursor: 'pointer' }}
+                    hoverable
+                    onClick={(e) => {
+                      // Prevent navigation if dropdown or datepicker is clicked
+                      if (
+                        (e.target as HTMLElement).closest('.no-card-nav')
+                      ) return;
+                      if (typeof topStats[1].onClick === 'function') {
+                        topStats[1].onClick();
+                      }
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Title level={4} style={{ margin: 0 }}>New Doctors</Title>
+                      <Select
+                        className="no-card-nav"
+                        size="small"
+                        value={revenueTimeframe}
+                        onChange={(val) => {
+                          setRevenueTimeframe(val);
+                          message.info(`Timeframe: ${val}`);
+                        }}
+                        style={{ width: 81 }}
+                        onClick={e => e.stopPropagation()}
+                      >
+                        <Option value="today">Today</Option>
+                        <Option value="weekly">Weekly</Option>
+                        <Option value="monthly">Monthly</Option>
+                        <Option value="yearly">Yearly</Option>
+                        <Option value="calendar">Calendar</Option>
+                      </Select>
+                    </div>
+                    {revenueTimeframe === 'calendar' && (
+                      <DatePicker
+                        className="no-card-nav"
+                        style={{ marginTop: 8 }}
+                        onChange={(date) => {
+                          // setSelectedDate(date);
+                          message.success(`Selected date: ${date?.format('YYYY-MM-DD')}`);
+                        }}
+                        onClick={e => e.stopPropagation()}
+                      />
+                    )}
+                    <Statistic
+                      value={
+                        revenueTimeframe === 'weekly'
+                          ? 45
+                          : revenueTimeframe === 'monthly'
+                          ? 180
+                          : revenueTimeframe === 'yearly'
+                          ? 1200
+                          : 45 // default
+                      }
+                      prefix={React.cloneElement(topStats[1].icon, { style: { color: topStats[1].color } })}
+                      valueStyle={{ color: topStats[1].color }}
                     />
-                  )}
-                  <Statistic
-                    value={topStats[1].value}
-                    prefix={React.cloneElement(topStats[1].icon, { style: { color: topStats[1].color } })}
-                    valueStyle={{ color: topStats[1].color }}
-                  />
-                  <Text type="secondary" style={{ fontSize: '12px' }}>
-                    {topStats[1].change}
-                  </Text>
-                </Card>
-              </Col>
+                    <Text type="secondary" style={{ fontSize: '12px' }}>
+                      {revenueTimeframe === 'weekly'
+                        ? '+8% this week'
+                        : revenueTimeframe === 'monthly'
+                        ? '+32% this month'
+                        : revenueTimeframe === 'yearly'
+                        ? '+96% this year'
+                        : topStats[1].change}
+                    </Text>
+                  </Card>
+                </Col>
 
-              {/* New Patients Card */}
-              <Col xs={24} sm={12} md={8}>
-                <Card style={{ borderRadius: '8px' }}>
+                {/* New Patients Card */}
+                <Col xs={24} sm={12} md={8}>
+                <Card
+                  style={{ borderRadius: '8px', cursor: 'pointer' }}
+                  hoverable
+                  onClick={e => {
+                  // Prevent navigation if dropdown or datepicker is clicked
+                  if ((e.target as HTMLElement).closest('.no-card-nav')) return;
+                  if (typeof topStats[2].onClick === 'function') {
+                    topStats[2].onClick();
+                  }
+                  }}
+                >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Title level={4} style={{ margin: 0 }}>New Patients</Title>
-                    <Select
-                      size="small"
-                      value={signinsTimeframe}
-                      onChange={(val) => {
-                        setSigninsTimeframe(val);
-                        message.info(`Timeframe: ${val}`);
-                      }}
-                      style={{ width: 81 }}
-                    >
-                      <Option value="today">Today</Option>
-                      <Option value="weekly">Weekly</Option>
-                      <Option value="monthly">Monthly</Option>
-                      <Option value="yearly">Yearly</Option>
-                      <Option value="calendar">Calendar</Option>
-                    </Select>
+                  <Title level={4} style={{ margin: 0 }}>New Patients</Title>
+                  <Select
+                    className="no-card-nav"
+                    size="small"
+                    value={patientsTimeframe}
+                    onChange={val => {
+                    setPatientsTimeframe(val);
+                    message.info(`Timeframe: ${val}`);
+                    }}
+                    style={{ width: 81 }}
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <Option value="today">Today</Option>
+                    <Option value="weekly">Weekly</Option>
+                    <Option value="monthly">Monthly</Option>
+                    <Option value="yearly">Yearly</Option>
+                    <Option value="calendar">Calendar</Option>
+                  </Select>
                   </div>
-                  {signinsTimeframe === 'calendar' && (
-                    <DatePicker
-                      style={{ marginTop: 8 }}
-                      onChange={(date) => {
-                        setSelectedDate(date);
-                        message.success(`Selected date: ${date?.format('YYYY-MM-DD')}`);
-                      }}
-                    />
+                  {patientsTimeframe === 'calendar' && (
+                  <DatePicker
+                    className="no-card-nav"
+                    style={{ marginTop: 8 }}
+                    onChange={date => {
+                    // setPatientsSelectedDate(date);
+                    message.success(`Selected date: ${date?.format('YYYY-MM-DD')}`);
+                    }}
+                    onClick={e => e.stopPropagation()}
+                  />
                   )}
                   <Statistic
-                    value={topStats[2].value}
-                    prefix={React.cloneElement(topStats[2].icon, { style: { color: topStats[2].color } })}
-                    valueStyle={{ color: topStats[2].color }}
+                  value={
+                    patientsTimeframe === 'today'
+                    ? 12
+                    : patientsTimeframe === 'weekly'
+                    ? 156
+                    : patientsTimeframe === 'monthly'
+                    ? 600
+                    : patientsTimeframe === 'yearly'
+                    ? 7200
+                    : 156 // default
+                  }
+                  prefix={React.cloneElement(topStats[2].icon, { style: { color: topStats[2].color } })}
+                  valueStyle={{ color: topStats[2].color }}
                   />
                   <Text type="secondary" style={{ fontSize: '12px' }}>
-                    {topStats[2].change}
+                  {patientsTimeframe === 'today'
+                    ? '+1% from yesterday'
+                    : patientsTimeframe === 'weekly'
+                    ? '+15% this week'
+                    : patientsTimeframe === 'monthly'
+                    ? '+60% this month'
+                    : patientsTimeframe === 'yearly'
+                    ? '+180% this year'
+                    : topStats[2].change}
                   </Text>
                 </Card>
-              </Col>
+                </Col>
 
               {/* The rest of the topStats cards */}
               {topStats.slice(3).map((stat, index) => (
@@ -931,16 +1015,16 @@ const SuperAdminDashboard = () => {
                       </Select>
                     </div>
                   }
-                  style={{ borderRadius: '8px' }}
-                  extra={
-                    <Text type="secondary" style={{ fontSize: 12 }}>
-                      {revenueTimeframe === 'weekly'
-                        ? 'Showing daily revenue for this week'
-                        : revenueTimeframe === 'monthly'
-                          ? 'Showing monthly revenue for this year'
-                          : 'Showing yearly revenue'}
-                    </Text>
-                  }
+                  // style={{ borderRadius: '8px' }}
+                  // extra={
+                  //   <Text type="secondary" style={{ fontSize: 12 }}>
+                  //     {revenueTimeframe === 'weekly'
+                  //       ? 'Showing daily revenue for this week'
+                  //       : revenueTimeframe === 'monthly'
+                  //         ? 'Showing monthly revenue for this year'
+                  //         : 'Showing yearly revenue'}
+                  //   </Text>
+                  // }
                 >
                   <div style={{ width: '100%', height: '320px' }}>
                     <ResponsiveContainer width="100%" height="100%">
@@ -1235,16 +1319,4 @@ const SuperAdminDashboard = () => {
 
 export default SuperAdminDashboard;
 
-function setLoading(arg0: boolean) {
-  throw new Error('Function not implemented.');
-}
 
-
-function setDoctors(data: any) {
-  throw new Error('Function not implemented.');
-}
-
-
-function setDoctorsCount(length: any) {
-  throw new Error('Function not implemented.');
-}

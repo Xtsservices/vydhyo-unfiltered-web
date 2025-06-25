@@ -39,6 +39,7 @@ import {
     HomeOutlined
 } from '@ant-design/icons';
 import { API_BASE } from "../../../Admin/services"
+import SideHeader from '../../components/sideheader';
 
 const { Sider, Content } = Layout;
 const { Title, Text } = Typography;

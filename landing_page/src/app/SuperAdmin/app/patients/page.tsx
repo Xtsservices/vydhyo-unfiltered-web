@@ -174,7 +174,7 @@ const PatientList = () => {
                 marginTop: '-84px',
             }}>
                 <AppHeader />
-                <SideHeader />
+                <SideHeader  selectedKey='patients'/>
             </AntHeader>
 
             <Content style={{ 
@@ -240,65 +240,65 @@ const PatientList = () => {
                     <Table
                         columns={columns}
                         dataSource={patients}
-                        pagination={{
-                            current: 1,
-                            pageSize: 5,
-                            total: 1247,
-                            showSizeChanger: false,
-                            showQuickJumper: false,
-                            showTotal: (total, range) => `Showing ${range[0]} to ${range[1]} of ${total} results`,
-                            style: { marginTop: '20px' },
-                            itemRender: (current, type, originalElement) => {
-                                if (type === 'page') {
-                                    return (
-                                        <Button 
-                                            type={current === 1 ? 'primary' : 'default'}
-                                            size="small"
-                                            style={{ 
-                                                minWidth: '32px',
-                                                height: '32px',
-                                                margin: '0 2px'
-                                            }}
-                                        >
-                                            {current}
-                                        </Button>
-                                    );
-                                }
-                                if (type === 'prev') {
-                                    return (
-                                        <Button 
-                                            size="small" 
-                                            disabled
-                                            style={{ 
-                                                minWidth: '70px',
-                                                height: '32px',
-                                                margin: '0 2px'
-                                            }}
-                                        >
-                                            ← Previous
-                                        </Button>
-                                    );
-                                }
-                                if (type === 'next') {
-                                    return (
-                                        <Button 
-                                            size="small"
-                                            style={{ 
-                                                minWidth: '70px',
-                                                height: '32px',
-                                                margin: '0 2px'
-                                            }}
-                                        >
-                                            Next →
-                                        </Button>
-                                    );
-                                }
-                                if (type === 'jump-next') {
-                                    return <span style={{ margin: '0 8px' }}>...</span>;
-                                }
-                                return originalElement;
-                            }
-                        }}
+                        // pagination={{
+                        //     current: 1,
+                        //     pageSize: 5,
+                        //     total: 1247,
+                        //     showSizeChanger: false,
+                        //     showQuickJumper: false,
+                        //     showTotal: (total, range) => `Showing ${range[0]} to ${range[1]} of ${total} results`,
+                        //     style: { marginTop: '20px' },
+                        //     itemRender: (current, type, originalElement) => {
+                        //         if (type === 'page') {
+                        //             return (
+                        //                 <Button 
+                        //                     type={current === 1 ? 'primary' : 'default'}
+                        //                     size="small"
+                        //                     style={{ 
+                        //                         minWidth: '32px',
+                        //                         height: '32px',
+                        //                         margin: '0 2px'
+                        //                     }}
+                        //                 >
+                        //                     {current}
+                        //                 </Button>
+                        //             );
+                        //         }
+                        //         if (type === 'prev') {
+                        //             return (
+                        //                 <Button 
+                        //                     size="small" 
+                        //                     disabled
+                        //                     style={{ 
+                        //                         minWidth: '70px',
+                        //                         height: '32px',
+                        //                         margin: '0 2px'
+                        //                     }}
+                        //                 >
+                        //                     ← Previous
+                        //                 </Button>
+                        //             );
+                        //         }
+                        //         if (type === 'next') {
+                        //             return (
+                        //                 <Button 
+                        //                     size="small"
+                        //                     style={{ 
+                        //                         minWidth: '70px',
+                        //                         height: '32px',
+                        //                         margin: '0 2px'
+                        //                     }}
+                        //                 >
+                        //                     Next →
+                        //                 </Button>
+                        //             );
+                        //         }
+                        //         if (type === 'jump-next') {
+                        //             return <span style={{ margin: '0 8px' }}>...</span>;
+                        //         }
+                        //         return originalElement;
+                        //     }
+                        // }}
                         style={{
                             backgroundColor: 'white'
                         }}
